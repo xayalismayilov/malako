@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Malako — Твоё любимое место</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/8.0.4/i18nextBrowserLanguageDetector.min.js"></script>
+<style>
+:root {
+  --cream: #FAF6F0;
+  --milk: #F5EDE0;
+  --latte: #E8D5B7;
+  --caramel: #C4965A;
+  --mocha: #8B6343;
+  --espresso: #4A3020;
+  --dark: #2C1A0E;
+  --white: #FFFFFF;
+  --text-muted: #9B7B5A;
+  --border: rgba(139,99,67,0.2);
+  --shadow: rgba(74,48,32,0.08);
+  --overlay: rgba(250,246,240,0.88);
+}
+ 
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Jost',sans-serif;
+  color:var(--dark);
+  overflow-x:hidden;
+  min-height:100vh;
+  background-color: #F5F0E8;
+  background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+body.bg-image-set {
+  background: var(--bg-image) center/cover fixed no-repeat;
+}
+body.bg-image-set::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(250, 246, 240, 0.85);
+  z-index: -1;
+  pointer-events: none;
+}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;transition:all 0.4s;background:rgba(250,246,240,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:600;color:var(--espresso);text-decoration:none;letter-spacing:0.02em}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--mocha);font-size:0.9rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover{color:var(--caramel)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.btn-reserve{background:var(--espresso);color:var(--cream);padding:0.55rem 1.3rem;border-radius:50px;font-size:0.82rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;white-space:nowrap}
+.btn-reserve:hover{background:var(--caramel);transform:translateY(-1px)}
+.btn-menu-link{color:var(--mocha);text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--border);padding:0.55rem 1.3rem;border-radius:50px;transition:all 0.3s}
+.btn-menu-link:hover{border-color:var(--caramel);color:var(--caramel)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:5px}
+.hamburger span{width:24px;height:2px;background:var(--espresso);transition:all 0.3s;display:block}
+.lang-switcher{position:relative;display:inline-flex;align-items:center;margin-left:1rem}
+.lang-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:0.55rem 1rem;font-size:0.82rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;color:var(--mocha);transition:all 0.3s;display:flex;align-items:center;gap:0.4rem}
+.lang-btn:hover{border-color:var(--caramel);color:var(--caramel)}
+.lang-btn .lang-flag{font-size:1.1rem}
+.lang-dropdown{position:absolute;top:100%;right:0;margin-top:0.5rem;background:var(--white);border-radius:16px;border:1px solid var(--latte);box-shadow:0 10px 30px rgba(0,0,0,0.1);min-width:140px;z-index:1000;display:none;overflow:hidden}
+.lang-dropdown.show{display:block}
+.lang-option{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;cursor:pointer;transition:background 0.2s;font-size:0.85rem;color:var(--mocha)}
+.lang-option:hover{background:var(--milk)}
+.lang-option.active{background:var(--milk);color:var(--caramel);font-weight:500}
+.mobile-lang-section{display:flex;justify-content:center;gap:1rem;padding-top:1.5rem;margin-top:1rem;border-top:1px solid var(--border)}
+.mobile-lang-item{display:flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:50px;cursor:pointer;transition:all 0.3s;font-size:0.85rem;color:var(--mocha);background:var(--milk)}
+.mobile-lang-item.active{background:var(--espresso);color:var(--cream)}
+@media (max-width:768px){.nav-right{gap:0.5rem}.lang-btn span:not(.lang-flag){display:none}.lang-btn{padding:0.55rem 0.8rem}}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-bg-pattern{position:absolute;inset:0;opacity:0.04;background-image:radial-gradient(circle,var(--espresso) 1px,transparent 1px);background-size:40px 40px}
+.hero-content{text-align:center;z-index:2;padding:0 1rem;animation:fadeInUp 1s ease}
+.hero-tagline{font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.5rem;font-weight:500}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:400;color:var(--espresso);line-height:1;margin-bottom:1rem;letter-spacing:-0.02em}
+.hero-title em{font-style:italic;color:var(--caramel)}
+.hero-subtitle{font-size:1.1rem;color:var(--mocha);font-weight:300;margin-bottom:2.5rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
+.hero-buttons{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--espresso);color:var(--cream);padding:0.85rem 2.2rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block}
+.btn-primary:hover{background:var(--caramel);transform:translateY(-2px);box-shadow:0 8px 25px rgba(74,48,32,0.2)}
+.btn-outline{border:1.5px solid var(--espresso);color:var(--espresso);padding:0.85rem 2.2rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block}
+.btn-outline:hover{background:var(--espresso);color:var(--cream)}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;animation:bounce 2s infinite}
+.scroll-indicator::after{content:'';width:1px;height:40px;background:linear-gradient(var(--caramel),transparent);display:block}
+.hero-float-card{position:absolute;background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);border-radius:20px;padding:1rem 1.4rem;border:1px solid var(--latte);box-shadow:0 8px 30px var(--shadow)}
+.hero-float-card-1{top:20%;left:5%;animation:float 6s ease-in-out infinite}
+.hero-float-card-2{bottom:25%;right:5%;animation:float 8s ease-in-out infinite 2s}
+.float-card-icon{font-size:1.5rem;margin-bottom:0.3rem}
+.float-card-label{font-size:0.75rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase}
+.float-card-value{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--espresso)}
+.ticker{background:var(--espresso);color:var(--latte);padding:0.85rem 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;gap:3rem;animation:ticker 30s linear infinite}
+.ticker-item{font-size:0.82rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:400}
+.ticker-dot{color:var(--caramel)}
+.section{padding:6rem 5%;position:relative;background:rgba(250,246,240,0.85);backdrop-filter:blur(2px);margin:1rem 0;border-radius:0}
+.section:nth-child(even){background:rgba(245,237,224,0.85)}
+.section-label{font-size:0.78rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:1rem;font-weight:500}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--espresso);margin-bottom:1.5rem;line-height:1.15}
+.section-title em{font-style:italic;color:var(--caramel)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;margin-top:4rem}
+.feature-card{background:var(--white);border-radius:24px;padding:2.5rem 2rem;border:1px solid var(--latte);transition:all 0.3s;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--latte),var(--caramel));transform:scaleX(0);transition:transform 0.3s}
+.feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px var(--shadow)}
+.feature-card:hover::before{transform:scaleX(1)}
+.feature-icon{width:56px;height:56px;background:var(--milk);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1.5rem}
+.feature-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--espresso);margin-bottom:0.8rem}
+.feature-card p{font-size:0.9rem;color:var(--mocha);line-height:1.7}
+.menu-preview{}
+.menu-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:3rem}
+.menu-tab{padding:0.6rem 1.4rem;border-radius:50px;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--mocha);transition:all 0.3s;font-family:'Jost',sans-serif;font-weight:400}
+.menu-tab.active,.menu-tab:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
+.menu-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.menu-card{background:var(--white);border-radius:20px;overflow:hidden;border:1px solid var(--latte);transition:all 0.3s}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 15px 40px var(--shadow)}
+.menu-card-img{height:180px;background:linear-gradient(135deg,var(--latte),var(--milk));display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.menu-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.menu-card-badge{position:absolute;top:12px;right:12px;background:var(--caramel);color:var(--white);font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;z-index:1}
+.menu-card-body{padding:1.3rem}
+.menu-card-body h4{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--espresso);margin-bottom:0.4rem}
+.menu-card-body p{font-size:0.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:1rem}
+.menu-card-footer{display:flex;align-items:center;justify-content:space-between}
+.menu-price{font-size:1.1rem;font-weight:600;color:var(--caramel);font-family:'Playfair Display',serif}
+.menu-tag{font-size:0.7rem;color:var(--text-muted);background:var(--milk);padding:0.2rem 0.6rem;border-radius:20px;letter-spacing:0.05em}
+.btn-all-menu{display:inline-flex;align-items:center;gap:0.5rem;margin-top:3rem;color:var(--espresso);font-weight:500;letter-spacing:0.08em;text-transform:uppercase;font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--caramel);padding-bottom:2px;transition:all 0.3s}
+.btn-all-menu:hover{color:var(--caramel)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-image-stack{position:relative;height:500px}
+.about-img-main{width:75%;height:380px;border-radius:28px;position:absolute;top:0;left:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:5rem;background-size:cover;background-position:center}
+.about-img-sub{width:55%;height:220px;border-radius:20px;position:absolute;bottom:0;right:0;border:5px solid var(--cream);display:flex;align-items:center;justify-content:center;font-size:3.5rem;background-size:cover;background-position:center}
+.about-stat{position:absolute;top:40%;right:-5%;background:var(--white);border-radius:20px;padding:1.2rem 1.5rem;border:1px solid var(--latte);box-shadow:0 8px 30px var(--shadow)}
+.about-stat-num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--caramel);font-weight:600;display:block}
+.about-stat-label{font-size:0.78rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase}
+.about-content p{font-size:1rem;color:var(--mocha);line-height:1.8;margin-bottom:1.5rem}
+.about-features{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap}
+.about-feat-item{display:flex;align-items:center;gap:0.6rem;font-size:0.88rem;color:var(--espresso);font-weight:500}
+.about-feat-item::before{content:'';width:6px;height:6px;background:var(--caramel);border-radius:50%;flex-shrink:0}
+.cashback-section{background:var(--espresso);color:var(--cream);border-radius:32px;margin:0 5%;padding:5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.cashback-label{font-size:0.78rem;letter-spacing:0.25em;color:var(--latte);text-transform:uppercase;margin-bottom:1rem}
+.cashback-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);margin-bottom:1.5rem;line-height:1.2}
+.cashback-title em{font-style:italic;color:var(--caramel)}
+.cashback-text{color:var(--latte);line-height:1.7;margin-bottom:2rem;font-size:0.95rem}
+.cashback-steps{display:flex;flex-direction:column;gap:1rem}
+.cashback-step{display:flex;align-items:center;gap:1rem;font-size:0.9rem;color:var(--latte)}
+.step-num{width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:var(--caramel);flex-shrink:0;border:1px solid rgba(255,255,255,0.15)}
+.cashback-card{background:rgba(255,255,255,0.06);border-radius:24px;padding:3rem;border:1px solid rgba(255,255,255,0.1);text-align:center}
+.cashback-percent{font-family:'Playfair Display',serif;font-size:6rem;color:var(--caramel);line-height:1;font-weight:600}
+.cashback-sub{font-size:0.9rem;color:var(--latte);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.5rem}
+.promo-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}
+.promo-card-item{background:var(--white);border-radius:20px;overflow:hidden;border:1px solid var(--latte);transition:all 0.3s}
+.promo-card-item:hover{transform:translateY(-4px);box-shadow:0 15px 40px var(--shadow)}
+.promo-card-img{height:160px;background:linear-gradient(135deg,var(--caramel),var(--espresso));display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.promo-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.promo-card-body{padding:1.3rem}
+.promo-card-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--espresso);margin-bottom:0.5rem}
+.promo-card-body p{font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin-bottom:1rem}
+.promo-card-btn{display:inline-block;background:var(--caramel);color:white;padding:0.5rem 1.2rem;border-radius:50px;font-size:0.8rem;text-decoration:none;transition:all 0.3s}
+.promo-card-btn:hover{background:var(--espresso)}
+.branches-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.branch-card{background:var(--white);border-radius:20px;padding:2rem;border:1px solid var(--latte);transition:all 0.3s;cursor:pointer;display:block!important;opacity:1!important;visibility:visible!important}
+.branch-card:hover{border-color:var(--caramel);transform:translateY(-4px);box-shadow:0 12px 35px var(--shadow)}
+.branch-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--espresso);margin-bottom:0.5rem}
+.branch-addr{font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5}
+.branch-phone{font-size:0.9rem;color:var(--caramel);font-weight:500;text-decoration:none;display:block;margin-bottom:1.2rem}
+.btn-book-branch{width:100%;background:var(--milk);border:1px solid var(--latte);color:var(--espresso);padding:0.65rem;border-radius:12px;font-size:0.83rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.3s;font-weight:500}
+.btn-book-branch:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
+.modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.6);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--cream);border-radius:28px;padding:3rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--mocha);line-height:1}
+.modal-close:hover{color:var(--espresso)}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--espresso);margin-bottom:0.5rem}
+.modal-branch-name{font-size:0.85rem;color:var(--caramel);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:2rem}
+.form-group{margin-bottom:1.3rem}
+.form-group label{display:block;font-size:0.82rem;color:var(--mocha);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.5rem;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.85rem 1rem;border:1px solid var(--latte);border-radius:12px;font-family:'Jost',sans-serif;font-size:0.95rem;background:var(--white);color:var(--espresso);transition:border 0.3s;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--caramel)}
+.form-group textarea{resize:none;height:90px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-submit{width:100%;background:var(--espresso);color:var(--cream);border:none;padding:1rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.3s;margin-top:0.5rem}
+.btn-submit:hover{background:var(--caramel);transform:translateY(-1px)}
+.wa-note{text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:0.8rem;display:flex;align-items:center;justify-content:center;gap:0.3rem}
+.promo-popup{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);z-index:2000;background:var(--white);border-radius:20px;border:1px solid var(--latte);box-shadow:0 20px 60px rgba(74,48,32,0.25);padding:1rem 1.5rem;max-width:450px;width:90%;display:none!important;align-items:center;gap:1rem;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.promo-popup.show{display:flex!important;transform:translateX(-50%) translateY(0)}
+.promo-icon{width:80px;height:80px;border-radius:16px;flex-shrink:0;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:var(--milk);display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden}
+.promo-icon img{width:100%;height:100%;object-fit:cover}
+.promo-content{flex:1}
+.promo-content h4{font-family:'Playfair Display',serif;color:var(--espresso);font-size:1rem;margin-bottom:0.3rem;line-height:1.3}
+.promo-content p{font-size:0.8rem;color:var(--text-muted);line-height:1.4;margin-bottom:0.5rem}
+.promo-content a:hover{background:var(--espresso)!important}
+.promo-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);padding:4px 8px;flex-shrink:0;transition:color 0.2s;align-self:flex-start}
+.promo-close:hover{color:var(--espresso)}
+@media (max-width:500px){.promo-popup{flex-direction:column;text-align:center;padding:1rem}.promo-icon{width:100px;height:100px;margin-bottom:0.5rem}}
+footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:3rem;margin-bottom:3rem}
+.footer-brand h3{font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream);margin-bottom:0.8rem}
+.footer-brand p{font-size:0.88rem;color:rgba(232,213,183,0.7);line-height:1.7;max-width:260px}
+.footer-socials{display:flex;gap:0.8rem;margin-top:1.5rem}
+.social-link{width:38px;height:38px;background:rgba(255,255,255,0.06);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;color:var(--latte);transition:all 0.3s;border:1px solid rgba(255,255,255,0.08)}
+.social-link:hover{background:var(--caramel);border-color:var(--caramel)}
+.footer-col h4{font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.2rem}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:0.6rem}
+.footer-col ul li a{color:rgba(232,213,183,0.7);text-decoration:none;font-size:0.88rem;transition:color 0.3s}
+.footer-col ul li a:hover{color:var(--cream)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:0.8rem;color:rgba(232,213,183,0.5)}
+.mobile-nav{position:fixed;inset:0;background:var(--cream);z-index:999;transform:translateX(100%);transition:transform 0.4s;display:flex;flex-direction:column;padding:6rem 2rem 2rem;gap:0.5rem}
+.mobile-nav.open{transform:translateX(0)}
+.mobile-nav a{font-family:'Playfair Display',serif;font-size:2rem;color:var(--espresso);text-decoration:none;padding:0.5rem 0;border-bottom:1px solid var(--latte);font-style:italic}
+.mobile-nav .btn-reserve{font-family:'Jost',sans-serif;font-style:normal;font-size:0.9rem;text-align:center;margin-top:1rem;display:block}
+
+
+
+
+
+
+
+
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.fade-up{opacity:0;transform:translateY(30px);transition:all 0.7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.slider-section{position:relative;overflow:hidden;background:var(--espresso);width:100%}
+.slider-track{display:flex;transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);will-change:transform}
+.slide{min-width:100%;position:relative;height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.slide-content{position:relative;z-index:2;text-align:center;padding:2rem 8%;max-width:780px;width:100%;margin:0 auto;box-sizing:border-box;left:50%;transform:translateX(-50%)}
+.slide-tag{display:inline-block;font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--latte);border:1px solid rgba(232,213,183,0.35);padding:0.3rem 0.9rem;border-radius:30px;margin-bottom:1.2rem;font-weight:400}
+.slide-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3.5rem);color:var(--white);line-height:1.15;margin-bottom:1rem;font-weight:400}
+.slide-title em{font-style:italic;color:var(--caramel)}
+.slide-desc{font-size:clamp(0.9rem,2vw,1.05rem);color:rgba(255,255,255,0.82);line-height:1.7;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto}
+.slide-btn{display:inline-block;padding:0.8rem 2rem;border-radius:50px;font-size:0.85rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;cursor:pointer;border:none;font-family:'Jost',sans-serif}
+.slide-btn-primary{background:var(--caramel);color:var(--white)}
+.slide-btn-primary:hover{background:var(--white);color:var(--espresso)}
+.slide-btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.6)!important}
+.slide-btn-outline:hover{background:var(--white);color:var(--espresso)}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(4px);color:white;font-size:1.1rem}
+.slider-arrow:hover{background:var(--caramel);border-color:var(--caramel)}
+.slider-arrow-prev{left:1.5rem}
+.slider-arrow-next{right:1.5rem}
+.slider-dots{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10}
+.slider-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:all 0.3s;border:none;padding:0}
+.slider-dot.active{width:24px;border-radius:4px;background:var(--caramel)}
+.slide-emoji-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14rem;opacity:0.06;user-select:none;pointer-events:none}
+.success-msg{background:var(--milk);border:1px solid var(--caramel);border-radius:16px;padding:1.5rem;text-align:center;display:none;margin-top:1rem}
+.success-msg.show{display:block}
+.success-msg h3{font-family:'Playfair Display',serif;color:var(--espresso);margin-bottom:0.4rem}
+.success-msg p{font-size:0.85rem;color:var(--mocha)}
+@media(max-width:1024px){
+  .about-grid{grid-template-columns:1fr}
+  .about-image-stack{height:350px}
+  .cashback-section{grid-template-columns:1fr;padding:3rem}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero-float-card{display:none}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .btn-reserve,.btn-menu-link{display:none}
+  .hamburger{display:flex}
+  .section{padding:4rem 5%}
+  .about-stat{display:none}
+  .form-row{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center}
+  .cashback-section{margin:0 4%;padding:2.5rem 2rem}
+  .promo-cards-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero-title{font-size:3rem}
+  .menu-items{grid-template-columns:1fr}
+  .branches-grid{grid-template-columns:1fr}
+  .modal{padding:2rem 1.5rem;border-radius:20px}
+}
+/* Слайдер адаптив */
+@media (max-width: 1024px) { .slide { height: 480px; } }
+@media (max-width: 768px) {
+  .slider-section { height: auto !important; }
+  .slide { height: 75vh !important; min-height: 480px !important; max-height: 700px; }
+  .slide-content { padding: 1.5rem 1.4rem !important; width: 100% !important; max-width: 100% !important; left: 0 !important; right: 0 !important; transform: translateY(-50%) !important; }
+  .slide-tag { font-size: 0.68rem !important; }
+  .slide-title { font-size: clamp(1.4rem, 7vw, 2.2rem) !important; }
+  .slide-desc { font-size: 0.88rem !important; }
+  .slider-arrow { width: 36px !important; height: 36px !important; }
+  .slider-arrow-prev { left: 0.75rem !important; }
+  .slider-arrow-next { right: 0.75rem !important; }
+}
+@media (max-width: 480px) {
+  .slide { height: 80vh !important; min-height: 500px !important; }
+  .slide-buttons { flex-direction: column !important; align-items: center !important; gap: 0.5rem !important; width: 90% !important; }
+  .slide-btn { width: 100% !important; text-align: center !important; }
+}
+</style>
+</head>
+<body>
+ 
+<!-- NAVi -->
+<nav id="navbar">
+  <a href="#" class="nav-logo" id="navLogo">Malako</a>
+  <ul class="nav-links">
+    <li><a href="#home" id="navHomeLink" data-i18n="nav_home">Ana səhifə</a></li>
+    <li><a href="#menu" id="navMenuLink" data-i18n="nav_menu">Menyu</a></li>
+    <li><a href="#about" id="navAboutLink" data-i18n="nav_about">Haqqımızda</a></li>
+    <li><a href="#cashback" id="navCashbackLink" data-i18n="nav_cashback">Keşbek</a></li>
+    <li><a href="#branches" id="navBranchesLink" data-i18n="nav_branches">Filiallar</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="menu.html" class="btn-menu-link" id="navMenuBtn" data-i18n="nav_menu_btn">Menyu</a>
+    <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>
+    <div class="lang-switcher">
+      <button class="lang-btn" id="langBtn"><span class="lang-flag" id="currentLangFlag">🇦🇿</span><span id="currentLangText">AZ</span><span>▼</span></button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" data-lang="az" data-flag="🇦🇿"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
+        <div class="lang-option" data-lang="ru" data-flag="🇷🇺"><span class="lang-flag">🇷🇺</span> Русский</div>
+        <div class="lang-option" data-lang="en" data-flag="🇬🇧"><span class="lang-flag">🇬🇧</span> English</div>
+      </div>
+    </div>
+    <button class="hamburger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+ 
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#home" onclick="closeMobileNav()" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
+  <a href="#menu" onclick="closeMobileNav()" id="mobileNavMenu" data-i18n="nav_menu">Menyu</a>
+  <a href="#about" onclick="closeMobileNav()" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>
+  <a href="#cashback" onclick="closeMobileNav()" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>
+  <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
+  <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>
+  <div class="mobile-lang-section">
+    <div class="mobile-lang-item active" data-lang="az"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
+    <div class="mobile-lang-item" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</div>
+    <div class="mobile-lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+  </div>
+</div>
+ 
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-float-card hero-float-card-1"><div class="float-card-icon">☕</div><div class="float-card-label" id="heroFloatLabel" data-i18n="hero_float1_label">Specialty Coffee</div><div class="float-card-value" id="heroFloatValue" data-i18n="hero_float1_value">Kolumbiya</div></div>
+  <div class="hero-float-card hero-float-card-2"><div class="float-card-icon">🏆</div><div class="float-card-label" id="heroFloatLabel2" data-i18n="hero_float2_label">İşləyirik</div><div class="float-card-value" id="heroFloatValue2" data-i18n="hero_float2_value">2016-cı ildən</div></div>
+  <div class="hero-content">
+    <p class="hero-tagline" id="heroTagline" data-i18n="hero_tagline">Specialty Coffee & Food</p>
+    <h1 class="hero-title" id="heroTitle">Malako<br><em>Café</em></h1>
+    <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero_subtitle">Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə</p>
+    <div class="hero-buttons">
+      <a href="menu.html" class="btn-primary" id="heroMenuBtn" data-i18n="hero_btn_menu">Menyuya bax</a>
+      <a href="#branches" class="btn-outline" id="heroReserveBtn" data-i18n="hero_btn_reserve">Masa rezerv et</a>
+    </div>
+  </div>
+  <div class="scroll-indicator" id="heroScroll" data-i18n="hero_scroll">Aşağı diyirin</div>
+</section>
+ 
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-inner"><span class="ticker-item">✦ Specialty Coffee</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerBreakfast" data-i18n="ticker_breakfast">Hər gün səhər yeməyi</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerDesserts" data-i18n="ticker_desserts">Orijinal desertlər</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCashback" data-i18n="ticker_cashback">5% Keşbek</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCoffee" data-i18n="ticker_coffee">Kolumbiya qovrulmuş qəhvə</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerAtmosphere" data-i18n="ticker_atmosphere">Rahat atmosfer</span><span class="ticker-item ticker-dot">✦</span></div></div>
+ 
+<!-- SLIDER -->
+<section class="slider-section" id="slider" style="display: none;"><div class="slider-track" id="sliderTrack"></div><button class="slider-arrow slider-arrow-prev" onclick="slidePrev()">&#8592;</button><button class="slider-arrow slider-arrow-next" onclick="slideNext()">&#8594;</button><div class="slider-dots" id="sliderDots"></div></section>
+ 
+<!-- FEATURES -->
+<section class="section" id="why" style="display: none;"><p class="section-label fade-up" id="whyLabel" data-i18n="why_label">Niyə biz</p><h2 class="section-title fade-up" id="whyTitle" data-i18n="why_title">Bizi xüsusi edən nədir</h2><div class="features-grid" id="featuresGrid"></div></section>
+ 
+<!-- MENU PREVIEW -->
+<section class="section menu-preview" id="menu" style="display: none;"><p class="section-label fade-up" id="menuLabel" data-i18n="menu_label">Menyumuz</p><h2 class="section-title fade-up" id="menuTitle" data-i18n="menu_title">Ən yaxşısını dadın</h2><div class="menu-tabs fade-up" id="menuTabs"></div><div class="menu-items" id="menuGrid"></div><a href="menu.html" class="btn-all-menu fade-up" id="menuFullLink" data-i18n="menu_full">Tam menyu →</a></section>
+ 
+<!-- ABOUT -->
+<section class="section" id="about" style="display: none;"><div class="about-grid"><div class="about-image-stack fade-up"><div class="about-img-main" id="aboutImgMain"></div><div class="about-img-sub" id="aboutImgSub"></div><div class="about-stat"><span class="about-stat-num" id="aboutYear">2016</span><span class="about-stat-label" id="aboutYearLabel" data-i18n="about_year_label">Təsis ili</span></div></div><div class="about-content fade-up"><p class="section-label" id="aboutNavLabel" data-i18n="about_nav_label">Haqqımızda</p><h2 class="section-title" id="aboutTitle" data-i18n="about_title">Malako-nun hekayəsi</h2><p id="aboutText1"></p><p id="aboutText2"></p><p id="aboutText3"></p><div class="about-features" id="aboutFeatures"></div></div></div></section>
+ 
+<!-- CASHBACK -->
+<div id="cashback" style="padding:0 0 4rem; display: none;"><div class="cashback-section fade-up"><div><p class="cashback-label" id="cashbackLabel" data-i18n="cashback_label">Loyallıq proqramı</p><h2 class="cashback-title" id="cashbackTitle" data-i18n="cashback_title">Hər sifarişdə keşbek qazanın</h2><p class="cashback-text" id="cashbackText" data-i18n="cashback_text">QR kodu skan edin, proqrama qoşulun və Malako-nun istənilən filialında hər alışdan 5% keşbek qazanın.</p><div class="cashback-steps"><div class="cashback-step"><span class="step-num">1</span><span id="cashbackStep1" data-i18n="cashback_step1">Malako tətbiqini yükləyin</span></div><div class="cashback-step"><span class="step-num">2</span><span id="cashbackStep2" data-i18n="cashback_step2">1 dəqiqəyə qeydiyyatdan keçin</span></div><div class="cashback-step"><span class="step-num">3</span><span id="cashbackStep3" data-i18n="cashback_step3">Hər ziyarətdə QR skan edin</span></div></div><a href="#" class="btn-primary" style="display:inline-block;margin-top:2rem" id="cashbackBtn" data-i18n="cashback_btn">Qoşulun</a></div><div class="cashback-card"><div class="cashback-percent">5%</div><div class="cashback-sub" id="cashbackPercentLabel" data-i18n="cashback_percent">Hər alışdan keşbek</div><div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85rem;color:rgba(232,213,183,0.6);line-height:1.7" id="cashbackTextBottom" data-i18n="cashback_text_bottom">Balları toplayın və menyunun istənilən məhsuluna xərcləyin</div></div></div></div>
+ 
+<!-- PROMO CARDS -->
+<section class="section" id="promos" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="promosLabel" data-i18n="promos_label">Aksiyalar</p><h2 class="section-title fade-up" id="promosTitle" data-i18n="promos_title">Təkliflərimiz</h2><div class="promo-cards-grid" id="promoCardsGrid"></div></section>
+ 
+<!-- BRANCHES -->
+<section class="section" id="branches" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="branchesLabel" data-i18n="branches_label">Ünvanlarımız</p><h2 class="section-title fade-up" id="branchesTitle" data-i18n="branches_title">Ən yaxın filialı tapın</h2><div class="branches-grid" id="branchesGrid"></div></section>
+ 
+<!-- RESERVATION MODAL -->
+<div class="modal-overlay" id="reservationModal"><div class="modal"><button class="modal-close" onclick="closeReservation()">×</button><h2 id="reserveTitle" data-i18n="reserve_title">Masa rezervasiyası</h2><p class="modal-branch-name" id="modalBranchName">Malako — Mərkəz</p><div id="reservationForm"><div class="form-group"><label id="reserveNameLabel" data-i18n="reserve_name">Adınız</label><input type="text" id="resName" placeholder="Adınızı daxil edin"></div><div class="form-group"><label id="reservePhoneLabel" data-i18n="reserve_phone">WhatsApp nömrəsi</label><input type="tel" id="resPhone" placeholder="+994 50 000-00-00"></div><div class="form-row"><div class="form-group"><label id="reserveDateLabel" data-i18n="reserve_date">Tarix</label><input type="date" id="resDate"></div><div class="form-group"><label id="reserveTimeLabel" data-i18n="reserve_time">Vaxt</label><input type="time" id="resTime" value="12:00"></div></div><div class="form-group"><label id="reserveGuestsLabel" data-i18n="reserve_guests">Qonaq sayı</label><select id="resGuests"><option value="1">1 qonaq</option><option value="2" selected>2 qonaq</option><option value="3">3 qonaq</option><option value="4">4 qonaq</option><option value="5">5 qonaq</option><option value="6">6 qonaq</option><option value="7+">7+ qonaq</option></select></div><div class="form-group"><label id="reserveNoteLabel" data-i18n="reserve_note">Arzular (istəyə bağlı)</label><textarea id="resNote" placeholder="Xüsusi arzular, allergiyalar, münasibət..."></textarea></div><button class="btn-submit" onclick="submitReservation()" id="reserveSubmitBtn" data-i18n="reserve_submit">Müraciət göndər</button><p class="wa-note" id="reserveNoteWa" data-i18n="reserve_note_wa">📱 Təsdiq menecer tərəfindən WhatsApp-da göndəriləcək</p></div><div class="success-msg" id="successMsg"><h3 id="reserveSuccessTitle" data-i18n="reserve_success_title">Müraciət göndərildi! ✓</h3><p id="reserveSuccessText" data-i18n="reserve_success_text">Menecer bir neçə dəqiqə ərzində rezervasiyanı təsdiqləmək üçün WhatsApp vasitəsilə sizinlə əlaqə saxlayacaq.</p></div></div></div>
+ 
+<!-- PROMO POPUP -->
+<div class="promo-popup" id="promoPopup" style="display:none"><div class="promo-icon" id="promoIcon"></div><div class="promo-content"><h4 id="promoTitle"></h4><p id="promoDesc"></p><a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a></div><button class="promo-close" onclick="closePromo()">×</button></div>
+ 
+ 
+<!-- FOOTER -->
+<footer><div class="footer-grid"><div class="footer-brand"><h3>Malako</h3><p id="footerBrandText" data-i18n="footer_brand_text">Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer üçün sevimli yeriniz.</p><div class="footer-socials"><a href="#" class="social-link">📷</a><a href="#" class="social-link">📘</a><a href="#" class="social-link">🎵</a></div></div><div class="footer-col"><h4 id="footerNavTitle" data-i18n="footer_nav">Naviqasiya</h4><ul><li><a href="#home" id="footerNavHome" data-i18n="nav_home">Ana səhifə</a></li><li><a href="menu.html" id="footerNavMenu" data-i18n="nav_menu">Menyu</a></li><li><a href="#about" id="footerNavAbout" data-i18n="nav_about">Haqqımızda</a></li><li><a href="#cashback" id="footerNavCashback" data-i18n="nav_cashback">Keşbek</a></li><li><a href="#branches" id="footerNavBranches" data-i18n="nav_branches">Filiallar</a></li></ul></div><div class="footer-col"><h4 id="footerCompanyTitle" data-i18n="footer_company">Şirkət</h4><ul><li><a href="#" id="footerCareer" data-i18n="footer_career">Karyera</a></li><li><a href="#" id="footerFranchise" data-i18n="footer_franchise">Franshiza</a></li><li><a href="#" id="footerCorporate" data-i18n="footer_corporate">Korporativlərə</a></li><li><a href="#" id="footerPrivacy" data-i18n="footer_privacy">Məxfilik siyasəti</a></li></ul></div><div class="footer-col"><h4 id="footerContactsTitle" data-i18n="footer_contacts">Əlaqə</h4><ul><li><a href="tel:+994501234501" id="footerPhone">+994 50 123-45-01</a></li><li><a href="mailto:hello@malako.az" id="footerEmail">hello@malako.az</a></li><li><a href="#" id="footerWhatsApp" data-i18n="footer_whatsapp">WhatsApp</a></li></ul><div style="margin-top:1.5rem;font-size:0.82rem;color:rgba(232,213,183,0.5)" id="workHours">B–B: 08:00–23:00</div></div></div><div class="footer-bottom"><span>© 2024 Malako. <span id="footerRights" data-i18n="footer_rights">Bütün hüquqlar qorunur.</span></span><span data-i18n="footer_city">Bakı, Azərbaycan</span></div></footer>
+ 
+<script>
+// ========== SUPABASE КОНФИГУРАЦИЯ ==========
+const SUPABASE_URL = 'https://tjomkspowljeyuqkqgop.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqb21rc3Bvd2xqZXl1cWtxZ29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMDgxNjIsImV4cCI6MjA5Mzc4NDE2Mn0.oq_8PBF5FvftPuI7uynIEXz9uRHeZjIUfIGo3REf8SU';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+let sliderSlides = [], currentSlide = 0, sliderTimer = null;
+let allCategories = [], allMenuItems = [], currentCategory = '';
+let popupTimeout = null, popupShown = false;
+let currentLang = 'az';
+let siteSettings = {};
+
+// ========== ИНИЦИАЛИЗАЦИЯ I18NEXT ==========
+async function initI18n() {
+  try {
+    await i18next
+      .use(window.i18nextHttpBackend)
+      .use(window.i18nextBrowserLanguageDetector)
+      .init({
+        fallbackLng: 'az',
+        supportedLngs: ['az', 'ru', 'en'],
+        ns: ['common'],
+        defaultNS: 'common',
+        backend: {
+          loadPath: '/locales/{{lng}}/{{ns}}.json'
+        },
+        detection: {
+          order: ['localStorage', 'navigator'],
+          lookupLocalStorage: 'selected_language',
+          caches: ['localStorage']
+        },
+        interpolation: {
+          escapeValue: false
+        }
+      });
+    
+    // Загружаем язык из localStorage
+    const savedLang = localStorage.getItem('selected_language');
+    if (savedLang && ['az', 'ru', 'en'].includes(savedLang)) {
+      currentLang = savedLang;
+      await i18next.changeLanguage(savedLang);
+    } else {
+      currentLang = 'az';
+      localStorage.setItem('selected_language', 'az');
+      await i18next.changeLanguage('az');
+    }
+    
+    updateUILanguage();
+    return true;
+  } catch (e) {
+    console.error('Ошибка инициализации i18next:', e);
+    return false;
+  }
+}
+
+// ========== ОБНОВЛЕНИЕ UI ПО ЯЗЫКУ ==========
+function updateUILanguage() {
+  document.documentElement.lang = currentLang === 'az' ? 'az' : (currentLang === 'ru' ? 'ru' : 'en');
+  
+  // Обновляем все элементы с data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const translation = i18next.t(key);
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      if (el.placeholder !== undefined) el.placeholder = translation;
+    } else {
+      el.innerHTML = translation;
+    }
+  });
+  
+  // Обновляем флаг и текст кнопки языка
+  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
+  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const cf = document.getElementById('currentLangFlag');
+  const ct = document.getElementById('currentLangText');
+  if (cf) cf.textContent = flags[currentLang];
+  if (ct) ct.textContent = texts[currentLang];
+  
+  // Обновляем активный класс для опций языка
+  document.querySelectorAll('.lang-option, .mobile-lang-item').forEach(opt => {
+    const lang = opt.getAttribute('data-lang');
+    if (lang === currentLang) {
+      opt.classList.add('active');
+    } else {
+      opt.classList.remove('active');
+    }
+  });
+  
+  localStorage.setItem('selected_language', currentLang);
+}
+
+// ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ==========
+function setLanguage(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  localStorage.setItem('selected_language', lang);
+  i18next.changeLanguage(lang).then(() => {
+    updateUILanguage();
+    // Перерисовываем контент, зависящий от языка
+    loadCategoriesAndMenu();
+    loadFeatures();
+    loadBranches();
+    loadAboutSection();
+    const dd = document.getElementById('langDropdown');
+    if (dd) dd.classList.remove('show');
+  });
+}
+
+// ========== ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ ==========
+function initLangSwitcher() {
+  const btn = document.getElementById('langBtn');
+  const dd = document.getElementById('langDropdown');
+  
+  if (btn && dd) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dd.classList.toggle('show');
+    });
+    document.addEventListener('click', () => dd.classList.remove('show'));
+  }
+  
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const lang = opt.getAttribute('data-lang');
+      if (lang) setLanguage(lang);
+    });
+  });
+  
+  document.querySelectorAll('.mobile-lang-item').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const lang = opt.getAttribute('data-lang');
+      if (lang) setLanguage(lang);
+      document.getElementById('mobileNav')?.classList.remove('open');
+    });
+  });
+}
+
+// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА БЛЮДА ==========
+function getDishTranslation(translations, lang) {
+  if (!translations || translations.length === 0) return null;
+  const found = translations.find(t => t.language === lang);
+  if (found) return found;
+  // Fallback на AZ
+  return translations.find(t => t.language === 'az') || translations[0] || null;
+}
+
+function getDishName(translations, lang) {
+  const t = getDishTranslation(translations, lang);
+  return t ? t.name : null;
+}
+
+function getDishDescription(translations, lang) {
+  const t = getDishTranslation(translations, lang);
+  return t ? t.description : null;
+}
+
+// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА КАТЕГОРИИ ==========
+function getCategoryTranslation(translations, lang) {
+  if (!translations || translations.length === 0) return null;
+  const found = translations.find(t => t.language === lang);
+  if (found) return found;
+  return translations.find(t => t.language === 'az') || translations[0] || null;
+}
+
+function getCategoryName(translations, lang) {
+  const t = getCategoryTranslation(translations, lang);
+  return t ? t.name : null;
+}
+
+// ========== ЗАГРУЗКА НАСТРОЕК ==========
+async function loadAllSettings() {
+  try {
+    const { data } = await supabaseClient.from('settings').select('*');
+    (data || []).forEach(s => siteSettings[s.key] = s.value);
+    
+    // Применяем настройки
+    loadLogoSettings();
+    loadSiteBackground();
+    loadSectionsVisibility();
+    await loadSlides();
+    await loadCategoriesAndMenu();
+    await loadFeatures();
+    await loadBranches();
+    await loadAboutSection();
+    await loadPromoCards();
+    await loadPromoPopup();
+    loadSettings();
+    loadContactSettings();
+  } catch(e) { console.error('Ошибка загрузки настроек:', e); }
+}
+
+// ========== ЛОГОТИП ==========
+function loadLogoSettings() {
+  try {
+    const settings = siteSettings;
+    const logoType = settings.logo_type || 'text';
+    const logoLink = document.querySelector('.nav-logo');
+    if (!logoLink) return;
+    if (logoType === 'text') {
+      const logoText = settings.logo_text || 'Malako';
+      const textSize = settings.logo_text_size || '28';
+      const textColor = settings.logo_text_color || '#4A3020';
+      logoLink.innerHTML = logoText;
+      logoLink.style.fontSize = textSize + 'px';
+      logoLink.style.color = textColor;
+      logoLink.style.fontFamily = "'Playfair Display', serif";
+      logoLink.style.fontWeight = '600';
+    } else {
+      const logoImage = settings.logo_image;
+      const logoWidth = settings.logo_width || '180';
+      const logoHeight = settings.logo_height || 'auto';
+      if (logoImage) {
+        logoLink.innerHTML = `<img src="${logoImage}" alt="Malako" style="height:${logoHeight}; width:${logoWidth}px; max-height:50px; object-fit:contain">`;
+      } else {
+        logoLink.innerHTML = 'Malako';
+      }
+    }
+  } catch(e) { console.error('Ошибка загрузки логотипа:', e); }
+}
+
+// ========== ФОН ==========
+function loadSiteBackground() {
+  try {
+    const settings = siteSettings;
+    const bgType = settings.site_bg_type || 'preset';
+    const presets = {
+      stone:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
+      paper:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
+      concrete: { bg: '#E8E4D9', pattern: "url('https://www.transparenttextures.com/patterns/concrete-wall.png')" },
+      map:      { bg: '#EAE5D9', pattern: "url('https://www.transparenttextures.com/patterns/cartographer.png')" }
+    };
+    if (bgType === 'preset') {
+      const preset = settings.site_bg_preset || 'stone';
+      const p = presets[preset] || presets.stone;
+      document.body.style.background = `${p.pattern} ${p.bg}`;
+      document.body.style.backgroundRepeat = 'repeat';
+      document.body.classList.remove('bg-image-set');
+    } else if (bgType === 'image' && settings.site_bg_image) {
+      document.body.classList.add('bg-image-set');
+      document.body.style.setProperty('--bg-image', `url('${settings.site_bg_image}')`);
+      document.body.style.background = `var(--bg-image) center/cover no-repeat fixed`;
+    } else if (bgType === 'color') {
+      document.body.classList.remove('bg-image-set');
+      document.body.style.background = settings.site_bg_color || '#F5F0E8';
+    }
+  } catch(e) { console.error('Ошибка загрузки фона:', e); }
+}
+
+// ========== ВИДИМОСТЬ СЕКЦИЙ ==========
+function loadSectionsVisibility() {
+  const s = siteSettings;
+  const map = {
+    slider: { id: 'slider', key: 'section_slider' },
+    why:    { id: 'why',    key: 'section_features' },
+    menu:   { id: 'menu',   key: 'section_menu_preview' },
+    about:  { id: 'about',  key: 'section_about' },
+    cashback: { id: 'cashback', key: 'section_cashback' },
+    branches: { id: 'branches', key: 'section_branches' },
+    promos:   { id: 'promos',   key: 'section_promos' },
+  };
+  Object.values(map).forEach(({ id, key }) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = s[key] !== 'false' ? '' : 'none';
+  });
+}
+
+// ========== КОНТАКТЫ ==========
+function loadContactSettings() {
+  const s = siteSettings;
+  const footerPhone = document.getElementById('footerPhone');
+  if (footerPhone) footerPhone.setAttribute('href', `tel:${s.default_wa_number || '994501234501'}`);
+  const workHours = document.getElementById('workHours');
+  if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
+}
+
+// ========== СЛАЙДЕР ==========
+async function loadSlides() {
+  const { data } = await supabaseClient.from('slides').select('*').order('sort_order');
+  sliderSlides = (data || []).filter(s => s.is_active !== false);
+  buildSlider();
+}
+
+function buildSlider() {
+  const track = document.getElementById('sliderTrack');
+  const dots = document.getElementById('sliderDots');
+  if (!track) return;
+  if (sliderSlides.length === 0) { track.innerHTML = '<div class="slide" style="display:flex; align-items:center; justify-content:center; height:520px; background:var(--espresso); color:white;">Aktiv slayd yoxdur</div>'; if (dots) dots.innerHTML = ''; return; }
+  track.innerHTML = sliderSlides.map((s, i) => {
+    let bgStyle = '', mediaContent = '';
+    if (s.video_url && s.video_url.trim() !== '') {
+      let videoUrl = s.video_url.trim();
+      if (videoUrl.includes('player.cloudinary.com/embed')) { try { const u = new URL(videoUrl); const cloud = u.searchParams.get('cloud_name'); const pid = u.searchParams.get('public_id'); if(cloud && pid) videoUrl = `https://res.cloudinary.com/${cloud}/video/upload/${pid}.mp4`; } catch(e) {} }
+      if (videoUrl.includes('res.cloudinary.com') && videoUrl.includes('/video/upload/') && !videoUrl.endsWith('.mp4')) videoUrl = videoUrl.split('?')[0] + '.mp4';
+      if (videoUrl.includes('drive.google.com')) { const match = videoUrl.match(/\/d\/(.+?)\//); if(match && match[1]) videoUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`; }
+      const isValidVideo = videoUrl.endsWith('.mp4') || videoUrl.includes('/video/upload/') || videoUrl.includes('drive.google.com/uc');
+      if (isValidVideo) mediaContent = `<video autoplay muted loop playsinline webkit-playsinline preload="auto" disablePictureInPicture style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;" onloadeddata="this.play().catch(function(){})"><source src="${videoUrl}" type="video/mp4"></video>`;
+      else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
+    } else if (s.image_url && s.image_url.trim() !== '') bgStyle = `background-image: url('${s.image_url}'); background-size: cover; background-position: center;`;
+    else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
+    let buttonsHtml = '';
+    if (s.btn_text && s.btn_text.trim() !== '') { const btnStyle = (s.btn_style === 'outline') ? 'slide-btn-outline' : 'slide-btn-primary'; buttonsHtml += `<a href="${s.btn_url || '#'}" class="slide-btn ${btnStyle}">${s.btn_text}</a>`; }
+    if (s.btn2_text && s.btn2_text.trim() !== '' && s.btn2_url) buttonsHtml += `<a href="${s.btn2_url}" class="slide-btn slide-btn-outline" style="border:1.5px solid rgba(255,255,255,0.6); background:transparent;">${s.btn2_text}</a>`;
+    return `<div class="slide" style="position:relative; ${bgStyle}">${mediaContent}<div class="slide-emoji-bg" style="position:absolute; z-index:0; opacity:0.1;">${s.emoji || ''}</div><div class="slide-overlay" style="position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:1;"></div><div class="slide-content" style="position:absolute; z-index:2; text-align:center; padding:2rem 8%; width:100%; left:0; right:0; top:50%; transform:translateY(-50%);"><span class="slide-tag">${s.tag || ''}</span><h2 class="slide-title">${s.title || ''}</h2><p class="slide-desc">${s.description || ''}</p><div class="slide-buttons" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">${buttonsHtml}</div></div></div>`;
+  }).join('');
+  if (dots) dots.innerHTML = sliderSlides.map((_, i) => `<button class="slider-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
+  currentSlide = 0; if(track) track.style.transform = 'translateX(0)'; resetTimer();
+  setTimeout(() => { document.querySelectorAll(".slide video").forEach(v => v.play().catch(()=>{})); }, 300);
+}
+
+function goToSlide(n) { if(sliderSlides.length===0) return; currentSlide = Math.min(Math.max(0, n), sliderSlides.length-1); const track = document.getElementById('sliderTrack'); if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide)); resetTimer(); }
+
+function slideNext() { if(sliderSlides.length>1) goToSlide((currentSlide+1)%sliderSlides.length); }
+
+function slidePrev() { if(sliderSlides.length>1) goToSlide((currentSlide-1+sliderSlides.length)%sliderSlides.length); }
+
+function resetTimer() { clearInterval(sliderTimer); if(sliderSlides.length>1) sliderTimer = setInterval(slideNext, 5000); }
+
+// ========== FEATURES (С ИСПОЛЬЗОВАНИЕМ ПЕРЕВОДОВ ИЗ SETTINGS) ==========
+async function loadFeatures() {
+  const grid = document.getElementById('featuresGrid');
+  if(!grid) return;
+  
+  // Получаем переводы для фич из таблицы settings
+  const s = siteSettings;
+  
+  // Для каждой фичи используем ts-подобную логику: если есть перевод для текущего языка, используем его
+  function getFeatureText(baseKey, fallback) {
+    const key = baseKey + '_' + currentLang;
+    if (s[key]) return s[key];
+    return s[baseKey] || fallback || '';
+  }
+  
+  const features = [
+    { 
+      icon: '☕', 
+      title: getFeatureText('feature1_title', 'Öz qovurma'), 
+      desc: getFeatureText('feature1_desc', 'Kolumbiya qəhvəsi, unikal texnologiya ilə qovrulur. Hər fincanda zəngin dad və ətir.') 
+    },
+    { 
+      icon: '🥗', 
+      title: getFeatureText('feature2_title', 'Dadlı mətbəx'), 
+      desc: getFeatureText('feature2_desc', 'Tam səhər yeməkləri, doyumlu bol qablar, burgerlər və zərif desertlər — hər zövq üçün nəsə var.') 
+    },
+    { 
+      icon: '🌿', 
+      title: getFeatureText('feature3_title', 'Rahat atmosfer'), 
+      desc: getFeatureText('feature3_desc', 'Düşünülmüş interyer, isti işıqlandırma və yenilənən pleylistlər ideal mühit yaradır.') 
+    },
+    { 
+      icon: '⭐', 
+      title: getFeatureText('feature4_title', 'Yüksək xidmət'), 
+      desc: getFeatureText('feature4_desc', 'Xidmətin keyfiyyəti bizim fəlsəfəmizin əsasını təşkil edir. Hər rəy təhlil edilir və səviyyəmizi yaxşılaşdırır.') 
+    }
+  ];
+  
+  grid.innerHTML = features.map(f => 
+    `<div class="feature-card fade-up"><div class="feature-icon">${f.icon}</div><h3>${f.title}</h3><p>${f.desc}</p></div>`
+  ).join('');
+}
+
+// ========== МЕНЮ ==========
+async function loadCategoriesAndMenu() {
+  try {
+    // Загружаем категории с переводами
+    const { data: categories } = await supabaseClient
+      .from('categories')
+      .select('*, category_translations(*)')
+      .order('sort_order');
+    
+    // Загружаем блюда с переводами
+    const { data: menuItems } = await supabaseClient
+      .from('menu_items')
+      .select('*, dish_translations(*)')
+      .eq('available', true)
+      .order('sort_order');
+    
+    allCategories = categories || [];
+    allMenuItems = menuItems || [];
+    
+    // Строим табы для категорий
+    const tabs = document.getElementById('menuTabs');
+    if (tabs && allCategories.length) {
+      tabs.innerHTML = allCategories.map((c, i) => {
+        const name = getCategoryName(c.category_translations, currentLang) || c.name || 'Kateqoriya';
+        return `<button class="menu-tab ${i===0?'active':''}" onclick="filterMenu('${c.id}',this)">${name}</button>`;
+      }).join('');
+      currentCategory = allCategories[0]?.id || '';
+      renderMenu(currentCategory);
+    }
+  } catch(e) {
+    console.error('Ошибка загрузки меню:', e);
+  }
+}
+
+function renderMenu(categoryId) {
+  const g = document.getElementById('menuGrid');
+  if (!g) return;
+  
+  const items = allMenuItems.filter(i => i.category_id === categoryId);
+  const cat = allCategories.find(c => c.id === categoryId);
+  const catName = cat ? getCategoryName(cat.category_translations, currentLang) || cat.name || '' : '';
+  
+  if (!items.length) {
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">Bu kateqoriyada hələ heç bir yemək yoxdur</div>';
+    return;
+  }
+  
+  g.innerHTML = items.slice(0,6).map(item => {
+    const name = getDishName(item.dish_translations, currentLang) || item.name || '';
+    const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
+    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url}" alt="${name}">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+  }).join('');
+}
+
+function filterMenu(catId, btn) {
+  currentCategory = catId;
+  document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(catId);
+}
+
+// ========== ФИЛИАЛЫ ==========
+async function loadBranches() {
+  const { data } = await supabaseClient.from('branches').select('*').order('sort_order');
+  const grid = document.getElementById('branchesGrid');
+  if (!grid) return;
+  if (!data?.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">Filiallar tezliklə açılacaq</div>'; return; }
+  
+  // Получаем текст кнопки из settings или i18n
+  const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
+  
+  grid.innerHTML = data.map(b => 
+    `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a><button class="btn-book-branch" onclick="openReservation('${b.name.replace(/'/g, "\\'")}')">${btnText}</button></div>`
+  ).join('');
+}
+
+// ========== О НАС ==========
+function loadAboutSection() {
+  const s = siteSettings;
+  
+  const branchesCount = allCategories.length || 0; // используем количество филиалов, если доступно
+  const aboutText3 = (s.about_text3 || 'Bu gün Malako — Bakıda {branches} filial və 50+ peşəkardan ibarət müasir komandadır').replace('{branches}', branchesCount);
+  
+  document.getElementById('aboutText1').innerHTML = s.about_text1 || '';
+  document.getElementById('aboutText2').innerHTML = s.about_text2 || '';
+  document.getElementById('aboutText3').innerHTML = aboutText3;
+  document.getElementById('aboutYear').innerHTML = s.about_year || '2016';
+  
+  const img1 = s.about_img1 || '☕';
+  const img2 = s.about_img2 || '🥐';
+  const imgMain = document.getElementById('aboutImgMain');
+  if(imgMain) { if(img1.startsWith('http')) imgMain.style.backgroundImage = `url('${img1}')`; else imgMain.innerHTML = img1; }
+  const imgSub = document.getElementById('aboutImgSub');
+  if(imgSub) { if(img2.startsWith('http')) imgSub.style.backgroundImage = `url('${img2}')`; else imgSub.innerHTML = img2; }
+  
+  const featContainer = document.getElementById('aboutFeatures');
+  if(featContainer) {
+    const features = (s.about_features || 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar').split(',');
+    featContainer.innerHTML = features.map(f => `<div class="about-feat-item">${f.trim()}</div>`).join('');
+  }
+}
+
+// ========== АКЦИИ ==========
+async function loadPromoCards() {
+  const { data } = await supabaseClient.from('promo_cards').select('*').eq('is_active', true);
+  const grid = document.getElementById('promoCardsGrid');
+  if (!grid) return;
+  if (!data?.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = data.map(p => 
+    `<div class="promo-card-item"><div class="promo-card-img">🎁</div><div class="promo-card-body"><h3>${p.title}</h3><p>${p.description || ''}</p>${p.btn_text && p.btn_url ? `<a href="${p.btn_url}" class="promo-card-btn">${p.btn_text}</a>` : ''}</div></div>`
+  ).join('');
+}
+
+// ========== ПОПАП ==========
+async function loadPromoPopup() {
+  try {
+    const popupEl = document.getElementById('promoPopup');
+    if (!popupEl) return;
+    popupEl.classList.remove('show');
+    popupEl.style.display = 'none';
+    popupShown = false;
+    if (popupTimeout) clearTimeout(popupTimeout);
+    
+    const { data } = await supabaseClient
+      .from('promo_popups')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+    
+    if (!data?.length) return;
+    const popup = data[0];
+    document.getElementById('promoTitle').textContent = popup.title || 'Aksiya!';
+    document.getElementById('promoDesc').textContent = popup.description || '';
+    
+    const icon = document.getElementById('promoIcon');
+    if (icon) {
+      icon.innerHTML = '';
+      if (popup.image_url && popup.image_url.trim() !== '') {
+        const img = document.createElement('img');
+        img.src = popup.image_url;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        icon.appendChild(img);
+      } else {
+        icon.innerHTML = '🎉';
+      }
+    }
+    
+    const btn = document.getElementById('promoBtn');
+    if (btn) {
+      if (popup.btn_text && popup.btn_url) {
+        btn.textContent = popup.btn_text;
+        btn.href = popup.btn_url;
+        btn.style.display = 'inline-block';
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+    
+    const delay = (popup.delay_seconds || 5) * 1000;
+    popupTimeout = setTimeout(() => {
+      popupEl.style.display = 'flex';
+      setTimeout(() => popupEl.classList.add('show'), 50);
+      popupShown = true;
+    }, delay);
+  } catch(e) { console.error(e); }
+}
+
+function closePromo() {
+  const p = document.getElementById('promoPopup');
+  if (p) {
+    p.classList.remove('show');
+    p.style.display = 'none';
+    popupShown = false;
+    if (popupTimeout) clearTimeout(popupTimeout);
+  }
+}
+
+// ========== НАСТРОЙКИ (контакты) ==========
+function loadSettings() {
+  const s = siteSettings;
+  const footerPhone = document.getElementById('footerPhone');
+  if (footerPhone) footerPhone.setAttribute('href', `tel:${s.default_wa_number || '994501234501'}`);
+  const workHours = document.getElementById('workHours');
+  if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
+}
+
+// ========== БРОНИРОВАНИЕ ==========
+let currentBranch = 'Malako — Mərkəz';
+
+function openReservation(b) {
+  currentBranch = b;
+  document.getElementById('modalBranchName').textContent = b;
+  document.getElementById('reservationModal').classList.add('open');
+  document.getElementById('successMsg').classList.remove('show');
+  document.getElementById('reservationForm').style.opacity = '1';
+  document.getElementById('resDate').value = new Date().toISOString().split('T')[0];
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReservation() {
+  document.getElementById('reservationModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function submitReservation() {
+  const n = document.getElementById('resName')?.value.trim() || '';
+  const p = document.getElementById('resPhone')?.value.trim() || '';
+  const d = document.getElementById('resDate')?.value || '';
+  const t = document.getElementById('resTime')?.value || '';
+  const g = document.getElementById('resGuests')?.value || '';
+  const nt = document.getElementById('resNote')?.value.trim() || '';
+  
+  if (!n || !p || !d || !t) {
+    alert(i18next.t('reserve_error_fill_fields') || 'Zəhmət olmasa bütün məcburi sahələri doldurun.');
+    return;
+  }
+  
+  const { error } = await supabaseClient.from('reservations').insert([
+    { name: n, phone: p, branch: currentBranch, date: d, time: t, guests: g, note: nt, status: 'pending' }
+  ]);
+  
+  if (error) {
+    console.error('Ошибка бронирования:', error);
+    alert(i18next.t('reserve_error') || 'Rezervasiya zamanı xəta baş verdi.');
+    return;
+  }
+  
+  const wa = siteSettings.default_wa_number || '994501234501';
+  const msg = encodeURIComponent(
+    `🌿 YENİ REZERVASİYA\n\nFilial: ${currentBranch}\nAd: ${n}\nTelefon: ${p}\nTarix: ${d}\nVaxt: ${t}\nQonaq: ${g}${nt ? '\nArzular: ' + nt : ''}`
+  );
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+  document.getElementById('reservationForm').style.opacity = '0';
+  setTimeout(() => { document.getElementById('successMsg').classList.add('show'); }, 300);
+}
+
+document.getElementById('reservationModal')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('reservationModal')) closeReservation();
+});
+
+// ========== МОБИЛЬНОЕ МЕНЮ ==========
+document.getElementById('burger')?.addEventListener('click', () => {
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+// ========== АНИМАЦИИ ==========
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ========== ЗАПУСК ==========
+async function init() {
+  // Инициализируем i18next
+  await initI18n();
+  
+  // Инициализируем переключатель языка
+  initLangSwitcher();
+  
+  // Загружаем все настройки и данные
+  await loadAllSettings();
+  
+  // После загрузки настроек обновляем UI для текущего языка
+  updateUILanguage();
+  
+  // Обновляем все элементы с data-i18n еще раз
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const translation = i18next.t(key);
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      if (el.placeholder !== undefined) el.placeholder = translation;
+    } else {
+      el.innerHTML = translation;
+    }
+  });
+  
+  // Устанавливаем флаг и текст для языка
+  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
+  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const cf = document.getElementById('currentLangFlag');
+  const ct = document.getElementById('currentLangText');
+  if (cf) cf.textContent = flags[currentLang];
+  if (ct) ct.textContent = texts[currentLang];
+}
+
+// Запускаем инициализацию
+init();
+</script>
+</body>
+</html>

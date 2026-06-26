@@ -1,0 +1,2707 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+<title>Malako Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --cream: #FAF6F0;
+  --milk: #F5EDE0;
+  --latte: #E8D5B7;
+  --caramel: #C4965A;
+  --mocha: #8B6343;
+  --espresso: #4A3020;
+  --dark: #2C1A0E;
+  --white: #FFFFFF;
+  --text-muted: #9B7B5A;
+  --border: rgba(139,99,67,0.15);
+  --sidebar: 260px;
+  --green: #2E7D32;
+  --red: #C62828;
+  --orange: #E65100;
+  --blue: #1565C0;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: #EDE8E1;
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== LOGIN ========== */
+.login-page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--milk), var(--cream));
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.login-page.show { display: flex; }
+.login-box {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 360px;
+  border: 1px solid var(--latte);
+  box-shadow: 0 20px 60px rgba(74,48,32,0.1);
+}
+.login-box h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--espresso);
+  margin-bottom: 0.3rem;
+}
+.login-box p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+.login-field { margin-bottom: 1.2rem; }
+.login-field label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mocha);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.login-field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--latte);
+  border-radius: 12px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  background: var(--cream);
+}
+.login-field input:focus { border-color: var(--caramel); }
+.btn-login {
+  width: 100%;
+  background: var(--espresso);
+  color: var(--cream);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.3s;
+  margin-top: 0.5rem;
+}
+.btn-login:hover { background: var(--caramel); }
+.login-err {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+/* ========== LAYOUT ========== */
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar);
+  background: var(--espresso);
+  color: var(--cream);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+.sidebar-brand {
+  padding: 1.5rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--cream);
+}
+.sidebar-brand p {
+  font-size: 0.68rem;
+  color: var(--latte);
+  opacity: 0.6;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+.sidebar-nav {
+  flex: 1;
+  padding: 0.5rem 0;
+}
+.nav-section-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(232,213,183,0.35);
+  padding: 0.8rem 1.2rem 0.3rem;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 1.2rem;
+  color: rgba(232,213,183,0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--latte);
+  border-left-color: rgba(196,150,90,0.3);
+}
+.nav-item.active {
+  background: rgba(255,255,255,0.07);
+  color: var(--cream);
+  border-left-color: var(--caramel);
+  font-weight: 500;
+}
+.nav-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+.sidebar-footer {
+  padding: 1.2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.btn-logout {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--latte);
+  padding: 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  transition: all 0.3s;
+}
+.btn-logout:hover {
+  background: rgba(198,40,40,0.25);
+  border-color: rgba(198,40,40,0.3);
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - var(--sidebar));
+}
+.topbar {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.topbar h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--espresso);
+  word-break: break-word;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.topbar-badge {
+  background: var(--milk);
+  color: var(--mocha);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  border: 1px solid var(--latte);
+  white-space: nowrap;
+}
+.topbar-badge a { color: var(--mocha); text-decoration: none; }
+.content {
+  padding: 1.5rem;
+  flex: 1;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ========== CARDS & GRID ========== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--espresso);
+  font-weight: 500;
+  word-break: break-word;
+}
+.stat-sub {
+  font-size: 0.7rem;
+  color: var(--caramel);
+  margin-top: 0.3rem;
+}
+
+/* TABLES */
+.table-wrap {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+.data-table th {
+  background: var(--milk);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  color: var(--mocha);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(139,99,67,0.07);
+  font-size: 0.85rem;
+  color: var(--dark);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(250,246,240,0.5); }
+
+/* SECTION CARDS */
+.section-card {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.section-card-header {
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(139,99,67,0.07);
+  background: var(--milk);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.section-card-header h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--espresso);
+}
+.section-card-body { padding: 1.2rem; }
+
+/* FORMS */
+.form-field { margin-bottom: 1rem; }
+.form-field label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--mocha);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--latte);
+  border-radius: 10px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  background: var(--cream);
+  color: var(--dark);
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--caramel); }
+.form-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+/* BUTTONS */
+.btn-sm {
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--mocha);
+  transition: all 0.2s;
+}
+.btn-sm:hover { background: var(--milk); }
+.btn-sm.primary {
+  background: var(--espresso);
+  color: var(--cream);
+  border-color: var(--espresso);
+}
+.btn-sm.primary:hover { background: var(--caramel); border-color: var(--caramel); }
+.btn-sm.danger:hover {
+  background: #FFEBEE;
+  border-color: #EF9A9A;
+  color: var(--red);
+}
+.btn-sm.success {
+  background: #E8F5E9;
+  color: var(--green);
+  border-color: #A5D6A7;
+}
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  transition: all 0.3s;
+  background: var(--espresso);
+  color: var(--cream);
+  width: 100%;
+}
+.btn-main:hover {
+  background: var(--caramel);
+  transform: translateY(-1px);
+}
+@media (min-width: 768px) {
+  .btn-main { width: auto; }
+}
+
+/* DISH ADMIN ITEM */
+.dish-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(139,99,67,0.05);
+  flex-wrap: wrap;
+}
+.dish-admin-item:last-child { border-bottom: none; }
+.dish-emoji { font-size: 1.2rem; flex-shrink: 0; }
+.dish-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.dish-info { flex: 1; min-width: 120px; }
+.dish-info-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--espresso);
+  word-break: break-word;
+}
+.dish-info-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.dish-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* TOGGLE SWITCH */
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: #ddd;
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border: none;
+  outline: none;
+}
+.toggle.on { background: var(--green); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.3s;
+}
+.toggle.on::after { transform: translateX(18px); }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-input {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  background: var(--white);
+  outline: none;
+  color: var(--dark);
+  flex: 1;
+  min-width: 150px;
+}
+.filter-input:focus { border-color: var(--caramel); }
+
+/* SECTION TOGGLE */
+.section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(139,99,67,0.08);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.section-toggle:last-child { border-bottom: none; }
+
+/* PROMO CARD */
+.promo-card {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+}
+.promo-card h4 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--espresso);
+  margin-bottom: 0.3rem;
+  word-break: break-word;
+}
+.promo-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+.promo-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,26,14,0.5);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-box h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--espresso);
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+}
+.modal-btns {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.3rem;
+  flex-wrap: wrap;
+}
+.modal-btns button {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 50px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.modal-save {
+  background: var(--espresso);
+  color: var(--cream);
+  border-color: var(--espresso);
+}
+.modal-save:hover { background: var(--caramel); }
+.modal-cancel {
+  background: transparent;
+  color: var(--mocha);
+}
+.modal-cancel:hover { background: var(--milk); }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--dark);
+  cursor: pointer;
+}
+.checkbox-label input { width: auto; margin: 0; }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  background: var(--espresso);
+  color: var(--cream);
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  pointer-events: none;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .toast {
+    bottom: 2rem;
+    right: 2rem;
+    left: auto;
+    max-width: 320px;
+  }
+}
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+}
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+.toast.warning { background: var(--orange); }
+
+/* MENU TOGGLE BUTTON */
+.menu-toggle-btn {
+  display: none;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 200;
+  background: var(--espresso);
+  color: var(--cream);
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-size: 1rem;
+  font-weight: 500;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* LANGUAGE TABS FOR TRANSLATIONS */
+.lang-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.8rem;
+}
+.lang-tab-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--mocha);
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.lang-tab-btn:hover { background: var(--milk); }
+.lang-tab-btn.active {
+  background: var(--espresso);
+  color: var(--cream);
+  border-color: var(--espresso);
+}
+.lang-tab-flag { margin-right: 0.3rem; }
+
+/* Translation field group */
+.trans-field-group {
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+}
+.trans-field-group .form-field { margin-bottom: 0.5rem; }
+.trans-field-group .form-field:last-child { margin-bottom: 0; }
+.trans-field-group .form-field label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ========== RESPONSIVE BREAKPOINTS ========== */
+@media (min-width: 901px) {
+  .sidebar { transform: translateX(0) !important; }
+  .menu-toggle-btn { display: none !important; }
+}
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); z-index: 150; width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; width: 100%; }
+  .menu-toggle-btn { display: flex; }
+  .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .topbar { padding: 0.8rem 1rem; }
+  .content { padding: 1rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .dish-admin-item { flex-direction: column; align-items: flex-start; }
+  .dish-info { width: 100%; }
+  .dish-controls { width: 100%; justify-content: flex-end; }
+  .section-card-header { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .login-box { padding: 1.5rem; margin: 1rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-val { font-size: 1.5rem; }
+  .data-table th, .data-table td { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+  .modal-box { padding: 1.2rem; margin: 0.5rem; }
+  .topbar-right { width: 100%; justify-content: flex-start; }
+  .filter-bar .filter-input { width: 100%; min-width: auto; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar { overflow-y: auto; }
+  .sidebar-nav { padding: 0.2rem 0; }
+  .nav-item { padding: 0.4rem 1rem; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .nav-item, .btn-sm, .btn-main, .toggle, .menu-toggle-btn { cursor: default; }
+  button { cursor: default; }
+  input, select, textarea { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+  <div class="login-page show" id="loginPage">
+  <div class="login-box">
+    <h1>Malako</h1>
+    <p>Панель управления</p>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@malako.az" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Пароль</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Войти</button>
+    <p class="login-err" id="loginErr">Неверный email или пароль</p>
+  </div>
+</div>
+
+<div class="app-wrapper">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <h1>Malako</h1>
+      <p>Admin Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Обзор</div>
+      <div class="nav-item active" onclick="switchTab('dashboard',this)"><span class="nav-icon">📊</span><span>Дашборд</span></div>
+      <div class="nav-item" onclick="switchTab('reservations',this)"><span class="nav-icon">📅</span><span>Бронирования</span></div>
+      
+      <div class="nav-section-label">Контент</div>
+      <div class="nav-item" onclick="switchTab('main_page',this)"><span class="nav-icon">🏠</span><span>Главная (тексты)</span></div>
+      <div class="nav-item" onclick="switchTab('sections',this)"><span class="nav-icon">⚙️</span><span>Секции сайта</span></div>
+      <div class="nav-item" onclick="switchTab('logo',this)"><span class="nav-icon">🏷️</span><span>Логотип</span></div>
+      <div class="nav-item" onclick="switchTab('menu',this)"><span class="nav-icon">📋</span><span>Меню</span></div>
+      <div class="nav-item" onclick="switchTab('categories',this)"><span class="nav-icon">🏷️</span><span>Категории</span></div>
+      <div class="nav-item" onclick="switchTab('slider',this)"><span class="nav-icon">🖼️</span><span>Слайдер</span></div>
+      <div class="nav-item" onclick="switchTab('about',this)"><span class="nav-icon">📖</span><span>О нас (блок)</span></div>
+      <div class="nav-item" onclick="switchTab('promos',this)"><span class="nav-icon">🏷️</span><span>Акции</span></div>
+      <div class="nav-item" onclick="switchTab('popups',this)"><span class="nav-icon">💬</span><span>Попапы</span></div>
+      <div class="nav-item" onclick="switchTab('branches',this)"><span class="nav-icon">📍</span><span>Филиалы</span></div>
+      
+      <div class="nav-section-label">Дизайн</div>
+      <div class="nav-item" onclick="switchTab('appearance',this)"><span class="nav-icon">🎨</span><span>Внешний вид</span></div>
+      
+      <div class="nav-section-label">Система</div>
+      <div class="nav-item" onclick="switchTab('settings',this)"><span class="nav-icon">⚙️</span><span>Настройки</span></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()"><span class="nav-icon">🚪</span><span>Выйти</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="topbarTitle">Дашборд</h2>
+      <div class="topbar-right">
+        <span class="topbar-badge" id="sessionCountdown" style="color:var(--mocha);font-variant-numeric:tabular-nums;min-width:80px;text-align:center">⏱ 60:00</span>
+        <a href="index.html" target="_blank" class="topbar-badge" style="text-decoration:none;">↗ Сайт</a>
+        <span class="topbar-badge" id="topbarDate"></span>
+      </div>
+    </div>
+    
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Брони сегодня</div><div class="stat-val" id="todayResCount">—</div></div>
+          <div class="stat-card"><div class="stat-label">Всего броней</div><div class="stat-val" id="totalResCount">—</div></div>
+          <div class="stat-card"><div class="stat-label">Блюд в меню</div><div class="stat-val" id="menuItemsCount">—</div></div>
+          <div class="stat-card"><div class="stat-label">Филиалов</div><div class="stat-val" id="branchCount">—</div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>📋 Последние бронирования</h3></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Имя</th><th>Филиал</th><th>Дата/Время</th><th>Гостей</th><th>Статус</th></tr></thead>
+              <tbody id="dashResList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-reservations">
+        <div class="filter-bar">
+          <input class="filter-input" type="search" id="resSearch" placeholder="🔍 Поиск..." oninput="loadReservations()">
+          <select class="filter-input" id="filterBranch" onchange="loadReservations()"><option value="">Все филиалы</option></select>
+          <select class="filter-input" id="filterStatus" onchange="loadReservations()"><option value="">Все статусы</option><option value="pending">Ожидает</option><option value="confirmed">Подтверждено</option><option value="cancelled">Отменено</option></select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Имя</th><th>Телефон</th><th>Филиал</th><th>Дата</th><th>Гостей</th><th>Статус</th><th>Действия</th></tr></thead>
+            <tbody id="fullResList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-main_page">
+        <!-- HERO -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>🎯 Hero секция</h3></div>
+          <div class="section-card-body">
+            <div class="form-field"><label>Заголовок Hero (H1) — только русский, отображается на всех языках</label><input type="text" id="hero_title" placeholder="Malako Café"></div>
+            <div class="form-field"><label>Тэг в Hero (AZ)</label><input type="text" id="hero_tagline_az" placeholder="Specialty Coffee & Food"></div>
+            <div class="form-field"><label>Тэг в Hero (RU)</label><input type="text" id="hero_tagline_ru" placeholder="Specialty Coffee & Food"></div>
+            <div class="form-field"><label>Тэг в Hero (EN)</label><input type="text" id="hero_tagline_en" placeholder="Specialty Coffee & Food"></div>
+            <div class="form-field"><label>Подзаголовок Hero (AZ)</label><textarea id="hero_subtitle_az" rows="2" placeholder="Sizin sevimli yeriniz..."></textarea></div>
+            <div class="form-field"><label>Подзаголовок Hero (RU)</label><textarea id="hero_subtitle_ru" rows="2" placeholder="Твоё любимое место..."></textarea></div>
+            <div class="form-field"><label>Подзаголовок Hero (EN)</label><textarea id="hero_subtitle_en" rows="2" placeholder="Your favourite place..."></textarea></div>
+            <div class="form-row">
+              <div class="form-field"><label>Кнопка меню (AZ)</label><input type="text" id="hero_btn_menu_az" placeholder="Menyuya bax"></div>
+              <div class="form-field"><label>Кнопка меню (RU)</label><input type="text" id="hero_btn_menu_ru" placeholder="Смотреть меню"></div>
+              <div class="form-field"><label>Кнопка меню (EN)</label><input type="text" id="hero_btn_menu_en" placeholder="View menu"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Кнопка брони (AZ)</label><input type="text" id="hero_btn_reserve_az" placeholder="Masa rezerv et"></div>
+              <div class="form-field"><label>Кнопка брони (RU)</label><input type="text" id="hero_btn_reserve_ru" placeholder="Забронировать стол"></div>
+              <div class="form-field"><label>Кнопка брони (EN)</label><input type="text" id="hero_btn_reserve_en" placeholder="Book a table"></div>
+            </div>
+            <div class="form-field"><label>Текст скролла (AZ)</label><input type="text" id="hero_scroll_az" placeholder="Aşağı diyirin"></div>
+            <div class="form-field"><label>Текст скролла (RU)</label><input type="text" id="hero_scroll_ru" placeholder="Листать вниз"></div>
+            <div class="form-field"><label>Текст скролла (EN)</label><input type="text" id="hero_scroll_en" placeholder="Scroll down"></div>
+          </div>
+        </div>
+
+        <!-- ПОЧЕМУ МЫ / FEATURES -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>✨ Секция "Почему мы"</h3></div>
+          <div class="section-card-body">
+            <div class="form-row">
+              <div class="form-field"><label>Лейбл (AZ)</label><input type="text" id="why_label_az" placeholder="Niyə biz"></div>
+              <div class="form-field"><label>Лейбл (RU)</label><input type="text" id="why_label_ru" placeholder="Почему мы"></div>
+              <div class="form-field"><label>Лейбл (EN)</label><input type="text" id="why_label_en" placeholder="Why us"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Заголовок (AZ)</label><input type="text" id="why_title_az" placeholder="Bizi xüsusi edən nədir"></div>
+              <div class="form-field"><label>Заголовок (RU)</label><input type="text" id="why_title_ru" placeholder="Что делает нас особенными"></div>
+              <div class="form-field"><label>Заголовок (EN)</label><input type="text" id="why_title_en" placeholder="What makes us special"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Карточка 1 — Заголовок (AZ)</label><input type="text" id="feature1_title_az" placeholder="Öz qovurma"></div>
+              <div class="form-field"><label>Карточка 1 — Заголовок (RU)</label><input type="text" id="feature1_title_ru" placeholder="Собственная обжарка"></div>
+              <div class="form-field"><label>Карточка 1 — Заголовок (EN)</label><input type="text" id="feature1_title_en" placeholder="Own roasting"></div>
+            </div>
+            <div class="form-field"><label>Карточка 1 — Описание (AZ)</label><textarea id="feature1_desc_az" rows="2" placeholder="Kolumbiya qəhvəsi..."></textarea></div>
+            <div class="form-field"><label>Карточка 1 — Описание (RU)</label><textarea id="feature1_desc_ru" rows="2" placeholder="Колумбийский кофе..."></textarea></div>
+            <div class="form-field"><label>Карточка 1 — Описание (EN)</label><textarea id="feature1_desc_en" rows="2" placeholder="Colombian coffee..."></textarea></div>
+            
+            <div class="form-row">
+              <div class="form-field"><label>Карточка 2 — Заголовок (AZ)</label><input type="text" id="feature2_title_az" placeholder="Dadlı mətbəx"></div>
+              <div class="form-field"><label>Карточка 2 — Заголовок (RU)</label><input type="text" id="feature2_title_ru" placeholder="Вкусная кухня"></div>
+              <div class="form-field"><label>Карточка 2 — Заголовок (EN)</label><input type="text" id="feature2_title_en" placeholder="Delicious kitchen"></div>
+            </div>
+            <div class="form-field"><label>Карточка 2 — Описание (AZ)</label><textarea id="feature2_desc_az" rows="2" placeholder="Tam qidalı səhər yeməkləri..."></textarea></div>
+            <div class="form-field"><label>Карточка 2 — Описание (RU)</label><textarea id="feature2_desc_ru" rows="2" placeholder="Полноценные завтраки..."></textarea></div>
+            <div class="form-field"><label>Карточка 2 — Описание (EN)</label><textarea id="feature2_desc_en" rows="2" placeholder="Full breakfasts..."></textarea></div>
+            
+            <div class="form-row">
+              <div class="form-field"><label>Карточка 3 — Заголовок (AZ)</label><input type="text" id="feature3_title_az" placeholder="Rahat atmosfer"></div>
+              <div class="form-field"><label>Карточка 3 — Заголовок (RU)</label><input type="text" id="feature3_title_ru" placeholder="Уютная атмосфера"></div>
+              <div class="form-field"><label>Карточка 3 — Заголовок (EN)</label><input type="text" id="feature3_title_en" placeholder="Cozy atmosphere"></div>
+            </div>
+            <div class="form-field"><label>Карточка 3 — Описание (AZ)</label><textarea id="feature3_desc_az" rows="2" placeholder="Düşünülmüş interyer..."></textarea></div>
+            <div class="form-field"><label>Карточка 3 — Описание (RU)</label><textarea id="feature3_desc_ru" rows="2" placeholder="Продуманный интерьер..."></textarea></div>
+            <div class="form-field"><label>Карточка 3 — Описание (EN)</label><textarea id="feature3_desc_en" rows="2" placeholder="Thoughtful interior..."></textarea></div>
+            
+            <div class="form-row">
+              <div class="form-field"><label>Карточка 4 — Заголовок (AZ)</label><input type="text" id="feature4_title_az" placeholder="Yüksək xidmət"></div>
+              <div class="form-field"><label>Карточка 4 — Заголовок (RU)</label><input type="text" id="feature4_title_ru" placeholder="Высокий сервис"></div>
+              <div class="form-field"><label>Карточка 4 — Заголовок (EN)</label><input type="text" id="feature4_title_en" placeholder="High service"></div>
+            </div>
+            <div class="form-field"><label>Карточка 4 — Описание (AZ)</label><textarea id="feature4_desc_az" rows="2" placeholder="Xidmətin keyfiyyəti..."></textarea></div>
+            <div class="form-field"><label>Карточка 4 — Описание (RU)</label><textarea id="feature4_desc_ru" rows="2" placeholder="Качество обслуживания..."></textarea></div>
+            <div class="form-field"><label>Карточка 4 — Описание (EN)</label><textarea id="feature4_desc_en" rows="2" placeholder="Service quality..."></textarea></div>
+          </div>
+        </div>
+
+        <!-- МЕНЮ -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>📋 Секция "Меню"</h3></div>
+          <div class="section-card-body">
+            <div class="form-row">
+              <div class="form-field"><label>Лейбл (AZ)</label><input type="text" id="menu_label_az" placeholder="Menyumuz"></div>
+              <div class="form-field"><label>Лейбл (RU)</label><input type="text" id="menu_label_ru" placeholder="Наше меню"></div>
+              <div class="form-field"><label>Лейбл (EN)</label><input type="text" id="menu_label_en" placeholder="Our menu"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Заголовок (AZ)</label><input type="text" id="menu_title_az" placeholder="Ən yaxşısını sınayın"></div>
+              <div class="form-field"><label>Заголовок (RU)</label><input type="text" id="menu_title_ru" placeholder="Попробуй лучшее"></div>
+              <div class="form-field"><label>Заголовок (EN)</label><input type="text" id="menu_title_en" placeholder="Try the best"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Ссылка "Полное меню" (AZ)</label><input type="text" id="menu_full_az" placeholder="Tam menyu →"></div>
+              <div class="form-field"><label>Ссылка "Полное меню" (RU)</label><input type="text" id="menu_full_ru" placeholder="Полное меню →"></div>
+              <div class="form-field"><label>Ссылка "Полное меню" (EN)</label><input type="text" id="menu_full_en" placeholder="Full menu →"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- КЭШБЭК -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>💰 Секция "Кэшбэк"</h3></div>
+          <div class="section-card-body">
+            <div class="form-row">
+              <div class="form-field"><label>Лейбл (AZ)</label><input type="text" id="cashback_label_az" placeholder="Loyallıq proqramı"></div>
+              <div class="form-field"><label>Лейбл (RU)</label><input type="text" id="cashback_label_ru" placeholder="Программа лояльности"></div>
+              <div class="form-field"><label>Лейбл (EN)</label><input type="text" id="cashback_label_en" placeholder="Loyalty program"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Заголовок (AZ)</label><input type="text" id="cashback_title_az" placeholder="Hər sifarişdə keşbek qazanın"></div>
+              <div class="form-field"><label>Заголовок (RU)</label><input type="text" id="cashback_title_ru" placeholder="Зарабатывайте кэшбэк с каждым заказом"></div>
+              <div class="form-field"><label>Заголовок (EN)</label><input type="text" id="cashback_title_en" placeholder="Earn cashback with every order"></div>
+            </div>
+            <div class="form-field"><label>Основной текст (AZ)</label><textarea id="cashback_text_az" rows="2" placeholder="QR kodu skan edin..."></textarea></div>
+            <div class="form-field"><label>Основной текст (RU)</label><textarea id="cashback_text_ru" rows="2" placeholder="Сканируйте QR-код..."></textarea></div>
+            <div class="form-field"><label>Основной текст (EN)</label><textarea id="cashback_text_en" rows="2" placeholder="Scan the QR code..."></textarea></div>
+            <div class="form-row">
+              <div class="form-field"><label>Шаг 1 (AZ)</label><input type="text" id="cashback_step1_az" placeholder="Malako tətbiqini yükləyin"></div>
+              <div class="form-field"><label>Шаг 1 (RU)</label><input type="text" id="cashback_step1_ru" placeholder="Скачайте приложение Malako"></div>
+              <div class="form-field"><label>Шаг 1 (EN)</label><input type="text" id="cashback_step1_en" placeholder="Download the Malako app"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Шаг 2 (AZ)</label><input type="text" id="cashback_step2_az" placeholder="1 dəqiqəyə qeydiyyatdan keçin"></div>
+              <div class="form-field"><label>Шаг 2 (RU)</label><input type="text" id="cashback_step2_ru" placeholder="Зарегистрируйтесь за 1 минуту"></div>
+              <div class="form-field"><label>Шаг 2 (EN)</label><input type="text" id="cashback_step2_en" placeholder="Register in 1 minute"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Шаг 3 (AZ)</label><input type="text" id="cashback_step3_az" placeholder="Hər ziyarətdə QR skan edin"></div>
+              <div class="form-field"><label>Шаг 3 (RU)</label><input type="text" id="cashback_step3_ru" placeholder="Сканируйте QR при каждом визите"></div>
+              <div class="form-field"><label>Шаг 3 (EN)</label><input type="text" id="cashback_step3_en" placeholder="Scan QR at every visit"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Кнопка (AZ)</label><input type="text" id="cashback_btn_az" placeholder="Qoşulun"></div>
+              <div class="form-field"><label>Кнопка (RU)</label><input type="text" id="cashback_btn_ru" placeholder="Присоединиться"></div>
+              <div class="form-field"><label>Кнопка (EN)</label><input type="text" id="cashback_btn_en" placeholder="Join now"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Подпись % (AZ)</label><input type="text" id="cashback_percent_az" placeholder="Hər alışdan keşbek"></div>
+              <div class="form-field"><label>Подпись % (RU)</label><input type="text" id="cashback_percent_ru" placeholder="Кэшбэк с каждой покупки"></div>
+              <div class="form-field"><label>Подпись % (EN)</label><input type="text" id="cashback_percent_en" placeholder="Cashback on every purchase"></div>
+            </div>
+            <div class="form-field"><label>Нижний текст (AZ)</label><textarea id="cashback_text_bottom_az" rows="2" placeholder="Balları toplayın..."></textarea></div>
+            <div class="form-field"><label>Нижний текст (RU)</label><textarea id="cashback_text_bottom_ru" rows="2" placeholder="Накапливайте баллы..."></textarea></div>
+            <div class="form-field"><label>Нижний текст (EN)</label><textarea id="cashback_text_bottom_en" rows="2" placeholder="Collect points..."></textarea></div>
+          </div>
+        </div>
+
+        <!-- АКЦИИ / ФИЛИАЛЫ -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>🏷️ Акции &amp; 📍 Филиалы</h3></div>
+          <div class="section-card-body">
+            <div class="form-row">
+              <div class="form-field"><label>Акции — Лейбл (AZ)</label><input type="text" id="promos_label_az" placeholder="Aksiyalar"></div>
+              <div class="form-field"><label>Акции — Лейбл (RU)</label><input type="text" id="promos_label_ru" placeholder="Акции"></div>
+              <div class="form-field"><label>Акции — Лейбл (EN)</label><input type="text" id="promos_label_en" placeholder="Promotions"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Акции — Заголовок (AZ)</label><input type="text" id="promos_title_az" placeholder="Təkliflərimiz"></div>
+              <div class="form-field"><label>Акции — Заголовок (RU)</label><input type="text" id="promos_title_ru" placeholder="Наши предложения"></div>
+              <div class="form-field"><label>Акции — Заголовок (EN)</label><input type="text" id="promos_title_en" placeholder="Our offers"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Филиалы — Лейбл (AZ)</label><input type="text" id="branches_label_az" placeholder="Ünvanlarımız"></div>
+              <div class="form-field"><label>Филиалы — Лейбл (RU)</label><input type="text" id="branches_label_ru" placeholder="Наши адреса"></div>
+              <div class="form-field"><label>Филиалы — Лейбл (EN)</label><input type="text" id="branches_label_en" placeholder="Our addresses"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Филиалы — Заголовок (AZ)</label><input type="text" id="branches_title_az" placeholder="Ən yaxın filialı tapın"></div>
+              <div class="form-field"><label>Филиалы — Заголовок (RU)</label><input type="text" id="branches_title_ru" placeholder="Найдите ближайший филиал"></div>
+              <div class="form-field"><label>Филиалы — Заголовок (EN)</label><input type="text" id="branches_title_en" placeholder="Find the nearest branch"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Кнопка брони (AZ)</label><input type="text" id="btn_book_branch_az" placeholder="Masa rezerv et"></div>
+              <div class="form-field"><label>Кнопка брони (RU)</label><input type="text" id="btn_book_branch_ru" placeholder="Забронировать стол"></div>
+              <div class="form-field"><label>Кнопка брони (EN)</label><input type="text" id="btn_book_branch_en" placeholder="Book a table"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-card-header"><h3>🔗 Футер</h3></div>
+          <div class="section-card-body">
+            <div class="form-field"><label>Текст бренда (AZ)</label><textarea id="footer_brand_text_az" rows="2" placeholder="Bakıda specialty qəhvə..."></textarea></div>
+            <div class="form-field"><label>Текст бренда (RU)</label><textarea id="footer_brand_text_ru" rows="2" placeholder="Твоё любимое место..."></textarea></div>
+            <div class="form-field"><label>Текст бренда (EN)</label><textarea id="footer_brand_text_en" rows="2" placeholder="Your favourite place..."></textarea></div>
+            <div class="form-row">
+              <div class="form-field"><label>Навигация (AZ)</label><input type="text" id="footer_nav_az" placeholder="Naviqasiya"></div>
+              <div class="form-field"><label>Навигация (RU)</label><input type="text" id="footer_nav_ru" placeholder="Навигация"></div>
+              <div class="form-field"><label>Навигация (EN)</label><input type="text" id="footer_nav_en" placeholder="Navigation"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Компания (AZ)</label><input type="text" id="footer_company_az" placeholder="Şirkət"></div>
+              <div class="form-field"><label>Компания (RU)</label><input type="text" id="footer_company_ru" placeholder="Компания"></div>
+              <div class="form-field"><label>Компания (EN)</label><input type="text" id="footer_company_en" placeholder="Company"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Контакты (AZ)</label><input type="text" id="footer_contacts_az" placeholder="Əlaqə"></div>
+              <div class="form-field"><label>Контакты (RU)</label><input type="text" id="footer_contacts_ru" placeholder="Контакты"></div>
+              <div class="form-field"><label>Контакты (EN)</label><input type="text" id="footer_contacts_en" placeholder="Contacts"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Копирайт (AZ)</label><input type="text" id="footer_rights_az" placeholder="Bütün hüquqlar qorunur."></div>
+              <div class="form-field"><label>Копирайт (RU)</label><input type="text" id="footer_rights_ru" placeholder="Все права защищены."></div>
+              <div class="form-field"><label>Копирайт (EN)</label><input type="text" id="footer_rights_en" placeholder="All rights reserved."></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-main" onclick="saveMainPageTexts()">💾 Сохранить все тексты</button>
+      </div>
+
+      <div class="tab-panel" id="tab-sections">
+        <div class="section-card">
+          <div class="section-card-header"><h3>🎛️ Управление видимостью секций</h3></div>
+          <div class="section-card-body">
+            <div class="section-toggle"><span>🖼️ Слайдер</span><input type="checkbox" id="section_slider_toggle"></div>
+            <div class="section-toggle"><span>✨ Преимущества (Почему мы)</span><input type="checkbox" id="section_features_toggle"></div>
+            <div class="section-toggle"><span>📋 Превью меню</span><input type="checkbox" id="section_menu_preview_toggle"></div>
+            <div class="section-toggle"><span>📖 О нас</span><input type="checkbox" id="section_about_toggle"></div>
+            <div class="section-toggle"><span>💰 Кэшбэк</span><input type="checkbox" id="section_cashback_toggle"></div>
+            <div class="section-toggle"><span>📍 Филиалы</span><input type="checkbox" id="section_branches_toggle"></div>
+            <div class="section-toggle"><span>🏷️ Акции</span><input type="checkbox" id="section_promos_toggle"></div>
+            <button class="btn-main" style="margin-top:1rem;" onclick="saveSectionsVisibility()">💾 Сохранить настройки</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-logo">
+        <div class="section-card">
+          <div class="section-card-header"><h3>🏷️ Управление логотипом</h3></div>
+          <div class="section-card-body">
+            <div class="form-field"><label>Тип логотипа</label><select id="logoType" onchange="toggleLogoOptions()"><option value="text">📝 Текстовый логотип</option><option value="image">🖼️ Логотип-картинка</option></select></div>
+            <div id="logoTextOptions"><div class="form-field"><label>Текст логотипа</label><input type="text" id="logoText" placeholder="Malako"></div><div class="form-row"><div class="form-field"><label>Размер текста (px)</label><input type="number" id="logoTextSize" value="28" min="16" max="48"></div><div class="form-field"><label>Цвет текста</label><input type="color" id="logoTextColor" value="#4A3020"></div></div></div>
+            <div id="logoImageOptions" style="display:none"><div class="form-field"><label>URL изображения</label><input type="text" id="logoImageUrl" placeholder="https://example.com/logo.png"></div><div class="form-row"><div class="form-field"><label>Ширина (px)</label><input type="number" id="logoImageWidth" value="180" min="80" max="300" step="10"></div><div class="form-field"><label>Высота</label><input type="text" id="logoImageHeight" value="auto" placeholder="auto"></div></div></div>
+            <div class="form-field"><label>Предпросмотр</label><div id="logoPreview" style="background:var(--milk); padding:1rem; border-radius:12px; text-align:center; min-height:80px;"><span id="logoPreviewText" style="font-family:'Playfair Display',serif; font-size:28px; font-weight:600; color:#4A3020">Malako</span></div></div>
+            <button class="btn-main" onclick="saveLogoSettings()">💾 Сохранить настройки логотипа</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-panel" id="tab-menu"><div class="filter-bar"><input class="filter-input" type="search" id="menuSearch" placeholder="🔍 Поиск блюда..." oninput="renderMenuAdmin()"><button class="btn-main" onclick="openDishModal()">+ Добавить блюдо</button></div><div id="menuAdminList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-categories"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:0.5rem"><h3 style="font-size:0.9rem;color:var(--espresso)">📁 Категории меню</h3><button class="btn-main" onclick="openCatModal()">+ Добавить категорию</button></div><div id="categoriesAdminList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-slider"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:0.5rem"><h3 style="font-size:0.9rem;color:var(--espresso)">🖼️ Управление слайдером</h3><button class="btn-main" onclick="openSlideModal()">+ Добавить слайд</button></div><div id="sliderAdminList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-about"><div class="section-card"><div class="section-card-header"><h3>📖 Редактирование секции "О нас"</h3></div><div class="section-card-body"><div class="form-field"><label>Заголовок</label><input type="text" id="about_title" placeholder="Malako-nun hekayəsi"></div><div class="form-field"><label>Текст 1</label><textarea id="about_text1" rows="3"></textarea></div><div class="form-field"><label>Текст 2</label><textarea id="about_text2" rows="3"></textarea></div><div class="form-field"><label>Текст 3 (с подстановкой {branches})</label><textarea id="about_text3" rows="2"></textarea></div><div class="form-row"><div class="form-field"><label>Год основания</label><input type="text" id="about_year" placeholder="2016"></div><div class="form-field"><label>Фоновое изображение (URL)</label><input type="text" id="about_bg_image" placeholder="https://..."></div></div><div class="form-row"><div class="form-field"><label>Изображение 1 (emoji или URL)</label><input type="text" id="about_img1" placeholder="☕"></div><div class="form-field"><label>Изображение 2 (emoji или URL)</label><input type="text" id="about_img2" placeholder="🥐"></div></div><div class="form-field"><label>Особенности (через запятую)</label><input type="text" id="about_features" placeholder="Öz qovurma, Təzə inqrediyentlər"></div><button class="btn-main" onclick="saveAboutSection()">💾 Сохранить изменения</button></div></div></div>
+      
+      <div class="tab-panel" id="tab-promos"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:0.5rem"><h3 style="font-size:0.9rem;color:var(--espresso)">🏷️ Акции и предложения</h3><button class="btn-main" onclick="openPromoCardModal()">+ Добавить акцию</button></div><div id="promoCardsList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-popups"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:0.5rem"><h3 style="font-size:0.9rem;color:var(--espresso)">💬 Popup-уведомления</h3><button class="btn-main" onclick="openPopupModal()">+ Создать попап</button></div><div id="popupsList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-branches"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:0.5rem"><h3 style="font-size:0.9rem;color:var(--espresso)">📍 Филиалы</h3><button class="btn-main" onclick="openBranchModal()">+ Добавить филиал</button></div><div id="branchesList">Загрузка...</div></div>
+      
+      <div class="tab-panel" id="tab-appearance"><div class="section-card"><div class="section-card-header"><h3>🎨 Настройка внешнего вида</h3></div><div class="section-card-body"><div class="form-field"><label>Тип фона</label><select id="bgType" onchange="toggleBgOptions()"><option value="preset">Пресет (текстура)</option><option value="image">Картинка</option><option value="color">Сплошной цвет</option></select></div><div id="presetOptions"><label>Выберите текстуру</label><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.8rem;margin-top:0.5rem"><div class="bg-preset-option selected" data-preset="stone" style="background:#F5F0E8;padding:0.8rem;text-align:center;border-radius:12px;cursor:pointer;border:2px solid var(--caramel)"><div style="height:40px;background:url('https://www.transparenttextures.com/patterns/aged-paper.png');border-radius:8px;margin-bottom:5px"></div>Камень</div><div class="bg-preset-option" data-preset="concrete" style="background:#E8E4D9;padding:0.8rem;text-align:center;border-radius:12px;cursor:pointer;border:2px solid var(--border)"><div style="height:40px;background:url('https://www.transparenttextures.com/patterns/concrete-wall.png');border-radius:8px;margin-bottom:5px"></div>Бетон</div><div class="bg-preset-option" data-preset="map" style="background:#EAE5D9;padding:0.8rem;text-align:center;border-radius:12px;cursor:pointer;border:2px solid var(--border)"><div style="height:40px;background:url('https://www.transparenttextures.com/patterns/cartographer.png');border-radius:8px;margin-bottom:5px"></div>Карта</div></div></div><div id="imageOptions" style="display:none;margin-top:1rem"><label>URL картинки</label><input type="text" id="bgImageUrl" placeholder="https://..."><label style="margin-top:0.8rem">Позиция</label><select id="bgPosition"><option value="center/cover">Растянуть (cover)</option><option value="center/contain">Вписать (contain)</option></select></div><div id="colorOptions" style="display:none;margin-top:1rem"><label>Цвет фона</label><input type="color" id="bgColorPicker" value="#F5F0E8" oninput="document.getElementById('bgColorHex').value=this.value"><input type="text" id="bgColorHex" placeholder="#F5F0E8" style="margin-top:0.5rem" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value))document.getElementById('bgColorPicker').value=this.value"></div><button class="btn-main" onclick="saveAppearanceSettings()" style="margin-top:1rem;">💾 Сохранить фон</button></div></div></div>
+      
+      <div class="tab-panel" id="tab-settings"><div class="section-card"><div class="section-card-header"><h3>⚙️ Основные настройки</h3></div><div class="section-card-body"><div class="form-field"><label>WhatsApp менеджера</label><input type="tel" id="waNumber" placeholder="994501234501"></div><div class="form-field"><label>Часы работы</label><input type="text" id="workHours" placeholder="Пн–Вс: 08:00–23:00"></div><div class="form-field"><label>Email кафе</label><input type="email" id="cafeEmail" placeholder="hello@malako.az"></div><button class="btn-main" onclick="saveSettings()">💾 Сохранить настройки</button></div></div></div>
+    </div>
+  </div>
+</div>
+
+<button class="menu-toggle-btn" id="menuToggleBtn">☰ Меню</button>
+
+<!-- MODALS -->
+<!-- Category Modal -->
+<div class="modal-overlay" id="catModal"><div class="modal-box"><h3 id="catModalTitle">Добавить категорию</h3><input type="hidden" id="catId">
+  <div class="form-field"><label>Emoji</label><input type="text" id="catEmoji" placeholder="☕"></div>
+  <div class="form-field"><label>Порядок сортировки</label><input type="number" id="catOrder" placeholder="1"></div>
+  
+  <div class="lang-tabs">
+    <button class="lang-tab-btn active" data-lang="az" onclick="switchCatLang('az', this)"><span class="lang-tab-flag">🇦🇿</span>AZ</button>
+    <button class="lang-tab-btn" data-lang="ru" onclick="switchCatLang('ru', this)"><span class="lang-tab-flag">🇷🇺</span>RU</button>
+    <button class="lang-tab-btn" data-lang="en" onclick="switchCatLang('en', this)"><span class="lang-tab-flag">🇬🇧</span>EN</button>
+  </div>
+  <div id="catLangFields">
+    <div class="form-field cat-lang-field" data-lang="az"><label>Название (AZ) *</label><input type="text" id="catName_az" placeholder="Kateqoriya adı"></div>
+    <div class="form-field cat-lang-field" data-lang="ru" style="display:none"><label>Название (RU)</label><input type="text" id="catName_ru" placeholder="Название категории"></div>
+    <div class="form-field cat-lang-field" data-lang="en" style="display:none"><label>Название (EN)</label><input type="text" id="catName_en" placeholder="Category name"></div>
+  </div>
+  
+  <div class="modal-btns"><button class="modal-save" onclick="saveCat()">Сохранить</button><button class="modal-cancel" onclick="closeModal('catModal')">Отмена</button></div>
+</div></div>
+
+<!-- Dish Modal -->
+<div class="modal-overlay" id="dishModal"><div class="modal-box"><h3 id="dishModalTitle">Добавить блюдо</h3><input type="hidden" id="dishId">
+  <div class="form-row">
+    <div class="form-field"><label>Цена (AZN) *</label><input type="number" id="dishPrice" placeholder="4.50" step="0.1"></div>
+    <div class="form-field"><label>Категория</label><select id="dishCategory"></select></div>
+  </div>
+  <div class="form-row">
+    <div class="form-field"><label>Бейдж</label><input type="text" id="dishBadge" placeholder="Хит / Новинка"></div>
+    <div class="form-field"><label>URL фото</label><input type="text" id="dishImageUrl" placeholder="https://..."></div>
+  </div>
+  <label class="checkbox-label"><input type="checkbox" id="dishAvailable" checked> Доступно</label>
+  
+  <div class="lang-tabs">
+    <button class="lang-tab-btn active" data-lang="az" onclick="switchDishLang('az', this)"><span class="lang-tab-flag">🇦🇿</span>AZ</button>
+    <button class="lang-tab-btn" data-lang="ru" onclick="switchDishLang('ru', this)"><span class="lang-tab-flag">🇷🇺</span>RU</button>
+    <button class="lang-tab-btn" data-lang="en" onclick="switchDishLang('en', this)"><span class="lang-tab-flag">🇬🇧</span>EN</button>
+  </div>
+  <div id="dishLangFields">
+    <div class="trans-field-group dish-lang-field" data-lang="az">
+      <div class="form-field"><label>Название (AZ) *</label><input type="text" id="dishName_az" placeholder="Yemək adı"></div>
+      <div class="form-field"><label>Описание (AZ)</label><textarea id="dishDesc_az" rows="2" placeholder="Təsvir..."></textarea></div>
+    </div>
+    <div class="trans-field-group dish-lang-field" data-lang="ru" style="display:none">
+      <div class="form-field"><label>Название (RU)</label><input type="text" id="dishName_ru" placeholder="Название блюда"></div>
+      <div class="form-field"><label>Описание (RU)</label><textarea id="dishDesc_ru" rows="2" placeholder="Описание..."></textarea></div>
+    </div>
+    <div class="trans-field-group dish-lang-field" data-lang="en" style="display:none">
+      <div class="form-field"><label>Название (EN)</label><input type="text" id="dishName_en" placeholder="Dish name"></div>
+      <div class="form-field"><label>Описание (EN)</label><textarea id="dishDesc_en" rows="2" placeholder="Description..."></textarea></div>
+    </div>
+  </div>
+  
+  <div class="modal-btns"><button class="modal-save" onclick="saveDish()">Сохранить</button><button class="modal-cancel" onclick="closeModal('dishModal')">Отмена</button></div>
+</div></div>
+
+<!-- Slide Modal -->
+<div class="modal-overlay" id="slideModal"><div class="modal-box"><h3 id="slideModalTitle">Добавить слайд</h3><input type="hidden" id="slideId"><div class="form-field"><label>Заголовок *</label><input type="text" id="slideTitle" placeholder="Новое меню"></div><div class="form-field"><label>URL изображения</label><input type="text" id="slideImageUrl" placeholder="https://...jpg"></div><div class="form-field"><label>URL видео</label><input type="text" id="slideVideoUrl" placeholder="https://res.cloudinary.com/.../video/upload/....mp4" oninput="previewVideoUrl(this)"><div id="slideVideoUrlHint" style="font-size:0.72rem;margin-top:0.4rem;padding:0.5rem 0.7rem;border-radius:8px;display:none"></div></div><div class="form-row"><div class="form-field"><label>Текст кнопки</label><input type="text" id="slideBtnText" placeholder="Смотреть"></div><div class="form-field"><label>Ссылка кнопки</label><input type="text" id="slideBtnUrl" placeholder="menu.html"></div></div><label class="checkbox-label"><input type="checkbox" id="slideActive" checked> Активен</label><div class="modal-btns"><button class="modal-save" onclick="saveSlide()">Сохранить</button><button class="modal-cancel" onclick="closeModal('slideModal')">Отмена</button></div></div></div>
+
+<!-- Promo Card Modal -->
+<div class="modal-overlay" id="promoCardModal"><div class="modal-box"><h3 id="promoCardModalTitle">Добавить акцию</h3><input type="hidden" id="promoCardId"><div class="form-field"><label>Заголовок *</label><input type="text" id="promoCardTitle" placeholder="Скидка 20%"></div><div class="form-field"><label>Описание</label><textarea id="promoCardDesc" placeholder="Описание акции..."></textarea></div><div class="form-row"><div class="form-field"><label>Текст кнопки</label><input type="text" id="promoCardBtnText" placeholder="Узнать"></div><div class="form-field"><label>Ссылка кнопки</label><input type="text" id="promoCardBtnUrl" placeholder="#"></div></div><label class="checkbox-label"><input type="checkbox" id="promoCardActive" checked> Активна</label><div class="modal-btns"><button class="modal-save" onclick="savePromoCard()">Сохранить</button><button class="modal-cancel" onclick="closeModal('promoCardModal')">Отмена</button></div></div></div>
+
+<!-- Popup Modal -->
+<div class="modal-overlay" id="popupModal"><div class="modal-box"><h3 id="popupModalTitle">Создать попап</h3><input type="hidden" id="popupId"><div class="form-field"><label>Заголовок *</label><input type="text" id="popupTitle" placeholder="Акция!"></div><div class="form-field"><label>Описание</label><textarea id="popupDesc" placeholder="Описание..."></textarea></div><div class="form-field"><label>URL картинки</label><input type="text" id="popupImageUrl" placeholder="https://..."></div><div class="form-row"><div class="form-field"><label>Задержка (сек)</label><input type="number" id="popupDelay" value="5" min="1"></div><div class="form-field"><label>Текст кнопки</label><input type="text" id="popupBtnText" placeholder="Подробнее"></div></div><div class="form-field"><label>Ссылка кнопки</label><input type="text" id="popupBtnUrl" placeholder="#"></div><label class="checkbox-label"><input type="checkbox" id="popupActive" checked> Активен</label><div class="modal-btns"><button class="modal-save" onclick="savePopup()">Сохранить</button><button class="modal-cancel" onclick="closeModal('popupModal')">Отмена</button></div></div></div>
+
+<!-- Branch Modal -->
+<div class="modal-overlay" id="branchModal"><div class="modal-box"><h3 id="branchModalTitle">Добавить филиал</h3><input type="hidden" id="branchId"><div class="form-field"><label>Название *</label><input type="text" id="branchName" placeholder="Malako — Центр"></div><div class="form-field"><label>Адрес</label><input type="text" id="branchAddr" placeholder="ул. Низами, 89"></div><div class="form-row"><div class="form-field"><label>Телефон</label><input type="tel" id="branchPhone" placeholder="+994 50 123-45-01"></div><div class="form-field"><label>Часы работы</label><input type="text" id="branchHours" placeholder="08:00–23:00"></div></div><div class="modal-btns"><button class="modal-save" onclick="saveBranch()">Сохранить</button><button class="modal-cancel" onclick="closeModal('branchModal')">Отмена</button></div></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== SUPABASE КОНФИГУРАЦИЯ ==========
+const SUPABASE_URL = 'https://tjomkspowljeyuqkqgop.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_XmthAk9xlw3AajBNRpkWOQ_eZ4miHDH';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========== ПЕРЕМЕННЫЕ ==========
+var allAdminCategories = [];
+var allAdminMenuItems = [];
+var sliderSlides = [];
+var branches = [];
+var promoCards = [];
+var popups = [];
+
+var toastEl = document.getElementById('toast');
+function showToast(msg, type) {
+  type = type || '';
+  if (!toastEl) return;
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastEl._timeout);
+  toastEl._timeout = setTimeout(function() {
+    toastEl.classList.remove('show');
+  }, 3000);
+}
+
+// ========== AUTH ==========
+var SESSION_KEY = 'malako_admin_session';
+var SESSION_HOURS = 1;
+
+function saveSession(token) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      token: token,
+      expires: Date.now() + SESSION_HOURS * 60 * 60 * 1000
+    }));
+  } catch(e) {}
+}
+
+function getValidSession() {
+  try {
+    var raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    if (Date.now() > data.expires) {
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    return data.token;
+  } catch(e) { return null; }
+}
+
+function clearSession() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch(e) {}
+}
+
+var sessionTimer = null;
+var countdownInterval = null;
+
+function updateCountdownDisplay() {
+  var raw = sessionStorage.getItem(SESSION_KEY);
+  var el = document.getElementById('sessionCountdown');
+  if (!el) return;
+  if (!raw) { el.textContent = ''; return; }
+  try {
+    var data = JSON.parse(raw);
+    var remaining = Math.max(0, data.expires - Date.now());
+    var m = Math.floor(remaining / 60000);
+    var s = Math.floor((remaining % 60000) / 1000);
+    el.textContent = '⏱ ' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    el.style.color = m < 10 ? 'var(--orange)' : 'var(--mocha)';
+  } catch(e) { el.textContent = ''; }
+}
+
+function startSessionTimer() {
+  clearTimeout(sessionTimer);
+  clearInterval(countdownInterval);
+  var raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) return;
+  try {
+    var data = JSON.parse(raw);
+    var remaining = data.expires - Date.now();
+    if (remaining <= 0) { forceLogout('Сессия истекла'); return; }
+    sessionTimer = setTimeout(function() {
+      forceLogout('Сессия истекла. Войдите снова.');
+    }, remaining);
+    updateCountdownDisplay();
+    countdownInterval = setInterval(updateCountdownDisplay, 1000);
+  } catch(e) {}
+}
+
+function forceLogout(msg) {
+  clearSession();
+  clearTimeout(sessionTimer);
+  clearInterval(countdownInterval);
+  document.getElementById('loginPage').classList.add('show');
+  setTimeout(function() {
+    showToast(msg || 'Вы вышли из системы', 'warning');
+  }, 100);
+}
+
+async function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginErr').textContent = 'Введите email и пароль';
+    return;
+  }
+
+  try {
+    var { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      document.getElementById('loginErr').style.display = 'block';
+      document.getElementById('loginErr').textContent = 'Неверный email или пароль';
+      console.error('Ошибка входа:', error.message);
+      return;
+    }
+
+    saveSession(data.session.access_token);
+    startSessionTimer();
+    document.getElementById('loginPage').classList.remove('show');
+    document.getElementById('loginErr').style.display = 'none';
+    showToast('Добро пожаловать!', 'success');
+
+    setTimeout(function() {
+      initAdmin();
+    }, 100);
+  } catch(e) {
+    console.error('Ошибка входа:', e);
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginErr').textContent = 'Ошибка соединения с сервером';
+  }
+}
+
+async function doLogout() {
+  try {
+    clearSession();
+    clearTimeout(sessionTimer);
+    clearInterval(countdownInterval);
+    await supabaseClient.auth.signOut();
+    document.getElementById('loginPage').classList.add('show');
+    showToast('Вы вышли из системы');
+  } catch(e) {
+    document.getElementById('loginPage').classList.add('show');
+  }
+}
+
+function checkAuth() {
+  var token = getValidSession();
+  if (!token) {
+    document.getElementById('loginPage').classList.add('show');
+    return;
+  }
+  document.getElementById('loginPage').classList.remove('show');
+  startSessionTimer();
+  setTimeout(function() {
+    initAdmin();
+  }, 100);
+}
+
+// ===== MODAL =====
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+function openModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('show');
+}
+
+// ===== КАТЕГОРИИ =====
+var currentCatLang = 'az';
+
+function switchCatLang(lang, btn) {
+  currentCatLang = lang;
+  var btns = document.querySelectorAll('.lang-tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  btn.classList.add('active');
+  var fields = document.querySelectorAll('.cat-lang-field');
+  for (var j = 0; j < fields.length; j++) {
+    fields[j].style.display = fields[j].dataset.lang === lang ? 'block' : 'none';
+  }
+}
+
+async function loadAdminCategories() {
+  try {
+    var { data } = await supabaseClient.from('categories')
+      .select('*, category_translations(*)')
+      .order('sort_order');
+    allAdminCategories = data || [];
+    var sel = document.getElementById('dishCategory');
+    if (sel) {
+      var html = '';
+      for (var i = 0; i < allAdminCategories.length; i++) {
+        var c = allAdminCategories[i];
+        var nameAZ = '';
+        if (c.category_translations) {
+          for (var j = 0; j < c.category_translations.length; j++) {
+            if (c.category_translations[j].language === 'az') {
+              nameAZ = c.category_translations[j].name;
+              break;
+            }
+          }
+        }
+        if (!nameAZ) nameAZ = c.name || 'Kateqoriya';
+        html += '<option value="' + c.id + '">' + (c.emoji || '') + ' ' + nameAZ + '</option>';
+      }
+      sel.innerHTML = html;
+    }
+  } catch(e) {
+    console.error('loadAdminCategories error:', e);
+  }
+}
+
+async function loadCategoriesAdmin() {
+  var container = document.getElementById('categoriesAdminList');
+  if (!container) return;
+  try {
+    var { data } = await supabaseClient.from('categories')
+      .select('*, category_translations(*)')
+      .order('sort_order');
+    if (!data || !data.length) {
+      container.innerHTML = '<div class="promo-card">Нет категорий</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var c = data[i];
+      var nameAZ = '';
+      if (c.category_translations) {
+        for (var j = 0; j < c.category_translations.length; j++) {
+          if (c.category_translations[j].language === 'az') {
+            nameAZ = c.category_translations[j].name;
+            break;
+          }
+        }
+      }
+      if (!nameAZ) nameAZ = c.name || 'Kateqoriya';
+      html += '<div class="promo-card"><h4>' + (c.emoji || '📁') + ' ' + nameAZ + '</h4><p class="promo-meta">Порядок: ' + (c.sort_order || 0) + '</p><div class="promo-controls"><button class="btn-sm primary" onclick="openCatModal(\'' + c.id + '\')">✎ Изменить</button><button class="btn-sm danger" onclick="deleteCat(\'' + c.id + '\')">🗑 Удалить</button></div></div>';
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('loadCategoriesAdmin error:', e);
+    container.innerHTML = '<div class="promo-card">Ошибка загрузки</div>';
+  }
+}
+
+function openCatModal(catId) {
+  var isEdit = !!catId;
+  document.getElementById('catModalTitle').textContent = isEdit ? 'Изменить категорию' : 'Добавить категорию';
+  document.getElementById('catId').value = catId || '';
+  document.getElementById('catEmoji').value = '';
+  document.getElementById('catOrder').value = 0;
+  document.getElementById('catName_az').value = '';
+  document.getElementById('catName_ru').value = '';
+  document.getElementById('catName_en').value = '';
+
+  if (isEdit) {
+    var cat = null;
+    for (var i = 0; i < allAdminCategories.length; i++) {
+      if (allAdminCategories[i].id === catId) {
+        cat = allAdminCategories[i];
+        break;
+      }
+    }
+    if (cat) {
+      document.getElementById('catEmoji').value = cat.emoji || '';
+      document.getElementById('catOrder').value = cat.sort_order || 0;
+      var trans = cat.category_translations || [];
+      for (var j = 0; j < trans.length; j++) {
+        if (trans[j].language === 'az') document.getElementById('catName_az').value = trans[j].name || '';
+        if (trans[j].language === 'ru') document.getElementById('catName_ru').value = trans[j].name || '';
+        if (trans[j].language === 'en') document.getElementById('catName_en').value = trans[j].name || '';
+      }
+    }
+  }
+
+  var azBtn = document.querySelector('.lang-tab-btn[data-lang="az"]');
+  if (azBtn) switchCatLang('az', azBtn);
+  openModal('catModal');
+}
+
+async function saveCat() {
+  var id = document.getElementById('catId').value;
+  var nameAZ = document.getElementById('catName_az').value.trim();
+  if (!nameAZ) {
+    showToast('Введите название на AZ', 'error');
+    return;
+  }
+
+  var payload = {
+    emoji: document.getElementById('catEmoji').value.trim() || '📁',
+    sort_order: parseInt(document.getElementById('catOrder').value) || 0
+  };
+
+  var categoryId = id;
+
+  if (!id) {
+    var { data, error } = await supabaseClient.from('categories').insert([payload]).select();
+    if (error) {
+      showToast('Ошибка: ' + error.message, 'error');
+      return;
+    }
+    categoryId = data[0].id;
+  } else {
+    var { error } = await supabaseClient.from('categories').update(payload).eq('id', id);
+    if (error) {
+      showToast('Ошибка: ' + error.message, 'error');
+      return;
+    }
+    categoryId = id;
+  }
+
+  var translations = [
+    { category_id: categoryId, language: 'az', name: nameAZ },
+    { category_id: categoryId, language: 'ru', name: document.getElementById('catName_ru').value.trim() || nameAZ },
+    { category_id: categoryId, language: 'en', name: document.getElementById('catName_en').value.trim() || nameAZ }
+  ];
+
+  await supabaseClient.from('category_translations').delete().eq('category_id', categoryId);
+  var { error: transError } = await supabaseClient.from('category_translations').insert(translations);
+  if (transError) {
+    showToast('Ошибка сохранения переводов: ' + transError.message, 'error');
+    return;
+  }
+
+  closeModal('catModal');
+  showToast(id ? 'Категория обновлена' : 'Категория добавлена', 'success');
+  loadAdminCategories();
+  loadCategoriesAdmin();
+  loadMenuAdmin();
+}
+
+async function deleteCat(id) {
+  if (!confirm('Удалить категорию?')) return;
+  await supabaseClient.from('category_translations').delete().eq('category_id', id);
+  await supabaseClient.from('categories').delete().eq('id', id);
+  showToast('Категория удалена', 'success');
+  loadAdminCategories();
+  loadCategoriesAdmin();
+  loadMenuAdmin();
+}
+
+// ===== БЛЮДА =====
+var currentDishLang = 'az';
+
+function switchDishLang(lang, btn) {
+  currentDishLang = lang;
+  var btns = document.querySelectorAll('.lang-tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  btn.classList.add('active');
+  var fields = document.querySelectorAll('.dish-lang-field');
+  for (var j = 0; j < fields.length; j++) {
+    fields[j].style.display = fields[j].dataset.lang === lang ? 'block' : 'none';
+  }
+}
+
+async function loadMenuAdmin() {
+  try {
+    var { data: categories } = await supabaseClient.from('categories').select('*');
+    var { data: menuItems } = await supabaseClient.from('menu_items')
+      .select('*, dish_translations(*)');
+    allAdminCategories = categories || [];
+    allAdminMenuItems = menuItems || [];
+    renderMenuAdmin();
+  } catch(e) {
+    console.error('loadMenuAdmin error:', e);
+    var container = document.getElementById('menuAdminList');
+    if (container) container.innerHTML = '<div class="promo-card">Ошибка загрузки меню</div>';
+  }
+}
+
+function renderMenuAdmin() {
+  var container = document.getElementById('menuAdminList');
+  if (!container) return;
+  var search = document.getElementById('menuSearch')?.value?.toLowerCase() || '';
+  if (!allAdminCategories || !allAdminCategories.length) {
+    container.innerHTML = '<div class="promo-card">Нет категорий. Сначала создайте категорию.</div>';
+    return;
+  }
+
+  var html = '';
+  for (var ci = 0; ci < allAdminCategories.length; ci++) {
+    var cat = allAdminCategories[ci];
+    var items = [];
+    for (var mi = 0; mi < allAdminMenuItems.length; mi++) {
+      if (allAdminMenuItems[mi].category_id === cat.id) {
+        items.push(allAdminMenuItems[mi]);
+      }
+    }
+
+    if (search) {
+      var filtered = [];
+      for (var fi = 0; fi < items.length; fi++) {
+        var nameAZ = '';
+        if (items[fi].dish_translations) {
+          for (var tj = 0; tj < items[fi].dish_translations.length; tj++) {
+            if (items[fi].dish_translations[tj].language === 'az') {
+              nameAZ = items[fi].dish_translations[tj].name || '';
+              break;
+            }
+          }
+        }
+        if (!nameAZ) nameAZ = items[fi].name || '';
+        if (nameAZ.toLowerCase().includes(search)) {
+          filtered.push(items[fi]);
+        }
+      }
+      items = filtered;
+    }
+
+    if (items.length === 0 && search) continue;
+
+    var catNameAZ = '';
+    if (cat.category_translations) {
+      for (var tj2 = 0; tj2 < cat.category_translations.length; tj2++) {
+        if (cat.category_translations[tj2].language === 'az') {
+          catNameAZ = cat.category_translations[tj2].name || '';
+          break;
+        }
+      }
+    }
+    if (!catNameAZ) catNameAZ = cat.name || 'Kateqoriya';
+
+    var itemsHtml = '';
+    for (var ii = 0; ii < items.length; ii++) {
+      var d = items[ii];
+      var nameAZ = '';
+      if (d.dish_translations) {
+        for (var tj3 = 0; tj3 < d.dish_translations.length; tj3++) {
+          if (d.dish_translations[tj3].language === 'az') {
+            nameAZ = d.dish_translations[tj3].name || '';
+            break;
+          }
+        }
+      }
+      if (!nameAZ) nameAZ = d.name || '';
+
+      itemsHtml += '<div class="dish-admin-item">' +
+        (d.image_url ? '<img class="dish-thumb" src="' + d.image_url + '" alt="' + nameAZ + '">' : '<span class="dish-emoji">🍽️</span>') +
+        '<div class="dish-info"><div class="dish-info-name">' + nameAZ + '</div><div class="dish-info-meta">' + d.price + ' AZN ' + (d.badge ? '· ' + d.badge : '') + '</div></div>' +
+        '<div class="dish-controls"><button class="toggle ' + (d.available ? 'on' : '') + '" onclick="toggleDish(\'' + d.id + '\',this)"></button><button class="btn-sm" onclick="openDishModal(\'' + d.id + '\')">✎</button><button class="btn-sm danger" onclick="deleteDish(\'' + d.id + '\')">✕</button></div></div>';
+    }
+
+    if (!itemsHtml) {
+      itemsHtml = '<div style="padding:1rem;text-align:center;color:var(--text-muted)">Нет блюд</div>';
+    }
+
+    html += '<div class="section-card"><div class="section-card-header"><span>' + (cat.emoji || '📁') + ' ' + catNameAZ + ' <span style="background:var(--caramel);color:white;padding:0.1rem 0.6rem;border-radius:10px;font-size:0.7rem;">' + items.length + '</span></span></div><div class="section-card-body" style="padding:0">' + itemsHtml + '</div></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function toggleDish(id, btn) {
+  var on = btn.classList.contains('on');
+  supabaseClient.from('menu_items').update({ available: !on }).eq('id', id).then(function() {
+    btn.classList.toggle('on');
+    showToast(on ? 'Блюдо скрыто' : 'Блюдо доступно', 'success');
+  });
+}
+
+async function deleteDish(id) {
+  if (!confirm('Удалить блюдо?')) return;
+  await supabaseClient.from('dish_translations').delete().eq('dish_id', id);
+  await supabaseClient.from('menu_items').delete().eq('id', id);
+  showToast('Блюдо удалено', 'success');
+  loadMenuAdmin();
+}
+
+function openDishModal(dishId) {
+  var isEdit = !!dishId;
+  document.getElementById('dishModalTitle').textContent = isEdit ? 'Изменить блюдо' : 'Добавить блюдо';
+  document.getElementById('dishId').value = dishId || '';
+  document.getElementById('dishPrice').value = '';
+  document.getElementById('dishBadge').value = '';
+  document.getElementById('dishImageUrl').value = '';
+  document.getElementById('dishAvailable').checked = true;
+  document.getElementById('dishName_az').value = '';
+  document.getElementById('dishName_ru').value = '';
+  document.getElementById('dishName_en').value = '';
+  document.getElementById('dishDesc_az').value = '';
+  document.getElementById('dishDesc_ru').value = '';
+  document.getElementById('dishDesc_en').value = '';
+
+  if (isEdit) {
+    var dish = null;
+    for (var i = 0; i < allAdminMenuItems.length; i++) {
+      if (allAdminMenuItems[i].id === dishId) {
+        dish = allAdminMenuItems[i];
+        break;
+      }
+    }
+    if (dish) {
+      document.getElementById('dishPrice').value = dish.price || '';
+      document.getElementById('dishBadge').value = dish.badge || '';
+      document.getElementById('dishImageUrl').value = dish.image_url || '';
+      document.getElementById('dishAvailable').checked = dish.available !== false;
+      if (dish.category_id) document.getElementById('dishCategory').value = dish.category_id;
+
+      var trans = dish.dish_translations || [];
+      for (var j = 0; j < trans.length; j++) {
+        if (trans[j].language === 'az') {
+          document.getElementById('dishName_az').value = trans[j].name || '';
+          document.getElementById('dishDesc_az').value = trans[j].description || '';
+        }
+        if (trans[j].language === 'ru') {
+          document.getElementById('dishName_ru').value = trans[j].name || '';
+          document.getElementById('dishDesc_ru').value = trans[j].description || '';
+        }
+        if (trans[j].language === 'en') {
+          document.getElementById('dishName_en').value = trans[j].name || '';
+          document.getElementById('dishDesc_en').value = trans[j].description || '';
+        }
+      }
+    }
+  }
+
+  var azBtn = document.querySelector('.lang-tab-btn[data-lang="az"]');
+  if (azBtn) switchDishLang('az', azBtn);
+  openModal('dishModal');
+}
+
+async function saveDish() {
+  var id = document.getElementById('dishId').value;
+  var nameAZ = document.getElementById('dishName_az').value.trim();
+  if (!nameAZ) {
+    showToast('Введите название на AZ', 'error');
+    return;
+  }
+
+  var payload = {
+    price: parseFloat(document.getElementById('dishPrice').value) || 0,
+    badge: document.getElementById('dishBadge').value.trim() || null,
+    image_url: document.getElementById('dishImageUrl').value.trim() || null,
+    available: document.getElementById('dishAvailable').checked,
+    category_id: document.getElementById('dishCategory').value
+  };
+
+  var dishId = id;
+
+  if (!id) {
+    var { data, error } = await supabaseClient.from('menu_items').insert([payload]).select();
+    if (error) {
+      showToast('Ошибка: ' + error.message, 'error');
+      return;
+    }
+    dishId = data[0].id;
+  } else {
+    var { error } = await supabaseClient.from('menu_items').update(payload).eq('id', id);
+    if (error) {
+      showToast('Ошибка: ' + error.message, 'error');
+      return;
+    }
+    dishId = id;
+  }
+
+  var translations = [
+    { dish_id: dishId, language: 'az', name: nameAZ, description: document.getElementById('dishDesc_az').value.trim() || '' },
+    { dish_id: dishId, language: 'ru', name: document.getElementById('dishName_ru').value.trim() || nameAZ, description: document.getElementById('dishDesc_ru').value.trim() || '' },
+    { dish_id: dishId, language: 'en', name: document.getElementById('dishName_en').value.trim() || nameAZ, description: document.getElementById('dishDesc_en').value.trim() || '' }
+  ];
+
+  await supabaseClient.from('dish_translations').delete().eq('dish_id', dishId);
+  var { error: transError } = await supabaseClient.from('dish_translations').insert(translations);
+  if (transError) {
+    showToast('Ошибка сохранения переводов: ' + transError.message, 'error');
+    return;
+  }
+
+  closeModal('dishModal');
+  showToast(id ? 'Блюдо обновлено' : 'Блюдо добавлено', 'success');
+  loadMenuAdmin();
+}
+
+// ===== СЛАЙДЕР =====
+async function loadSlides() {
+  try {
+    var { data } = await supabaseClient.from('slides').select('*').order('sort_order');
+    sliderSlides = data || [];
+    var container = document.getElementById('sliderAdminList');
+    if (!container) return;
+    if (!data || !data.length) {
+      container.innerHTML = '<div class="promo-card">Нет слайдов</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var s = data[i];
+      html += '<div class="promo-card"><h4>' + (s.title || 'Без названия') + '</h4><p class="promo-meta">' + (s.image_url ? '🖼️ Изображение' : s.video_url ? '🎬 Видео' : '🌈 Цвет') + '</p><div class="promo-controls"><button class="btn-sm primary" onclick="openSlideModal(\'' + s.id + '\')">✎ Изменить</button><button class="btn-sm danger" onclick="deleteSlide(\'' + s.id + '\')">🗑 Удалить</button></div></div>';
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('loadSlides error:', e);
+  }
+}
+
+function openSlideModal(slideId) {
+  var isEdit = !!slideId;
+  document.getElementById('slideModalTitle').textContent = isEdit ? 'Изменить слайд' : 'Добавить слайд';
+  document.getElementById('slideId').value = slideId || '';
+  document.getElementById('slideTitle').value = '';
+  document.getElementById('slideImageUrl').value = '';
+  document.getElementById('slideVideoUrl').value = '';
+  document.getElementById('slideBtnText').value = '';
+  document.getElementById('slideBtnUrl').value = '';
+  document.getElementById('slideActive').checked = true;
+  var hint = document.getElementById('slideVideoUrlHint');
+  if (hint) hint.style.display = 'none';
+
+  if (isEdit) {
+    var slide = null;
+    for (var i = 0; i < sliderSlides.length; i++) {
+      if (sliderSlides[i].id === slideId) {
+        slide = sliderSlides[i];
+        break;
+      }
+    }
+    if (slide) {
+      document.getElementById('slideTitle').value = slide.title || '';
+      document.getElementById('slideImageUrl').value = slide.image_url || '';
+      document.getElementById('slideVideoUrl').value = slide.video_url || '';
+      document.getElementById('slideBtnText').value = slide.btn_text || '';
+      document.getElementById('slideBtnUrl').value = slide.btn_url || '';
+      document.getElementById('slideActive').checked = slide.is_active !== false;
+    }
+  }
+  openModal('slideModal');
+}
+
+function convertVideoUrl(url) {
+  if (!url) return url;
+  url = url.trim();
+  if (url.includes('player.cloudinary.com/embed')) {
+    try {
+      var u = new URL(url);
+      var cloud = u.searchParams.get('cloud_name');
+      var pid = u.searchParams.get('public_id');
+      if (cloud && pid) return 'https://res.cloudinary.com/' + cloud + '/video/upload/' + pid + '.mp4';
+    } catch(e) {}
+  }
+  if (url.includes('res.cloudinary.com') && url.includes('/video/upload/') && !url.endsWith('.mp4')) return url.split('?')[0] + '.mp4';
+  if (url.includes('drive.google.com')) {
+    var match = url.match(/\/d\/(.+?)\//);
+    if (match && match[1]) return 'https://drive.google.com/uc?export=download&id=' + match[1];
+  }
+  return url;
+}
+
+function previewVideoUrl(input) {
+  var hint = document.getElementById('slideVideoUrlHint');
+  if (!hint) return;
+  var raw = input.value.trim();
+  if (!raw) {
+    hint.style.display = 'none';
+    return;
+  }
+  var converted = convertVideoUrl(raw);
+  if (converted !== raw) {
+    hint.style.display = 'block';
+    hint.style.background = '#E8F5E9';
+    hint.style.color = '#2E7D32';
+    hint.style.border = '1px solid #A5D6A7';
+    hint.innerHTML = '✅ Ссылка будет преобразована: <br><span style="font-family:monospace;font-size:0.7rem;word-break:break-all">' + converted + '</span>';
+  } else if (raw.endsWith('.mp4') || raw.includes('/video/upload/')) {
+    hint.style.display = 'block';
+    hint.style.background = '#E8F5E9';
+    hint.style.color = '#2E7D32';
+    hint.innerHTML = '✅ Прямая ссылка на видео';
+  } else {
+    hint.style.display = 'block';
+    hint.style.background = '#FFF3E0';
+    hint.style.color = '#E65100';
+    hint.innerHTML = '⚠️ Используй прямую ссылку на .mp4 или Cloudinary';
+  }
+}
+
+async function saveSlide() {
+  var id = document.getElementById('slideId').value;
+  var rawVideoUrl = document.getElementById('slideVideoUrl').value.trim();
+  var payload = {
+    title: document.getElementById('slideTitle').value.trim(),
+    image_url: document.getElementById('slideImageUrl').value.trim() || null,
+    video_url: convertVideoUrl(rawVideoUrl) || null,
+    btn_text: document.getElementById('slideBtnText').value.trim() || null,
+    btn_url: document.getElementById('slideBtnUrl').value.trim() || null,
+    is_active: document.getElementById('slideActive').checked
+  };
+  if (!payload.title) {
+    showToast('Введите заголовок', 'error');
+    return;
+  }
+  var { error } = id ? await supabaseClient.from('slides').update(payload).eq('id', id) : await supabaseClient.from('slides').insert([payload]);
+  if (error) {
+    showToast('Ошибка: ' + error.message, 'error');
+    return;
+  }
+  closeModal('slideModal');
+  showToast(id ? 'Слайд обновлён' : 'Слайд добавлен', 'success');
+  loadSlides();
+}
+
+async function deleteSlide(id) {
+  if (!confirm('Удалить слайд?')) return;
+  await supabaseClient.from('slides').delete().eq('id', id);
+  showToast('Слайд удалён', 'success');
+  loadSlides();
+}
+
+// ===== ФИЛИАЛЫ =====
+async function loadBranches() {
+  try {
+    var { data } = await supabaseClient.from('branches').select('*').order('sort_order');
+    branches = data || [];
+    var container = document.getElementById('branchesList');
+    if (!container) return;
+    if (!data || !data.length) {
+      container.innerHTML = '<div class="promo-card">Нет филиалов</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var b = data[i];
+      html += '<div class="promo-card"><h4>📍 ' + b.name + '</h4><p class="promo-meta">' + (b.address || '') + ' · ' + (b.phone || '') + ' · ' + (b.hours || '') + '</p><div class="promo-controls"><button class="btn-sm primary" onclick="openBranchModal(\'' + b.id + '\')">✎ Изменить</button><button class="btn-sm danger" onclick="deleteBranch(\'' + b.id + '\')">🗑 Удалить</button></div></div>';
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('loadBranches error:', e);
+  }
+}
+
+function openBranchModal(branchId) {
+  var isEdit = !!branchId;
+  document.getElementById('branchModalTitle').textContent = isEdit ? 'Изменить филиал' : 'Добавить филиал';
+  document.getElementById('branchId').value = branchId || '';
+  document.getElementById('branchName').value = '';
+  document.getElementById('branchAddr').value = '';
+  document.getElementById('branchPhone').value = '';
+  document.getElementById('branchHours').value = '';
+
+  if (isEdit) {
+    var branch = null;
+    for (var i = 0; i < branches.length; i++) {
+      if (branches[i].id === branchId) {
+        branch = branches[i];
+        break;
+      }
+    }
+    if (branch) {
+      document.getElementById('branchName').value = branch.name || '';
+      document.getElementById('branchAddr').value = branch.address || '';
+      document.getElementById('branchPhone').value = branch.phone || '';
+      document.getElementById('branchHours').value = branch.hours || '';
+    }
+  }
+  openModal('branchModal');
+}
+
+async function saveBranch() {
+  var id = document.getElementById('branchId').value;
+  var payload = {
+    name: document.getElementById('branchName').value.trim(),
+    address: document.getElementById('branchAddr').value.trim() || null,
+    phone: document.getElementById('branchPhone').value.trim() || null,
+    hours: document.getElementById('branchHours').value.trim() || null
+  };
+  if (!payload.name) {
+    showToast('Введите название', 'error');
+    return;
+  }
+  var { error } = id ? await supabaseClient.from('branches').update(payload).eq('id', id) : await supabaseClient.from('branches').insert([payload]);
+  if (error) {
+    showToast('Ошибка: ' + error.message, 'error');
+    return;
+  }
+  closeModal('branchModal');
+  showToast(id ? 'Филиал обновлён' : 'Филиал добавлен', 'success');
+  loadBranches();
+}
+
+async function deleteBranch(id) {
+  if (!confirm('Удалить филиал?')) return;
+  await supabaseClient.from('branches').delete().eq('id', id);
+  showToast('Филиал удалён', 'success');
+  loadBranches();
+}
+
+// ===== АКЦИИ =====
+async function loadPromoCards() {
+  try {
+    var { data } = await supabaseClient.from('promo_cards').select('*').order('sort_order');
+    promoCards = data || [];
+    var container = document.getElementById('promoCardsList');
+    if (!container) return;
+    if (!data || !data.length) {
+      container.innerHTML = '<div class="promo-card">Нет акций</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var p = data[i];
+      html += '<div class="promo-card"><h4>' + p.title + '</h4><p class="promo-meta">' + (p.description || '') + '</p><div class="promo-controls"><button class="btn-sm primary" onclick="openPromoCardModal(\'' + p.id + '\')">✎ Изменить</button><button class="btn-sm danger" onclick="deletePromoCard(\'' + p.id + '\')">🗑 Удалить</button></div></div>';
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('loadPromoCards error:', e);
+  }
+}
+
+function openPromoCardModal(promoId) {
+  var isEdit = !!promoId;
+  document.getElementById('promoCardModalTitle').textContent = isEdit ? 'Изменить акцию' : 'Добавить акцию';
+  document.getElementById('promoCardId').value = promoId || '';
+  document.getElementById('promoCardTitle').value = '';
+  document.getElementById('promoCardDesc').value = '';
+  document.getElementById('promoCardBtnText').value = '';
+  document.getElementById('promoCardBtnUrl').value = '';
+  document.getElementById('promoCardActive').checked = true;
+
+  if (isEdit) {
+    var promo = null;
+    for (var i = 0; i < promoCards.length; i++) {
+      if (promoCards[i].id === promoId) {
+        promo = promoCards[i];
+        break;
+      }
+    }
+    if (promo) {
+      document.getElementById('promoCardTitle').value = promo.title || '';
+      document.getElementById('promoCardDesc').value = promo.description || '';
+      document.getElementById('promoCardBtnText').value = promo.btn_text || '';
+      document.getElementById('promoCardBtnUrl').value = promo.btn_url || '';
+      document.getElementById('promoCardActive').checked = promo.is_active !== false;
+    }
+  }
+  openModal('promoCardModal');
+}
+
+async function savePromoCard() {
+  var id = document.getElementById('promoCardId').value;
+  var payload = {
+    title: document.getElementById('promoCardTitle').value.trim(),
+    description: document.getElementById('promoCardDesc').value.trim() || null,
+    btn_text: document.getElementById('promoCardBtnText').value.trim() || null,
+    btn_url: document.getElementById('promoCardBtnUrl').value.trim() || null,
+    is_active: document.getElementById('promoCardActive').checked
+  };
+  if (!payload.title) {
+    showToast('Введите название', 'error');
+    return;
+  }
+  var { error } = id ? await supabaseClient.from('promo_cards').update(payload).eq('id', id) : await supabaseClient.from('promo_cards').insert([payload]);
+  if (error) {
+    showToast('Ошибка: ' + error.message, 'error');
+    return;
+  }
+  closeModal('promoCardModal');
+  showToast(id ? 'Акция обновлена' : 'Акция добавлена', 'success');
+  loadPromoCards();
+}
+
+async function deletePromoCard(id) {
+  if (!confirm('Удалить акцию?')) return;
+  await supabaseClient.from('promo_cards').delete().eq('id', id);
+  showToast('Акция удалена', 'success');
+  loadPromoCards();
+}
+
+// ===== ПОПАПЫ =====
+async function loadPopups() {
+  try {
+    var { data } = await supabaseClient.from('promo_popups').select('*').order('created_at', { ascending: false });
+    popups = data || [];
+    var container = document.getElementById('popupsList');
+    if (!container) return;
+    if (!data || !data.length) {
+      container.innerHTML = '<div class="promo-card">Нет попапов</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var p = data[i];
+      html += '<div class="promo-card"><h4>' + p.title + '</h4><p class="promo-meta">' + (p.description || '') + '</p><div class="promo-controls"><button class="btn-sm primary" onclick="openPopupModal(\'' + p.id + '\')">✎ Изменить</button><button class="btn-sm danger" onclick="deletePopup(\'' + p.id + '\')">🗑 Удалить</button></div></div>';
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('loadPopups error:', e);
+  }
+}
+
+function openPopupModal(popupId) {
+  var isEdit = !!popupId;
+  document.getElementById('popupModalTitle').textContent = isEdit ? 'Изменить попап' : 'Создать попап';
+  document.getElementById('popupId').value = popupId || '';
+  document.getElementById('popupTitle').value = '';
+  document.getElementById('popupDesc').value = '';
+  document.getElementById('popupImageUrl').value = '';
+  document.getElementById('popupDelay').value = 5;
+  document.getElementById('popupBtnText').value = '';
+  document.getElementById('popupBtnUrl').value = '';
+  document.getElementById('popupActive').checked = true;
+
+  if (isEdit) {
+    var popup = null;
+    for (var i = 0; i < popups.length; i++) {
+      if (popups[i].id === popupId) {
+        popup = popups[i];
+        break;
+      }
+    }
+    if (popup) {
+      document.getElementById('popupTitle').value = popup.title || '';
+      document.getElementById('popupDesc').value = popup.description || '';
+      document.getElementById('popupImageUrl').value = popup.image_url || '';
+      document.getElementById('popupDelay').value = popup.delay_seconds || 5;
+      document.getElementById('popupBtnText').value = popup.btn_text || '';
+      document.getElementById('popupBtnUrl').value = popup.btn_url || '';
+      document.getElementById('popupActive').checked = popup.is_active !== false;
+    }
+  }
+  openModal('popupModal');
+}
+
+async function savePopup() {
+  var id = document.getElementById('popupId').value;
+  var payload = {
+    title: document.getElementById('popupTitle').value.trim(),
+    description: document.getElementById('popupDesc').value.trim() || null,
+    image_url: document.getElementById('popupImageUrl').value.trim() || null,
+    delay_seconds: parseInt(document.getElementById('popupDelay').value) || 5,
+    btn_text: document.getElementById('popupBtnText').value.trim() || null,
+    btn_url: document.getElementById('popupBtnUrl').value.trim() || null,
+    is_active: document.getElementById('popupActive').checked
+  };
+  if (!payload.title) {
+    showToast('Введите заголовок', 'error');
+    return;
+  }
+  var { error } = id ? await supabaseClient.from('promo_popups').update(payload).eq('id', id) : await supabaseClient.from('promo_popups').insert([payload]);
+  if (error) {
+    showToast('Ошибка: ' + error.message, 'error');
+    return;
+  }
+  closeModal('popupModal');
+  showToast(id ? 'Попап обновлён' : 'Попап создан', 'success');
+  loadPopups();
+}
+
+async function deletePopup(id) {
+  if (!confirm('Удалить попап?')) return;
+  await supabaseClient.from('promo_popups').delete().eq('id', id);
+  showToast('Попап удалён', 'success');
+  loadPopups();
+}
+
+// ===== О НАС =====
+async function loadAboutSection() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var s = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      s[data[i].key] = data[i].value;
+    }
+    document.getElementById('about_title').value = s.about_title || 'Malako-nun hekayəsi';
+    document.getElementById('about_text1').value = s.about_text1 || '';
+    document.getElementById('about_text2').value = s.about_text2 || '';
+    document.getElementById('about_text3').value = s.about_text3 || 'Bu gün Malako — Bakıda {branches} filial və 50+ peşəkardan ibarət müasir komandadır';
+    document.getElementById('about_year').value = s.about_year || '2016';
+    document.getElementById('about_bg_image').value = s.about_bg_image || '';
+    document.getElementById('about_img1').value = s.about_img1 || '☕';
+    document.getElementById('about_img2').value = s.about_img2 || '🥐';
+    document.getElementById('about_features').value = s.about_features || 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar';
+  } catch(e) {
+    console.error('loadAboutSection error:', e);
+  }
+}
+
+async function saveAboutSection() {
+  var pairs = [
+    ['about_title', document.getElementById('about_title').value],
+    ['about_text1', document.getElementById('about_text1').value],
+    ['about_text2', document.getElementById('about_text2').value],
+    ['about_text3', document.getElementById('about_text3').value],
+    ['about_year', document.getElementById('about_year').value],
+    ['about_bg_image', document.getElementById('about_bg_image').value],
+    ['about_img1', document.getElementById('about_img1').value],
+    ['about_img2', document.getElementById('about_img2').value],
+    ['about_features', document.getElementById('about_features').value]
+  ];
+  for (var i = 0; i < pairs.length; i++) {
+    await supabaseClient.from('settings').upsert({ key: pairs[i][0], value: pairs[i][1] });
+  }
+  showToast('Секция "О нас" сохранена', 'success');
+}
+
+// ===== ВИДИМОСТЬ СЕКЦИЙ =====
+async function loadSectionsVisibility() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var s = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      s[data[i].key] = data[i].value;
+    }
+    document.getElementById('section_slider_toggle').checked = s.section_slider !== 'false';
+    document.getElementById('section_features_toggle').checked = s.section_features !== 'false';
+    document.getElementById('section_menu_preview_toggle').checked = s.section_menu_preview !== 'false';
+    document.getElementById('section_about_toggle').checked = s.section_about !== 'false';
+    document.getElementById('section_cashback_toggle').checked = s.section_cashback !== 'false';
+    document.getElementById('section_branches_toggle').checked = s.section_branches !== 'false';
+    document.getElementById('section_promos_toggle').checked = s.section_promos !== 'false';
+  } catch(e) {
+    console.error('loadSectionsVisibility error:', e);
+  }
+}
+
+async function saveSectionsVisibility() {
+  var pairs = [
+    ['section_slider', document.getElementById('section_slider_toggle').checked],
+    ['section_features', document.getElementById('section_features_toggle').checked],
+    ['section_menu_preview', document.getElementById('section_menu_preview_toggle').checked],
+    ['section_about', document.getElementById('section_about_toggle').checked],
+    ['section_cashback', document.getElementById('section_cashback_toggle').checked],
+    ['section_branches', document.getElementById('section_branches_toggle').checked],
+    ['section_promos', document.getElementById('section_promos_toggle').checked]
+  ];
+  for (var i = 0; i < pairs.length; i++) {
+    await supabaseClient.from('settings').upsert({ key: pairs[i][0], value: String(pairs[i][1]) });
+  }
+  showToast('Настройки секций сохранены', 'success');
+}
+
+// ===== ЛОГОТИП =====
+function toggleLogoOptions() {
+  var type = document.getElementById('logoType').value;
+  document.getElementById('logoTextOptions').style.display = type === 'text' ? 'block' : 'none';
+  document.getElementById('logoImageOptions').style.display = type === 'image' ? 'block' : 'none';
+  updateLogoPreview();
+}
+
+function updateLogoPreview() {
+  var type = document.getElementById('logoType').value;
+  var previewDiv = document.getElementById('logoPreview');
+  var previewText = document.getElementById('logoPreviewText');
+  if (type === 'text') {
+    var text = document.getElementById('logoText').value || 'Malako';
+    var size = document.getElementById('logoTextSize').value || 28;
+    var color = document.getElementById('logoTextColor').value || '#4A3020';
+    previewText.style.display = 'block';
+    previewText.textContent = text;
+    previewText.style.fontSize = size + 'px';
+    previewText.style.color = color;
+    previewDiv.innerHTML = '';
+    previewDiv.appendChild(previewText);
+  } else {
+    var url = document.getElementById('logoImageUrl').value;
+    var width = document.getElementById('logoImageWidth').value || 180;
+    var height = document.getElementById('logoImageHeight').value || 'auto';
+    previewText.style.display = 'none';
+    if (url) {
+      previewDiv.innerHTML = '<img src="' + url + '" style="max-width:100%; width:' + width + 'px; height:' + height + '; object-fit:contain" alt="Логотип">';
+    } else {
+      previewDiv.innerHTML = '<span style="color:var(--text-muted)">🖼️ Предпросмотр логотипа</span>';
+    }
+  }
+}
+
+async function loadLogoSettings() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var settings = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      settings[data[i].key] = data[i].value;
+    }
+    document.getElementById('logoType').value = settings.logo_type || 'text';
+    document.getElementById('logoText').value = settings.logo_text || 'Malako';
+    document.getElementById('logoTextSize').value = settings.logo_text_size || '28';
+    document.getElementById('logoTextColor').value = settings.logo_text_color || '#4A3020';
+    document.getElementById('logoImageUrl').value = settings.logo_image || '';
+    document.getElementById('logoImageWidth').value = settings.logo_width || '180';
+    document.getElementById('logoImageHeight').value = settings.logo_height || 'auto';
+    toggleLogoOptions();
+    updateLogoPreview();
+  } catch(e) {
+    console.error('loadLogoSettings error:', e);
+  }
+}
+
+async function saveLogoSettings() {
+  var type = document.getElementById('logoType').value;
+  var settings = [
+    ['logo_type', type],
+    ['logo_text', document.getElementById('logoText').value],
+    ['logo_text_size', document.getElementById('logoTextSize').value],
+    ['logo_text_color', document.getElementById('logoTextColor').value],
+    ['logo_image', document.getElementById('logoImageUrl').value],
+    ['logo_width', document.getElementById('logoImageWidth').value],
+    ['logo_height', document.getElementById('logoImageHeight').value]
+  ];
+  for (var i = 0; i < settings.length; i++) {
+    await supabaseClient.from('settings').upsert({ key: settings[i][0], value: settings[i][1] });
+  }
+  showToast('✅ Настройки логотипа сохранены!', 'success');
+}
+
+// ===== ВНЕШНИЙ ВИД =====
+function toggleBgOptions() {
+  var type = document.getElementById('bgType').value;
+  document.getElementById('presetOptions').style.display = type === 'preset' ? 'block' : 'none';
+  document.getElementById('imageOptions').style.display = type === 'image' ? 'block' : 'none';
+  document.getElementById('colorOptions').style.display = type === 'color' ? 'block' : 'none';
+}
+
+async function loadAppearanceSettings() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var settings = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      settings[data[i].key] = data[i].value;
+    }
+    var bgType = settings.site_bg_type || 'preset';
+    document.getElementById('bgType').value = bgType;
+    toggleBgOptions();
+    var preset = settings.site_bg_preset || 'stone';
+    var options = document.querySelectorAll('.bg-preset-option');
+    for (var j = 0; j < options.length; j++) {
+      options[j].classList.toggle('selected', options[j].dataset.preset === preset);
+    }
+    document.getElementById('bgImageUrl').value = settings.site_bg_image || '';
+    document.getElementById('bgPosition').value = settings.site_bg_position || 'center/cover';
+    document.getElementById('bgColorPicker').value = settings.site_bg_color || '#F5F0E8';
+    document.getElementById('bgColorHex').value = settings.site_bg_color || '#F5F0E8';
+  } catch(e) {
+    console.error('loadAppearanceSettings error:', e);
+  }
+}
+
+var presetOptions = document.querySelectorAll('.bg-preset-option');
+for (var po = 0; po < presetOptions.length; po++) {
+  presetOptions[po].addEventListener('click', function() {
+    var all = document.querySelectorAll('.bg-preset-option');
+    for (var a = 0; a < all.length; a++) {
+      all[a].classList.remove('selected');
+    }
+    this.classList.add('selected');
+  });
+}
+
+async function saveAppearanceSettings() {
+  var type = document.getElementById('bgType').value;
+  var selected = document.querySelector('.bg-preset-option.selected');
+  var selectedPreset = selected ? selected.dataset.preset : 'stone';
+  var settings = [
+    ['site_bg_type', type],
+    ['site_bg_preset', selectedPreset],
+    ['site_bg_image', document.getElementById('bgImageUrl')?.value || ''],
+    ['site_bg_position', document.getElementById('bgPosition')?.value || 'center/cover'],
+    ['site_bg_color', document.getElementById('bgColorPicker')?.value || '#F5F0E8']
+  ];
+  for (var i = 0; i < settings.length; i++) {
+    await supabaseClient.from('settings').upsert({ key: settings[i][0], value: settings[i][1] });
+  }
+  showToast('Фон сохранён', 'success');
+}
+
+// ===== НАСТРОЙКИ =====
+async function loadSettings() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var s = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      s[data[i].key] = data[i].value;
+    }
+    if (document.getElementById('waNumber')) document.getElementById('waNumber').value = s.default_wa_number || '';
+    if (document.getElementById('workHours')) document.getElementById('workHours').value = s.work_hours || '';
+    if (document.getElementById('cafeEmail')) document.getElementById('cafeEmail').value = s.cafe_email || '';
+  } catch(e) {
+    console.error('loadSettings error:', e);
+  }
+}
+
+async function saveSettings() {
+  var pairs = [
+    ['default_wa_number', document.getElementById('waNumber').value],
+    ['work_hours', document.getElementById('workHours').value],
+    ['cafe_email', document.getElementById('cafeEmail').value]
+  ];
+  for (var i = 0; i < pairs.length; i++) {
+    await supabaseClient.from('settings').upsert({ key: pairs[i][0], value: pairs[i][1] });
+  }
+  showToast('Настройки сохранены', 'success');
+}
+
+// ===== ГЛАВНАЯ (ТЕКСТЫ) =====
+async function loadMainPageTexts() {
+  try {
+    var { data } = await supabaseClient.from('settings').select('*');
+    var s = {};
+    for (var i = 0; i < (data || []).length; i++) {
+      s[data[i].key] = data[i].value;
+    }
+
+    var fields = [
+      'hero_title', 'hero_tagline_az', 'hero_tagline_ru', 'hero_tagline_en',
+      'hero_subtitle_az', 'hero_subtitle_ru', 'hero_subtitle_en',
+      'hero_btn_menu_az', 'hero_btn_menu_ru', 'hero_btn_menu_en',
+      'hero_btn_reserve_az', 'hero_btn_reserve_ru', 'hero_btn_reserve_en',
+      'hero_scroll_az', 'hero_scroll_ru', 'hero_scroll_en',
+      'why_label_az', 'why_label_ru', 'why_label_en',
+      'why_title_az', 'why_title_ru', 'why_title_en',
+      'feature1_title_az', 'feature1_title_ru', 'feature1_title_en',
+      'feature1_desc_az', 'feature1_desc_ru', 'feature1_desc_en',
+      'feature2_title_az', 'feature2_title_ru', 'feature2_title_en',
+      'feature2_desc_az', 'feature2_desc_ru', 'feature2_desc_en',
+      'feature3_title_az', 'feature3_title_ru', 'feature3_title_en',
+      'feature3_desc_az', 'feature3_desc_ru', 'feature3_desc_en',
+      'feature4_title_az', 'feature4_title_ru', 'feature4_title_en',
+      'feature4_desc_az', 'feature4_desc_ru', 'feature4_desc_en',
+      'menu_label_az', 'menu_label_ru', 'menu_label_en',
+      'menu_title_az', 'menu_title_ru', 'menu_title_en',
+      'menu_full_az', 'menu_full_ru', 'menu_full_en',
+      'cashback_label_az', 'cashback_label_ru', 'cashback_label_en',
+      'cashback_title_az', 'cashback_title_ru', 'cashback_title_en',
+      'cashback_text_az', 'cashback_text_ru', 'cashback_text_en',
+      'cashback_step1_az', 'cashback_step1_ru', 'cashback_step1_en',
+      'cashback_step2_az', 'cashback_step2_ru', 'cashback_step2_en',
+      'cashback_step3_az', 'cashback_step3_ru', 'cashback_step3_en',
+      'cashback_btn_az', 'cashback_btn_ru', 'cashback_btn_en',
+      'cashback_percent_az', 'cashback_percent_ru', 'cashback_percent_en',
+      'cashback_text_bottom_az', 'cashback_text_bottom_ru', 'cashback_text_bottom_en',
+      'promos_label_az', 'promos_label_ru', 'promos_label_en',
+      'promos_title_az', 'promos_title_ru', 'promos_title_en',
+      'branches_label_az', 'branches_label_ru', 'branches_label_en',
+      'branches_title_az', 'branches_title_ru', 'branches_title_en',
+      'btn_book_branch_az', 'btn_book_branch_ru', 'btn_book_branch_en',
+      'footer_brand_text_az', 'footer_brand_text_ru', 'footer_brand_text_en',
+      'footer_nav_az', 'footer_nav_ru', 'footer_nav_en',
+      'footer_company_az', 'footer_company_ru', 'footer_company_en',
+      'footer_contacts_az', 'footer_contacts_ru', 'footer_contacts_en',
+      'footer_rights_az', 'footer_rights_ru', 'footer_rights_en'
+    ];
+
+    for (var j = 0; j < fields.length; j++) {
+      var el = document.getElementById(fields[j]);
+      if (el) {
+        el.value = s[fields[j]] || '';
+      }
+    }
+  } catch(e) {
+    console.error('loadMainPageTexts error:', e);
+  }
+}
+
+async function saveMainPageTexts() {
+  var fields = [
+    'hero_title',
+    'hero_tagline_az', 'hero_tagline_ru', 'hero_tagline_en',
+    'hero_subtitle_az', 'hero_subtitle_ru', 'hero_subtitle_en',
+    'hero_btn_menu_az', 'hero_btn_menu_ru', 'hero_btn_menu_en',
+    'hero_btn_reserve_az', 'hero_btn_reserve_ru', 'hero_btn_reserve_en',
+    'hero_scroll_az', 'hero_scroll_ru', 'hero_scroll_en',
+    'why_label_az', 'why_label_ru', 'why_label_en',
+    'why_title_az', 'why_title_ru', 'why_title_en',
+    'feature1_title_az', 'feature1_title_ru', 'feature1_title_en',
+    'feature1_desc_az', 'feature1_desc_ru', 'feature1_desc_en',
+    'feature2_title_az', 'feature2_title_ru', 'feature2_title_en',
+    'feature2_desc_az', 'feature2_desc_ru', 'feature2_desc_en',
+    'feature3_title_az', 'feature3_title_ru', 'feature3_title_en',
+    'feature3_desc_az', 'feature3_desc_ru', 'feature3_desc_en',
+    'feature4_title_az', 'feature4_title_ru', 'feature4_title_en',
+    'feature4_desc_az', 'feature4_desc_ru', 'feature4_desc_en',
+    'menu_label_az', 'menu_label_ru', 'menu_label_en',
+    'menu_title_az', 'menu_title_ru', 'menu_title_en',
+    'menu_full_az', 'menu_full_ru', 'menu_full_en',
+    'cashback_label_az', 'cashback_label_ru', 'cashback_label_en',
+    'cashback_title_az', 'cashback_title_ru', 'cashback_title_en',
+    'cashback_text_az', 'cashback_text_ru', 'cashback_text_en',
+    'cashback_step1_az', 'cashback_step1_ru', 'cashback_step1_en',
+    'cashback_step2_az', 'cashback_step2_ru', 'cashback_step2_en',
+    'cashback_step3_az', 'cashback_step3_ru', 'cashback_step3_en',
+    'cashback_btn_az', 'cashback_btn_ru', 'cashback_btn_en',
+    'cashback_percent_az', 'cashback_percent_ru', 'cashback_percent_en',
+    'cashback_text_bottom_az', 'cashback_text_bottom_ru', 'cashback_text_bottom_en',
+    'promos_label_az', 'promos_label_ru', 'promos_label_en',
+    'promos_title_az', 'promos_title_ru', 'promos_title_en',
+    'branches_label_az', 'branches_label_ru', 'branches_label_en',
+    'branches_title_az', 'branches_title_ru', 'branches_title_en',
+    'btn_book_branch_az', 'btn_book_branch_ru', 'btn_book_branch_en',
+    'footer_brand_text_az', 'footer_brand_text_ru', 'footer_brand_text_en',
+    'footer_nav_az', 'footer_nav_ru', 'footer_nav_en',
+    'footer_company_az', 'footer_company_ru', 'footer_company_en',
+    'footer_contacts_az', 'footer_contacts_ru', 'footer_contacts_en',
+    'footer_rights_az', 'footer_rights_ru', 'footer_rights_en'
+  ];
+
+  for (var i = 0; i < fields.length; i++) {
+    var el = document.getElementById(fields[i]);
+    if (el) {
+      await supabaseClient.from('settings').upsert({ key: fields[i], value: el.value });
+    }
+  }
+  showToast('✅ Все тексты сохранены на всех языках!', 'success');
+}
+
+// ===== БРОНИРОВАНИЯ =====
+async function loadReservations() {
+  try {
+    var branch = document.getElementById('filterBranch')?.value || '';
+    var q = supabaseClient.from('reservations').select('*').order('created_at', { ascending: false });
+    if (branch) q = q.eq('branch', branch);
+    var { data } = await q;
+    var tbody = document.getElementById('fullResList');
+    if (tbody) {
+      var html = '';
+      for (var i = 0; i < (data || []).length; i++) {
+        var r = data[i];
+        var phone = (r.phone || '').replace(/\D/g, '');
+        html += '<tr><td>' + r.name + '</td><td><a href="https://wa.me/' + phone + '" target="_blank" style="color:var(--caramel)">' + r.phone + '</a></td><td>' + r.branch + '</td><td>' + r.date + '</td><td>' + r.guests + '</td><td><span class="status-badge status-' + r.status + '">' + r.status + '</span></td><td><button class="btn-sm success" onclick="updateStatus(\'' + r.id + '\',\'confirmed\')">✓</button> <button class="btn-sm danger" onclick="updateStatus(\'' + r.id + '\',\'cancelled\')">✕</button></td></tr>';
+      }
+      tbody.innerHTML = html;
+    }
+  } catch(e) {
+    console.error('loadReservations error:', e);
+  }
+}
+
+async function updateStatus(id, status) {
+  await supabaseClient.from('reservations').update({ status: status }).eq('id', id);
+  showToast('Статус обновлён', 'success');
+  loadReservations();
+  loadDashboard();
+}
+
+// ===== DASHBOARD =====
+async function loadDashboard() {
+  try {
+    var today = new Date().toISOString().split('T')[0];
+    var results = await Promise.all([
+      supabaseClient.from('reservations').select('id').eq('date', today),
+      supabaseClient.from('reservations').select('id'),
+      supabaseClient.from('menu_items').select('id').eq('available', true),
+      supabaseClient.from('branches').select('id'),
+      supabaseClient.from('reservations').select('*').order('created_at', { ascending: false }).limit(5)
+    ]);
+
+    document.getElementById('todayResCount').textContent = (results[0].data || []).length || 0;
+    document.getElementById('totalResCount').textContent = (results[1].data || []).length || 0;
+    document.getElementById('menuItemsCount').textContent = (results[2].data || []).length || 0;
+    document.getElementById('branchCount').textContent = (results[3].data || []).length || 0;
+
+    var tbody = document.getElementById('dashResList');
+    if (tbody) {
+      var lastRes = results[4].data || [];
+      var html = '';
+      for (var i = 0; i < lastRes.length; i++) {
+        var r = lastRes[i];
+        var statusText = r.status === 'confirmed' ? 'Подтв.' : r.status === 'pending' ? 'Ожид.' : 'Отм.';
+        html += '<tr><td>' + r.name + '</td><td>' + r.branch + '</td><td>' + r.date + ' ' + r.time + '</td><td>' + r.guests + '</td><td><span class="status-badge status-' + r.status + '">' + statusText + '</span></td></tr>';
+      }
+      tbody.innerHTML = html;
+    }
+  } catch(e) {
+    console.error('loadDashboard error:', e);
+  }
+}
+
+// ===== UTILITY =====
+function clearForm(ids) {
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function switchTab(id, el) {
+  var panels = document.querySelectorAll('.tab-panel');
+  for (var i = 0; i < panels.length; i++) {
+    panels[i].classList.remove('active');
+  }
+  var navItems = document.querySelectorAll('.nav-item');
+  for (var j = 0; j < navItems.length; j++) {
+    navItems[j].classList.remove('active');
+  }
+  var target = document.getElementById('tab-' + id);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+
+  var titles = {
+    dashboard: 'Дашборд', reservations: 'Бронирования', main_page: 'Главная (тексты)',
+    sections: 'Секции сайта', logo: 'Логотип', menu: 'Меню', categories: 'Категории',
+    slider: 'Слайдер', about: 'О нас (блок)', promos: 'Акции', popups: 'Попапы',
+    branches: 'Филиалы', appearance: 'Внешний вид', settings: 'Настройки'
+  };
+  document.getElementById('topbarTitle').textContent = titles[id] || id;
+  if (window.innerWidth <= 900) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+
+// ===== INIT =====
+async function initAdmin() {
+  try {
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    // Загружаем филиалы для фильтра
+    var { data: branchesData } = await supabaseClient.from('branches').select('*');
+    var filterBranch = document.getElementById('filterBranch');
+    if (filterBranch) {
+      var html = '<option value="">Все филиалы</option>';
+      for (var i = 0; i < (branchesData || []).length; i++) {
+        html += '<option value="' + branchesData[i].name + '">' + branchesData[i].name + '</option>';
+      }
+      filterBranch.innerHTML = html;
+    }
+
+    await Promise.all([
+      loadDashboard(),
+      loadReservations(),
+      loadMenuAdmin(),
+      loadAdminCategories(),
+      loadCategoriesAdmin(),
+      loadSlides(),
+      loadBranches(),
+      loadPromoCards(),
+      loadPopups(),
+      loadSettings(),
+      loadAboutSection(),
+      loadSectionsVisibility(),
+      loadMainPageTexts(),
+      loadAppearanceSettings(),
+      loadLogoSettings()
+    ]);
+
+    var menuBtn = document.getElementById('menuToggleBtn');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('open');
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth <= 900 &&
+        !document.getElementById('sidebar').contains(e.target) &&
+        e.target !== document.getElementById('menuToggleBtn')) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    });
+  } catch(e) {
+    console.error('Ошибка инициализации админки:', e);
+    showToast('Ошибка загрузки данных', 'error');
+  }
+}
+
+// ===== ЗАПУСК =====
+var loginEmail = document.getElementById('loginEmail');
+var loginPassword = document.getElementById('loginPassword');
+if (loginEmail) {
+  loginEmail.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+}
+if (loginPassword) {
+  loginPassword.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+}
+
+checkAuth();
+</script>
+</body>
+</html>
