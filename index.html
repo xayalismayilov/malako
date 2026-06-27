@@ -397,7 +397,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <script>
 // ========== SUPABASE КОНФИГУРАЦИЯ ==========
 const SUPABASE_URL = 'https://wlnifdqfnxhqlyvlmadi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_3zY0UDB5bu2gXE8WJAEBgw_-V4qTnBi';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsbmlmZHFmbnhocWx5dmxtYWRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0NzU0NjcsImV4cCI6MjA5ODA1MTQ2N30.fu-1pKRjjFCKUb8mtEMmsO2DL9hyeLUo1oHIwFHsdwg';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
@@ -419,7 +419,7 @@ async function initI18n() {
         ns: ['common'],
         defaultNS: 'common',
         backend: {
-          loadPath: '/locales/{{lng}}/{{ns}}.json'
+          loadPath: './locales/{{lng}}/{{ns}}.json'
         },
         detection: {
           order: ['localStorage', 'navigator'],
