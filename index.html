@@ -3,25 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Malako — Specialty Coffee & Food, Bakı</title>
-<meta name="description" content="Malako — Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer. Specialty Coffee & Food since 2016.">
-<meta name="keywords" content="malako, kafe, bakı, qəhvə, specialty coffee, səhər yeməyi, baku cafe, кофе баку, кафе баку, malako.az">
-<meta name="author" content="Malako Café">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://malako.az/">
-<meta property="og:type" content="restaurant">
-<meta property="og:title" content="Malako — Specialty Coffee & Food, Bakı">
-<meta property="og:description" content="Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə. Bakıda 2016-cı ildən.">
-<meta property="og:url" content="https://malako.az/">
-<meta property="og:site_name" content="Malako">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Malako — Specialty Coffee & Food">
-<meta name="twitter:description" content="Bakıda specialty qəhvə və dadlı səhər yeməkləri. 2016-cı ildən.">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CafeOrCoffeeShop","name":"Malako","description":"Specialty Coffee & Food in Baku since 2016","url":"https://malako.az","servesCuisine":["Coffee","Breakfast","Desserts"],"priceRange":"$$","address":{"@type":"PostalAddress","addressLocality":"Baku","addressCountry":"AZ"},"openingHours":"Mo-Su 08:00-23:00"}
-</script>
+<title>Malako — Твоё любимое место</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://wlnifdqfnxhqlyvlmadi.supabase.co" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
@@ -585,18 +568,15 @@ function getCategoryName(translations, lang) {
 async function loadAllSettings() {
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
-    if (error) console.warn('Ошибка загрузки settings:', error.message);
-    (data || []).forEach(s => siteSettings[s.key] = s.value);
-  } catch(e) {
-    console.warn('Settings недоступны, используем значения по умолчанию');
-  }
+    if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
+  } catch(e) { console.warn('settings не загружены:', e); }
 
-  // Применяем настройки — даже если settings пустой, секции покажутся
+  // Применяем настройки — секции показываются даже если settings пустой
   try { loadLogoSettings(); } catch(e) {}
   try { loadSiteBackground(); } catch(e) {}
   loadSectionsVisibility();
 
-  // Загружаем данные параллельно для скорости
+  // Загружаем данные параллельно
   await Promise.allSettled([
     loadSlides(),
     loadCategoriesAndMenu(),
@@ -682,7 +662,6 @@ function loadSectionsVisibility() {
   };
   Object.values(map).forEach(({ id, key }) => {
     const el = document.getElementById(id);
-    // Показываем секцию если: настройка явно не 'false', или настройка вообще не задана (показываем по умолчанию)
     if (el) el.style.display = (s[key] === 'false') ? 'none' : '';
   });
 }
@@ -1076,17 +1055,6 @@ async function init() {
 
 // Запускаем инициализацию
 init();
-</script>
-
-<!-- Service Worker для офлайн работы -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW зарегистрирован'))
-      .catch(e => console.log('SW ошибка:', e));
-  });
-}
 </script>
 </body>
 </html>
