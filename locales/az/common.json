@@ -68,5 +68,7 @@
   "menu_page_label": "Tam menyu",
   "menu_page_em": "yeməklər",
   "unavailable": "Mövcud deyil",
-  "back_to_main": "← Ana səhifə"
+  "back_to_main": "← Ana səhifə",
+  "menu_page_pre": "Bizim",
+  "menu_page_post": "və içkilər",
 }
