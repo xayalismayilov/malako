@@ -853,7 +853,8 @@ function buildMenu() {
   if (!nav || !body) return;
   
   if (allCategories.length === 0) {
-    body.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted)">Menyu müvəqqəti olaraq əlçatan deyil. Sonra baxın!</div>';
+    const unavailMsg = { az: 'Menyu müvəqqəti olaraq əlçatan deyil. Sonra baxın!', ru: 'Меню временно недоступно. Загляните позже!', en: 'Menu is temporarily unavailable. Check back later!' };
+    body.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)">${unavailMsg[currentLang] || unavailMsg.az}</div>`;
     return;
   }
   
@@ -886,7 +887,7 @@ function buildMenu() {
                 <div class="dish-img">
                   ${item.image_url ? `<img src="${item.image_url}" alt="${name}" loading="lazy" onerror="this.style.display='none'; this.parentNode.innerHTML='${item.emoji || '🍽️'}'">` : (item.emoji || '🍽️')}
                   ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
-                  ${!item.available ? '<span class="dish-unavail-badge" data-i18n="unavailable">Mövcud deyil</span>' : ''}
+                  ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
                 </div>
                 <div class="dish-body">
                   <h3 class="dish-name">${escapeHtml(name)}</h3>
@@ -905,16 +906,12 @@ function buildMenu() {
   }
   
   if (sectionsHtml === '') {
-    body.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted)">Menyuda hələ heç bir yemək yoxdur. Sonra baxın!</div>';
+    const emptyMsg = { az: 'Menyuda hələ heç bir yemək yoxdur. Sonra baxın!', ru: 'В меню пока нет блюд. Загляните позже!', en: 'No dishes in the menu yet. Check back later!' };
+    body.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`;
     return;
   }
   
   body.innerHTML = sectionsHtml;
-  
-  // Обновляем бейджи "Недоступно" с переводом
-  document.querySelectorAll('[data-i18n="unavailable"]').forEach(el => {
-    el.textContent = i18next.t('unavailable');
-  });
   
   const firstBtn = document.querySelector('.cat-btn');
   if (firstBtn) firstBtn.classList.add('active');
