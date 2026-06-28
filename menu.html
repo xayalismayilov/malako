@@ -556,7 +556,7 @@ footer p{
 
 <div class="menu-hero">
   <p id="menuHeroLabel" data-i18n="menu_page_label">Tam menyu</p>
-  <h1>Bizim <em id="menuHeroEm" data-i18n="menu_page_em">yeməklər</em> və içkilər</h1>
+  <h1><span id="menuHeroPre" data-i18n="menu_page_pre">Bizim</span> <em id="menuHeroEm" data-i18n="menu_page_em">yeməklər</em> <span id="menuHeroPost" data-i18n="menu_page_post">və içkilər</span></h1>
 </div>
 
 <div class="menu-sticky-nav" id="stickyNav"></div>
@@ -800,8 +800,12 @@ function applyLogoSettings() {
 function applyMenuTexts() {
   const heroLabel = document.getElementById('menuHeroLabel');
   const heroEm = document.getElementById('menuHeroEm');
+  const heroPre = document.getElementById('menuHeroPre');
+  const heroPost = document.getElementById('menuHeroPost');
   if (heroLabel) heroLabel.textContent = i18next.t('menu_page_label');
   if (heroEm) heroEm.textContent = i18next.t('menu_page_em');
+  if (heroPre) heroPre.textContent = i18next.t('menu_page_pre');
+  if (heroPost) heroPost.textContent = i18next.t('menu_page_post');
 }
 
 // ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
