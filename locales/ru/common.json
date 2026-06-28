@@ -68,5 +68,7 @@
   "menu_page_label": "Полное меню",
   "menu_page_em": "блюда",
   "unavailable": "Недоступно",
-  "back_to_main": "← На главную"
+  "back_to_main": "← На главную",
+  "menu_page_pre": "Наши",
+  "menu_page_post": "и напитки",
 }
