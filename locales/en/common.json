@@ -68,5 +68,7 @@
   "menu_page_label": "Full menu",
   "menu_page_em": "dishes",
   "unavailable": "Unavailable",
-  "back_to_main": "← Back to home"
+  "back_to_main": "← Back to home",
+  "menu_page_pre": "Our",
+  "menu_page_post": "and drinks",
 }
