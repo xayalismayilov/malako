@@ -722,36 +722,36 @@ async function loadFeatures() {
   const grid = document.getElementById('featuresGrid');
   if(!grid) return;
   
-  // Получаем переводы для фич из таблицы settings
   const s = siteSettings;
+  const lang = currentLang;
   
-  // Для каждой фичи используем ts-подобную логику: если есть перевод для текущего языка, используем его
-  function getFeatureText(baseKey, fallback) {
-    const key = baseKey + '_' + currentLang;
+  function getFeatureText(baseKey, fallbacks) {
+    const key = baseKey + '_' + lang;
     if (s[key]) return s[key];
-    return s[baseKey] || fallback || '';
+    if (s[baseKey]) return s[baseKey];
+    return fallbacks[lang] || fallbacks.az || '';
   }
   
   const features = [
     { 
       icon: '☕', 
-      title: getFeatureText('feature1_title', 'Öz qovurma'), 
-      desc: getFeatureText('feature1_desc', 'Kolumbiya qəhvəsi, unikal texnologiya ilə qovrulur. Hər fincanda zəngin dad və ətir.') 
+      title: getFeatureText('feature1_title', { az: 'Öz qovurma', ru: 'Собственная обжарка', en: 'Own roasting' }), 
+      desc: getFeatureText('feature1_desc', { az: 'Kolumbiya qəhvəsi, unikal texnologiya ilə qovrulur. Hər fincanda zəngin dad və ətir.', ru: 'Колумбийский кофе, обжаренный по уникальной технологии. Насыщенный вкус и аромат в каждой чашке.', en: 'Colombian coffee roasted with a unique technique. Rich flavour and aroma in every cup.' }) 
     },
     { 
       icon: '🥗', 
-      title: getFeatureText('feature2_title', 'Dadlı mətbəx'), 
-      desc: getFeatureText('feature2_desc', 'Tam səhər yeməkləri, doyumlu bol qablar, burgerlər və zərif desertlər — hər zövq üçün nəsə var.') 
+      title: getFeatureText('feature2_title', { az: 'Dadlı mətbəx', ru: 'Вкусная кухня', en: 'Delicious kitchen' }), 
+      desc: getFeatureText('feature2_desc', { az: 'Tam səhər yeməkləri, doyumlu bol qablar, burgerlər və zərif desertlər — hər zövq üçün nəsə var.', ru: 'Полные завтраки, сытные порции, бургеры и нежные десерты — что-то для каждого.', en: 'Full breakfasts, hearty portions, burgers and delicate desserts — something for every taste.' }) 
     },
     { 
       icon: '🌿', 
-      title: getFeatureText('feature3_title', 'Rahat atmosfer'), 
-      desc: getFeatureText('feature3_desc', 'Düşünülmüş interyer, isti işıqlandırma və yenilənən pleylistlər ideal mühit yaradır.') 
+      title: getFeatureText('feature3_title', { az: 'Rahat atmosfer', ru: 'Уютная атмосфера', en: 'Cozy atmosphere' }), 
+      desc: getFeatureText('feature3_desc', { az: 'Düşünülmüş interyer, isti işıqlandırma və yenilənən pleylistlər ideal mühit yaradır.', ru: 'Продуманный интерьер, тёплое освещение и обновляемые плейлисты создают идеальную атмосферу.', en: 'Thoughtful interior, warm lighting and updated playlists create the perfect setting.' }) 
     },
     { 
       icon: '⭐', 
-      title: getFeatureText('feature4_title', 'Yüksək xidmət'), 
-      desc: getFeatureText('feature4_desc', 'Xidmətin keyfiyyəti bizim fəlsəfəmizin əsasını təşkil edir. Hər rəy təhlil edilir və səviyyəmizi yaxşılaşdırır.') 
+      title: getFeatureText('feature4_title', { az: 'Yüksək xidmət', ru: 'Высокий сервис', en: 'High service' }), 
+      desc: getFeatureText('feature4_desc', { az: 'Xidmətin keyfiyyəti bizim fəlsəfəmizin əsasını təşkil edir. Hər rəy təhlil edilir və səviyyəmizi yaxşılaşdırır.', ru: 'Качество сервиса — основа нашей философии. Каждый отзыв анализируется и помогает нам расти.', en: 'Service quality is the core of our philosophy. Every review is analysed and helps us improve.' }) 
     }
   ];
   
@@ -803,7 +803,8 @@ function renderMenu(categoryId) {
   const catName = cat ? getCategoryName(cat.category_translations, currentLang) || cat.name || '' : '';
   
   if (!items.length) {
-    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">Bu kateqoriyada hələ heç bir yemək yoxdur</div>';
+    const emptyMsg = { az: 'Bu kateqoriyada hələ heç bir yemək yoxdur', ru: 'В этой категории пока нет блюд', en: 'No items in this category yet' };
+    g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`;
     return;
   }
   
@@ -826,7 +827,11 @@ async function loadBranches() {
   const { data } = await supabaseClient.from('branches').select('*').order('sort_order');
   const grid = document.getElementById('branchesGrid');
   if (!grid) return;
-  if (!data?.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">Filiallar tezliklə açılacaq</div>'; return; }
+  if (!data?.length) { 
+    const emptyMsg = { az: 'Filiallar tezliklə açılacaq', ru: 'Филиалы скоро откроются', en: 'Branches coming soon' };
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`; 
+    return; 
+  }
   
   // Получаем текст кнопки из settings или i18n
   const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
@@ -839,12 +844,19 @@ async function loadBranches() {
 // ========== О НАС ==========
 function loadAboutSection() {
   const s = siteSettings;
+  const lang = currentLang;
   
-  const branchesCount = allCategories.length || 0; // используем количество филиалов, если доступно
-  const aboutText3 = (s.about_text3 || 'Bu gün Malako — Bakıda {branches} filial və 50+ peşəkardan ibarət müasir komandadır').replace('{branches}', branchesCount);
+  // Helper: get language-specific setting or fall back to base key
+  function getSetting(baseKey, fallback) {
+    return s[baseKey + '_' + lang] || s[baseKey] || fallback || '';
+  }
   
-  document.getElementById('aboutText1').innerHTML = s.about_text1 || '';
-  document.getElementById('aboutText2').innerHTML = s.about_text2 || '';
+  const branchesCount = allCategories.length || 0;
+  const aboutText3Raw = getSetting('about_text3', '');
+  const aboutText3 = aboutText3Raw.replace('{branches}', branchesCount);
+  
+  document.getElementById('aboutText1').innerHTML = getSetting('about_text1', '');
+  document.getElementById('aboutText2').innerHTML = getSetting('about_text2', '');
   document.getElementById('aboutText3').innerHTML = aboutText3;
   document.getElementById('aboutYear').innerHTML = s.about_year || '2016';
   
@@ -857,7 +869,8 @@ function loadAboutSection() {
   
   const featContainer = document.getElementById('aboutFeatures');
   if(featContainer) {
-    const features = (s.about_features || 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar').split(',');
+    const featuresRaw = getSetting('about_features', 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar');
+    const features = featuresRaw.split(',');
     featContainer.innerHTML = features.map(f => `<div class="about-feat-item">${f.trim()}</div>`).join('');
   }
 }
