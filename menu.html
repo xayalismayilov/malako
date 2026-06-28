@@ -746,15 +746,19 @@ function getCategoryName(translations, lang) {
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
   try {
-    const { data } = await supabaseClient.from('settings').select('*');
-    (data || []).forEach(s => siteSettings[s.key] = s.value);
-    
-    applyAppearanceSettings();
-    applyLogoSettings();
-    await loadMenuData();
-    await loadPromoPopup();
-    applyMenuTexts();
-  } catch(e) { console.error('Ошибка загрузки настроек:', e); }
+    const { data, error } = await supabaseClient.from('settings').select('*');
+    if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
+  } catch(e) { console.warn('settings не загружены:', e); }
+
+  try { applyAppearanceSettings(); } catch(e) {}
+  try { applyLogoSettings(); } catch(e) {}
+
+  await Promise.allSettled([
+    loadMenuData(),
+    loadPromoPopup(),
+  ]);
+
+  try { applyMenuTexts(); } catch(e) {}
 }
 
 // ========== ВНЕШНИЙ ВИД ==========
