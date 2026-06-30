@@ -883,10 +883,10 @@ async function loadBranches() {
   const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
   
   grid.innerHTML = data.map(b => 
-    `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a><button class="btn-book-branch" onclick="openReservation('${b.name.replace(/'/g, "\\'")}')">${btnText}</button></div>`
+    `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a></div>`
   ).join('');
 }
-
+//<button class="btn-book-branch" onclick="openReservation('${b.name.replace(/'/g, "\\'")}')">${btnText}</button>
 // ========== О НАС ==========
 function loadAboutSection() {
   const s = siteSettings;
