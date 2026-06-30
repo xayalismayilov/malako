@@ -316,7 +316,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   </ul>
   <div class="nav-right">
     <a href="menu.html" class="btn-menu-link" id="navMenuBtn" data-i18n="nav_menu_btn">Menyu</a>
-    <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>
+    <!-- <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>-->
     <div class="lang-switcher">
       <button class="lang-btn" id="langBtn"><span class="lang-flag" id="currentLangFlag">🇦🇿</span><span id="currentLangText">AZ</span><span>▼</span></button>
       <div class="lang-dropdown" id="langDropdown">
@@ -334,9 +334,9 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   <a href="#home" onclick="closeMobileNav()" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
   <a href="#menu" onclick="closeMobileNav()" id="mobileNavMenu" data-i18n="nav_menu">Menyu</a>
   <a href="#about" onclick="closeMobileNav()" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>
-  <a href="#cashback" onclick="closeMobileNav()" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>
+  <!-- <a href="#cashback" onclick="closeMobileNav()" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>-->
   <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
-  <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>
+  <!-- <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>-->
   <div class="mobile-lang-section">
     <div class="mobile-lang-item active" data-lang="az"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
     <div class="mobile-lang-item" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</div>
@@ -355,7 +355,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
     <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero_subtitle">Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə</p>
     <div class="hero-buttons">
       <a href="menu.html" class="btn-primary" id="heroMenuBtn" data-i18n="hero_btn_menu">Menyuya bax</a>
-      <a href="#branches" class="btn-outline" id="heroReserveBtn" data-i18n="hero_btn_reserve">Masa rezerv et</a>
+      <!--<a href="#branches" class="btn-outline" id="heroReserveBtn" data-i18n="hero_btn_reserve">Masa rezerv et</a> -->
     </div>
   </div>
   <div class="scroll-indicator" id="heroScroll" data-i18n="hero_scroll">Aşağı diyirin</div>
@@ -385,8 +385,8 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <!-- BRANCHES -->
 <section class="section" id="branches" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="branchesLabel" data-i18n="branches_label">Ünvanlarımız</p><h2 class="section-title fade-up" id="branchesTitle" data-i18n="branches_title">Ən yaxın filialı tapın</h2><div class="branches-grid" id="branchesGrid"></div></section>
  
-<!-- RESERVATION MODAL -->
-<div class="modal-overlay" id="reservationModal"><div class="modal"><button class="modal-close" onclick="closeReservation()">×</button><h2 id="reserveTitle" data-i18n="reserve_title">Masa rezervasiyası</h2><p class="modal-branch-name" id="modalBranchName">Malako — Mərkəz</p><div id="reservationForm"><div class="form-group"><label id="reserveNameLabel" data-i18n="reserve_name">Adınız</label><input type="text" id="resName" placeholder="Adınızı daxil edin"></div><div class="form-group"><label id="reservePhoneLabel" data-i18n="reserve_phone">WhatsApp nömrəsi</label><input type="tel" id="resPhone" placeholder="+994 50 000-00-00"></div><div class="form-row"><div class="form-group"><label id="reserveDateLabel" data-i18n="reserve_date">Tarix</label><input type="date" id="resDate"></div><div class="form-group"><label id="reserveTimeLabel" data-i18n="reserve_time">Vaxt</label><input type="time" id="resTime" value="12:00"></div></div><div class="form-group"><label id="reserveGuestsLabel" data-i18n="reserve_guests">Qonaq sayı</label><select id="resGuests"><option value="1">1 qonaq</option><option value="2" selected>2 qonaq</option><option value="3">3 qonaq</option><option value="4">4 qonaq</option><option value="5">5 qonaq</option><option value="6">6 qonaq</option><option value="7+">7+ qonaq</option></select></div><div class="form-group"><label id="reserveNoteLabel" data-i18n="reserve_note">Arzular (istəyə bağlı)</label><textarea id="resNote" placeholder="Xüsusi arzular, allergiyalar, münasibət..."></textarea></div><button class="btn-submit" onclick="submitReservation()" id="reserveSubmitBtn" data-i18n="reserve_submit">Müraciət göndər</button><p class="wa-note" id="reserveNoteWa" data-i18n="reserve_note_wa">📱 Təsdiq menecer tərəfindən WhatsApp-da göndəriləcək</p></div><div class="success-msg" id="successMsg"><h3 id="reserveSuccessTitle" data-i18n="reserve_success_title">Müraciət göndərildi! ✓</h3><p id="reserveSuccessText" data-i18n="reserve_success_text">Menecer bir neçə dəqiqə ərzində rezervasiyanı təsdiqləmək üçün WhatsApp vasitəsilə sizinlə əlaqə saxlayacaq.</p></div></div></div>
+<!-- RESERVATION MODAL 
+<div class="modal-overlay" id="reservationModal"><div class="modal"><button class="modal-close" onclick="closeReservation()">×</button><h2 id="reserveTitle" data-i18n="reserve_title">Masa rezervasiyası</h2><p class="modal-branch-name" id="modalBranchName">Malako — Mərkəz</p><div id="reservationForm"><div class="form-group"><label id="reserveNameLabel" data-i18n="reserve_name">Adınız</label><input type="text" id="resName" placeholder="Adınızı daxil edin"></div><div class="form-group"><label id="reservePhoneLabel" data-i18n="reserve_phone">WhatsApp nömrəsi</label><input type="tel" id="resPhone" placeholder="+994 50 000-00-00"></div><div class="form-row"><div class="form-group"><label id="reserveDateLabel" data-i18n="reserve_date">Tarix</label><input type="date" id="resDate"></div><div class="form-group"><label id="reserveTimeLabel" data-i18n="reserve_time">Vaxt</label><input type="time" id="resTime" value="12:00"></div></div><div class="form-group"><label id="reserveGuestsLabel" data-i18n="reserve_guests">Qonaq sayı</label><select id="resGuests"><option value="1">1 qonaq</option><option value="2" selected>2 qonaq</option><option value="3">3 qonaq</option><option value="4">4 qonaq</option><option value="5">5 qonaq</option><option value="6">6 qonaq</option><option value="7+">7+ qonaq</option></select></div><div class="form-group"><label id="reserveNoteLabel" data-i18n="reserve_note">Arzular (istəyə bağlı)</label><textarea id="resNote" placeholder="Xüsusi arzular, allergiyalar, münasibət..."></textarea></div><button class="btn-submit" onclick="submitReservation()" id="reserveSubmitBtn" data-i18n="reserve_submit">Müraciət göndər</button><p class="wa-note" id="reserveNoteWa" data-i18n="reserve_note_wa">📱 Təsdiq menecer tərəfindən WhatsApp-da göndəriləcək</p></div><div class="success-msg" id="successMsg"><h3 id="reserveSuccessTitle" data-i18n="reserve_success_title">Müraciət göndərildi! ✓</h3><p id="reserveSuccessText" data-i18n="reserve_success_text">Menecer bir neçə dəqiqə ərzində rezervasiyanı təsdiqləmək üçün WhatsApp vasitəsilə sizinlə əlaqə saxlayacaq.</p></div></div></div>-->
  
 <!-- PROMO POPUP -->
 <div class="promo-popup" id="promoPopup" style="display:none"><div class="promo-icon" id="promoIcon"></div><div class="promo-content"><h4 id="promoTitle"></h4><p id="promoDesc"></p><a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a></div><button class="promo-close" onclick="closePromo()">×</button></div>
