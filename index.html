@@ -6,9 +6,6 @@
 <title>Malako — Твоё любимое место</title>
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/dnkapcgvr/image/upload/v1782735994/6895efb96ab951f1d2d657a8_ns1ibc.avif">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://wlnifdqfnxhqlyvlmadi.supabase.co" crossorigin>
-<link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
@@ -570,15 +567,18 @@ function getCategoryName(translations, lang) {
 
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
-  // Запускаем загрузку settings параллельно с остальным контентом —
-  // не блокируем старт остальных запросов ожиданием settings
-  const settingsPromise = supabaseClient.from('settings').select('*')
-    .then(({ data, error }) => { if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value); })
-    .catch(e => console.warn('settings не загружены:', e));
+  try {
+    const { data, error } = await supabaseClient.from('settings').select('*');
+    if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
+  } catch(e) { console.warn('settings не загружены:', e); }
 
-  // Все запросы стартуют одновременно
-  const results = await Promise.allSettled([
-    settingsPromise,
+  // Применяем настройки — секции показываются даже если settings пустой
+  try { loadLogoSettings(); } catch(e) {}
+  try { loadSiteBackground(); } catch(e) {}
+  loadSectionsVisibility();
+
+  // Загружаем данные параллельно
+  await Promise.allSettled([
     loadSlides(),
     loadCategoriesAndMenu(),
     loadFeatures(),
@@ -588,10 +588,6 @@ async function loadAllSettings() {
     loadPromoPopup(),
   ]);
 
-  // Применяем настройки, зависящие от siteSettings (после того как settings точно пришли)
-  try { loadLogoSettings(); } catch(e) {}
-  try { loadSiteBackground(); } catch(e) {}
-  loadSectionsVisibility();
   try { loadSettings(); } catch(e) {}
   try { loadContactSettings(); } catch(e) {}
 }
@@ -700,7 +696,7 @@ function buildSlider() {
       if (videoUrl.includes('res.cloudinary.com') && videoUrl.includes('/video/upload/') && !videoUrl.endsWith('.mp4')) videoUrl = videoUrl.split('?')[0] + '.mp4';
       if (videoUrl.includes('drive.google.com')) { const match = videoUrl.match(/\/d\/(.+?)\//); if(match && match[1]) videoUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`; }
       const isValidVideo = videoUrl.endsWith('.mp4') || videoUrl.includes('/video/upload/') || videoUrl.includes('drive.google.com/uc');
-      if (isValidVideo) mediaContent = `<video autoplay muted loop playsinline webkit-playsinline preload="auto" disablePictureInPicture style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;" onloadeddata="this.play().catch(function(){})"><source src="${videoUrl}" type="video/mp4"></video>`;
+      if (isValidVideo) mediaContent = `<video id="slideVideo${i}" autoplay muted loop playsinline webkit-playsinline="true" x5-playsinline="true" x5-video-player-type="h5" preload="auto" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;"><source src="${videoUrl}" type="video/mp4"></video>`;
       else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
     } else if (s.image_url && s.image_url.trim() !== '') bgStyle = `background-image: url('${s.image_url}'); background-size: cover; background-position: center;`;
     else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
@@ -711,10 +707,55 @@ function buildSlider() {
   }).join('');
   if (dots) dots.innerHTML = sliderSlides.map((_, i) => `<button class="slider-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
   currentSlide = 0; if(track) track.style.transform = 'translateX(0)'; resetTimer();
-  setTimeout(() => { document.querySelectorAll(".slide video").forEach(v => v.play().catch(()=>{})); }, 300);
+  initSliderVideos();
 }
 
-function goToSlide(n) { if(sliderSlides.length===0) return; currentSlide = Math.min(Math.max(0, n), sliderSlides.length-1); const track = document.getElementById('sliderTrack'); if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide)); resetTimer(); }
+// ========== НАДЁЖНЫЙ ЗАПУСК ВИДЕО В СЛАЙДЕРЕ (для iOS Safari) ==========
+function initSliderVideos() {
+  const videos = document.querySelectorAll('.slide video');
+
+  const tryPlay = (video) => {
+    // iOS Safari иногда требует, чтобы muted был установлен именно как JS-свойство,
+    // а не только HTML-атрибут
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => { /* будет повторная попытка ниже */ });
+    }
+  };
+
+  videos.forEach(video => {
+    // Запускаем как только видео готово отдавать кадры
+    video.addEventListener('loadedmetadata', () => tryPlay(video));
+    video.addEventListener('canplay', () => tryPlay(video));
+    // Если видео уже готово (кэш) — пробуем сразу
+    if (video.readyState >= 2) tryPlay(video);
+  });
+
+  // Несколько повторных попыток в первые секунды (на случай если Safari отложил decode)
+  [50, 300, 800, 1500, 3000].forEach(delay => {
+    setTimeout(() => videos.forEach(tryPlay), delay);
+  });
+
+  // Гарантированный запуск при первом касании/клике пользователя —
+  // на iOS это всегда срабатывает, даже если автозапуск был заблокирован
+  const unlockOnInteraction = () => {
+    videos.forEach(tryPlay);
+    document.removeEventListener('touchstart', unlockOnInteraction);
+    document.removeEventListener('click', unlockOnInteraction);
+  };
+  document.addEventListener('touchstart', unlockOnInteraction, { once: true, passive: true });
+  document.addEventListener('click', unlockOnInteraction, { once: true });
+
+  // Перезапуск при возврате на вкладку (свайп между приложениями на iOS останавливает видео)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) videos.forEach(tryPlay);
+  });
+}
+
+function goToSlide(n) { if(sliderSlides.length===0) return; currentSlide = Math.min(Math.max(0, n), sliderSlides.length-1); const track = document.getElementById('sliderTrack'); if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide)); resetTimer(); const activeVideo = document.getElementById('slideVideo' + currentSlide); if (activeVideo) { activeVideo.muted = true; activeVideo.play().catch(()=>{}); } }
 
 function slideNext() { if(sliderSlides.length>1) goToSlide((currentSlide+1)%sliderSlides.length); }
 
@@ -816,7 +857,7 @@ function renderMenu(categoryId) {
   g.innerHTML = items.slice(0,6).map(item => {
     const name = getDishName(item.dish_translations, currentLang) || item.name || '';
     const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
-    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url}" alt="${name}">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
   }).join('');
 }
 
@@ -1039,30 +1080,29 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
 // ========== ЗАПУСК ==========
 async function init() {
-  // Инициализируем переключатель языка сразу (не требует данных)
+  // Инициализируем i18next
+  await initI18n();
+  
+  // Инициализируем переключатель языка
   initLangSwitcher();
-
-  // Запускаем загрузку переводов И данных Supabase ОДНОВРЕМЕННО
-  // (раньше переводы грузились первыми и блокировали старт запросов к базе)
-  const [, ] = await Promise.all([
-    initI18n(),
-    loadAllSettings(),
-  ]);
-
-  // После загрузки обновляем UI для текущего языка
+  
+  // Загружаем все настройки и данные
+  await loadAllSettings();
+  
+  // После загрузки настроек обновляем UI для текущего языка
   updateUILanguage();
-
+  
   // Обновляем все элементы с data-i18n еще раз
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    const translation = i18next.t(key, { lng: currentLang });
+    const translation = i18next.t(key);
     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
       if (el.placeholder !== undefined) el.placeholder = translation;
     } else {
       el.innerHTML = translation;
     }
   });
-
+  
   // Устанавливаем флаг и текст для языка
   const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
   const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
