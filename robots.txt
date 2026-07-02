@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /menu
+Disallow: /admin
+Disallow: /admin.html
+
+# Sitemap
+Sitemap: https://malako.az/sitemap.xml
+
+# Crawl-delay for bots
+Crawl-delay: 1
