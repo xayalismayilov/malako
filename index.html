@@ -3,10 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Malako — Твоё любимое место</title>
+<title>Malako Café Baku — Specialty Coffee & Food | malako.az</title>
+<meta name="description" content="Malako — Bakıda ən yaxşı specialty qəhvə, dadlı səhər yeməkləri, desertlər və rahat atmosfer. Malako kafe, Malako menu, Malako Baku.">
+<meta name="keywords" content="malako, malako baku, malako menu, malako kafe, malako cafe, malako az, malako coffee, specialty coffee baku, кофе баку, кафе баку, малако, малако баку, malako azerbaycan, coffee shop baku, breakfast baku, baku cafe">
+<meta name="author" content="Malako Café">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#3b2a20">
+<link rel="canonical" href="https://malako.az/">
+<meta property="og:type" content="restaurant">
+<meta property="og:title" content="Malako Café Baku — Specialty Coffee & Food">
+<meta property="og:description" content="Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer. 2016-cı ildən.">
+<meta property="og:url" content="https://malako.az/">
+<meta property="og:site_name" content="Malako">
+<meta property="og:locale" content="az_AZ">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Malako Café Baku — Specialty Coffee & Food">
+<meta name="twitter:description" content="Bakıda specialty qəhvə və dadlı səhər yeməkləri. 2016-cı ildən.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CafeOrCoffeeShop","name":"Malako","alternateName":["Malako Café","Malako Coffee","Малако"],"description":"Specialty Coffee & Food in Baku since 2016. Breakfast, desserts, Colombian coffee.","url":"https://malako.az","menu":"https://malako.az/menu","hasMenu":"https://malako.az/menu","servesCuisine":["Coffee","Breakfast","Desserts","Bowls","Burgers"],"priceRange":"$$","currenciesAccepted":"AZN","paymentAccepted":"Cash, Credit Card","address":{"@type":"PostalAddress","addressLocality":"Baku","addressCountry":"AZ"},"geo":{"@type":"GeoCoordinates","addressCountry":"AZ"},"openingHours":"Mo-Su 08:00-23:00","sameAs":[],"keywords":"malako, malako baku, specialty coffee, кофе баку, кафе баку"}
+</script>
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/dnkapcgvr/image/upload/v1782735994/6895efb96ab951f1d2d657a8_ns1ibc.avif">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://wlnifdqfnxhqlyvlmadi.supabase.co" crossorigin>
+<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="dns-prefetch" href="https://res.cloudinary.com">
+<link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js"></script>
@@ -318,11 +343,11 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
     <a href="menu.html" class="btn-menu-link" id="navMenuBtn" data-i18n="nav_menu_btn">Menyu</a>
     <!-- <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>-->
     <div class="lang-switcher">
-      <button class="lang-btn" id="langBtn"><span class="lang-flag" id="currentLangFlag">🇦🇿</span><span id="currentLangText">AZ</span><span>▼</span></button>
+      <button class="lang-btn" id="langBtn"><span id="currentLangText">AZ</span><span>▼</span></button>
       <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" data-lang="az" data-flag="🇦🇿"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
-        <div class="lang-option" data-lang="ru" data-flag="🇷🇺"><span class="lang-flag">🇷🇺</span> Русский</div>
-        <div class="lang-option" data-lang="en" data-flag="🇬🇧"><span class="lang-flag">🇬🇧</span> English</div>
+        <div class="lang-option active" data-lang="az">AZ — Azərbaycan</div>
+        <div class="lang-option" data-lang="ru">RU — Русский</div>
+        <div class="lang-option" data-lang="en">EN — English</div>
       </div>
     </div>
     <button class="hamburger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -338,9 +363,9 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
   <!-- <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>-->
   <div class="mobile-lang-section">
-    <div class="mobile-lang-item active" data-lang="az"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
-    <div class="mobile-lang-item" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</div>
-    <div class="mobile-lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+    <div class="mobile-lang-item active" data-lang="az">AZ — Azərbaycan</div>
+    <div class="mobile-lang-item" data-lang="ru">RU — Русский</div>
+    <div class="mobile-lang-item" data-lang="en">EN — English</div>
   </div>
 </div>
  
@@ -467,11 +492,8 @@ function updateUILanguage() {
   });
   
   // Обновляем флаг и текст кнопки языка
-  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
   const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
-  const cf = document.getElementById('currentLangFlag');
   const ct = document.getElementById('currentLangText');
-  if (cf) cf.textContent = flags[currentLang];
   if (ct) ct.textContent = texts[currentLang];
   
   // Обновляем активный класс для опций языка
@@ -857,7 +879,7 @@ function renderMenu(categoryId) {
   g.innerHTML = items.slice(0,6).map(item => {
     const name = getDishName(item.dish_translations, currentLang) || item.name || '';
     const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
-    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url}" alt="${name}">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_400,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
   }).join('');
 }
 
@@ -1081,13 +1103,8 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 // ========== ЗАПУСК ==========
 async function init() {
   // Инициализируем i18next
-  await initI18n();
-  
-  // Инициализируем переключатель языка
   initLangSwitcher();
-  
-  // Загружаем все настройки и данные
-  await loadAllSettings();
+  await Promise.all([ initI18n(), loadAllSettings() ]);
   
   // После загрузки настроек обновляем UI для текущего языка
   updateUILanguage();
@@ -1104,11 +1121,8 @@ async function init() {
   });
   
   // Устанавливаем флаг и текст для языка
-  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
   const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
-  const cf = document.getElementById('currentLangFlag');
   const ct = document.getElementById('currentLangText');
-  if (cf) cf.textContent = flags[currentLang];
   if (ct) ct.textContent = texts[currentLang];
 }
 
