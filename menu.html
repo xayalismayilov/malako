@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://wlnifdqfnxhqlyvlmadi.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
+<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="dns-prefetch" href="https://res.cloudinary.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
@@ -538,9 +540,9 @@ footer p{
         <span>▼</span>
       </button>
       <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" data-lang="az"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
-        <div class="lang-option" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</div>
-        <div class="lang-option" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+        <div class="lang-option active" data-lang="az">AZ — Azərbaycan</div>
+        <div class="lang-option" data-lang="ru">RU — Русский</div>
+        <div class="lang-option" data-lang="en">EN — English</div>
       </div>
     </div>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
@@ -655,11 +657,8 @@ function updateUILanguage() {
     }
   });
   
-  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
   const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
-  const cf = document.getElementById('currentLangFlag');
   const ct = document.getElementById('currentLangText');
-  if (cf) cf.textContent = flags[currentLang];
   if (ct) ct.textContent = texts[currentLang];
   
   document.querySelectorAll('.lang-option, .mobile-lang-item').forEach(opt => {
@@ -880,7 +879,7 @@ function buildMenu() {
     sectionsHtml += `
       <div class="menu-section" id="section-${category.id}">
         <div class="menu-section-header">
-          <span class="section-emoji">${category.emoji || '🍽️'}</span>
+          
           <h2 class="section-h2">${escapeHtml(catName)}</h2>
         </div>
         <div class="menu-grid">
@@ -890,7 +889,7 @@ function buildMenu() {
             return `
               <div class="dish-card${!item.available ? ' unavailable' : ''}">
                 <div class="dish-img">
-                  ${item.image_url ? `<img src="${item.image_url}" alt="${name}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentNode.innerHTML='${item.emoji || '🍽️'}'">` : (item.emoji || '🍽️')}
+                  ${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentNode.innerHTML='${item.emoji || '🍽️'}'">` : (item.emoji || '🍽️')}
                   ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
                   ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
                 </div>
@@ -1149,11 +1148,8 @@ async function init() {
   });
   
   // Устанавливаем флаг и текст для языка
-  const flags = { az: '🇦🇿', ru: '🇷🇺', en: '🇬🇧' };
   const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
-  const cf = document.getElementById('currentLangFlag');
   const ct = document.getElementById('currentLangText');
-  if (cf) cf.textContent = flags[currentLang];
   if (ct) ct.textContent = texts[currentLang];
 }
 
