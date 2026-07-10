@@ -219,7 +219,7 @@ nav{
 @media(max-width:768px){
   .hamburger{display:flex}
   .nav-back{display:none}
-  #currentLangText{display:none}
+  #currentLangText{display:inline}
 }
 
 .menu-hero{
@@ -555,9 +555,9 @@ footer p{
   <a href="index.html#cashback" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>
   <a href="index.html#about" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>-->
   <div class="mobile-lang-section">
-    <div class="mobile-lang-item active" data-lang="az"><span class="lang-flag">🇦🇿</span> Azərbaycan</div>
-    <div class="mobile-lang-item" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</div>
-    <div class="mobile-lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+    <div class="mobile-lang-item active" data-lang="az">AZE</div>
+    <div class="mobile-lang-item" data-lang="ru">RU</div>
+    <div class="mobile-lang-item" data-lang="en">ENG</div>
   </div>
 </div>
 
@@ -657,7 +657,7 @@ function updateUILanguage() {
     }
   });
   
-  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
   
@@ -1148,7 +1148,7 @@ async function init() {
   });
   
   // Устанавливаем флаг и текст для языка
-  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
 }
