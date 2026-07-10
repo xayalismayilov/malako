@@ -270,7 +270,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 .slide-btn-primary:hover{background:var(--white);color:var(--espresso)}
 .slide-btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.6)!important}
 .slide-btn-outline:hover{background:var(--white);color:var(--espresso)}
-.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(4px);color:white;font-size:1.1rem}
+.slider-arrow{display:none!important}
 .slider-arrow:hover{background:var(--caramel);border-color:var(--caramel)}
 .slider-arrow-prev{left:1.5rem}
 .slider-arrow-next{right:1.5rem}
@@ -322,7 +322,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 }
 @media (max-width: 480px) {
   .slide { height: 80vh !important; min-height: 500px !important; }
-  .slide-buttons { flex-direction: column !important; align-items: center !important; gap: 0.5rem !important; width: 90% !important; }
+  .slide-buttons { flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; width: 90% !important; margin: 0 auto !important; }
   .slide-btn { width: 100% !important; text-align: center !important; }
 }
 </style>
@@ -345,9 +345,9 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
     <div class="lang-switcher">
       <button class="lang-btn" id="langBtn"><span id="currentLangText">AZ</span><span>▼</span></button>
       <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" data-lang="az">AZ — Azərbaycan</div>
+        <div class="lang-option active" data-lang="az">AZE — Azərbaycan</div>
         <div class="lang-option" data-lang="ru">RU — Русский</div>
-        <div class="lang-option" data-lang="en">EN — English</div>
+        <div class="lang-option" data-lang="en">ENG — English</div>
       </div>
     </div>
     <button class="hamburger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -363,9 +363,9 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
   <!-- <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>-->
   <div class="mobile-lang-section">
-    <div class="mobile-lang-item active" data-lang="az">AZ — Azərbaycan</div>
-    <div class="mobile-lang-item" data-lang="ru">RU — Русский</div>
-    <div class="mobile-lang-item" data-lang="en">EN — English</div>
+    <div class="mobile-lang-item active" data-lang="az">AZE</div>
+    <div class="mobile-lang-item" data-lang="ru">RU</div>
+    <div class="mobile-lang-item" data-lang="en">ENG</div>
   </div>
 </div>
  
@@ -391,7 +391,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <div class="ticker"><div class="ticker-inner"><span class="ticker-item">✦ Specialty Coffee</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerBreakfast" data-i18n="ticker_breakfast">Hər gün səhər yeməyi</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerDesserts" data-i18n="ticker_desserts">Orijinal desertlər</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCashback" data-i18n="ticker_cashback">orijinal dad</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCoffee" data-i18n="ticker_coffee">Kolumbiya qovrulmuş qəhvə</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerAtmosphere" data-i18n="ticker_atmosphere">Rahat atmosfer</span><span class="ticker-item ticker-dot">✦</span></div></div>
  
 <!-- SLIDER -->
-<section class="slider-section" id="slider" style="display: none;"><div class="slider-track" id="sliderTrack"></div><button class="slider-arrow slider-arrow-prev" onclick="slidePrev()">&#8592;</button><button class="slider-arrow slider-arrow-next" onclick="slideNext()">&#8594;</button><div class="slider-dots" id="sliderDots"></div></section>
+<section class="slider-section" id="slider" style="display: none;"><div class="slider-track" id="sliderTrack"></div><div class="slider-dots" id="sliderDots"></div></section>
  
 <!-- FEATURES -->
 <section class="section" id="why" style="display: none;"><p class="section-label fade-up" id="whyLabel" data-i18n="why_label">Niyə biz</p><h2 class="section-title fade-up" id="whyTitle" data-i18n="why_title">Bizi xüsusi edən nədir</h2><div class="features-grid" id="featuresGrid"></div></section>
@@ -493,7 +493,7 @@ function updateUILanguage() {
   });
   
   // Обновляем флаг и текст кнопки языка
-  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
   
@@ -1122,7 +1122,7 @@ async function init() {
   });
   
   // Устанавливаем флаг и текст для языка
-  const texts = { az: 'AZ', ru: 'RU', en: 'EN' };
+  const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
 }
