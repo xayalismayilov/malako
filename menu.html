@@ -41,7 +41,7 @@ body{
   background-attachment:fixed;
 }
 body.bg-image-set{background:var(--bg-image) center/cover fixed no-repeat}
-body.bg-image-set::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(250,246,240,0.5);z-index:-1;pointer-events:none}
+body.bg-image-set::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(250,246,240,0.85);z-index:-1;pointer-events:none}
 
 nav{
   position:fixed;
@@ -223,7 +223,7 @@ nav{
 }
 
 .menu-hero{
-  background:rgba(245,237,224,0.5);
+  background:rgba(245,237,224,0.85);
   padding:120px 5% 4rem;
   text-align:center
 }
@@ -245,18 +245,67 @@ nav{
   color:var(--caramel)
 }
 
-.menu-sticky-nav{
+/* ===== SECTION TABS (İçkilər / Yemәklər) ===== */
+.menu-section-tabs{
   position:sticky;
   top:70px;
+  z-index:51;
+  background:rgba(250,246,240,0.97);
+  backdrop-filter:blur(12px);
+  display:flex;
+  justify-content:center;
+  border-bottom:1px solid var(--border);
+  padding:0;
+}
+.menu-section-tab{
+  flex:0 1 auto;
+  min-width:160px;
+  padding:1.1rem 3rem;
+  border:none;
+  background:transparent;
+  font-family:'Jost',sans-serif;
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:0.04em;
+  color:var(--text-muted);
+  cursor:pointer;
+  position:relative;
+  transition:color 0.25s;
+  text-align:center;
+}
+.menu-section-tab::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;
+  left:0;
+  right:0;
+  height:2.5px;
+  background:var(--espresso);
+  border-radius:2px 2px 0 0;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.menu-section-tab.active{
+  color:var(--espresso);
+  font-weight:600;
+}
+.menu-section-tab.active::after{
+  opacity:1;
+}
+
+/* ===== STICKY CATEGORY NAV ===== */
+.menu-sticky-nav{
+  position:sticky;
+  top:120px;
   z-index:50;
   background:rgba(250,246,240,0.95);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
-  padding:1rem 5%;
+  padding:0.75rem 5%;
   display:flex;
   gap:0.5rem;
   overflow-x:auto;
-  scrollbar-width:none
+  scrollbar-width:none;
 }
 .menu-sticky-nav::-webkit-scrollbar{
   display:none
@@ -274,12 +323,17 @@ nav{
   transition:all 0.3s;
   font-family:'Jost',sans-serif;
   white-space:nowrap;
-  font-weight:400
+  font-weight:400;
+  flex-shrink:0;
 }
 .cat-btn.active,.cat-btn:hover{
   background:var(--espresso);
   color:var(--cream);
-  border-color:var(--espresso)
+  border-color:var(--espresso);
+}
+@media(max-width:768px){
+  .menu-sticky-nav{top:118px}
+  .menu-section-tab{font-size:0.9rem}
 }
 
 .menu-body{
@@ -566,6 +620,7 @@ footer p{
   <h1><span id="menuHeroPre" data-i18n="menu_page_pre">Bizim</span> <em id="menuHeroEm" data-i18n="menu_page_em">yeməklər</em> <span id="menuHeroPost" data-i18n="menu_page_post">və içkilər</span></h1>
 </div>
 
+<div class="menu-section-tabs" id="menuSectionTabs"></div>
 <div class="menu-sticky-nav" id="stickyNav"></div>
 <div class="menu-body" id="menuBody"></div>
 
@@ -851,45 +906,99 @@ function showErrorMessage(message) {
   }
 }
 
+let currentMenuSection = 'drink'; // стартуем с İçkilər как на скриншоте
+
 function buildMenu() {
-  const nav = document.getElementById('stickyNav');
   const body = document.getElementById('menuBody');
-  if (!nav || !body) return;
-  
+  if (!body) return;
+
   if (allCategories.length === 0) {
-    const unavailMsg = { az: 'Menyu müvəqqəti olaraq əlçatan deyil. Sonra baxın!', ru: 'Меню временно недоступно. Загляните позже!', en: 'Menu is temporarily unavailable. Check back later!' };
-    body.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)">${unavailMsg[currentLang] || unavailMsg.az}</div>`;
+    const msg = { az: 'Menyu müvəqqəti əlçatan deyil.', ru: 'Меню временно недоступно.', en: 'Menu temporarily unavailable.' };
+    body.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">${msg[currentLang]||msg.az}</div>`;
     return;
   }
-  
-  // Строим навигацию по категориям
-  nav.innerHTML = allCategories.map(c => {
-    const name = getCategoryName(c.category_translations, currentLang) || c.name || 'Kateqoriya';
-    return `<button class="cat-btn" data-category-id="${c.id}" onclick="scrollToSection('${c.id}', this)">${escapeHtml(name)}</button>`;
+
+  const drinkCats = allCategories.filter(c => c.category_type === 'drink');
+  const foodCats  = allCategories.filter(c => c.category_type !== 'drink');
+  const hasBoth   = drinkCats.length > 0 && foodCats.length > 0;
+
+  // Строим табы секций
+  const tabsEl = document.getElementById('menuSectionTabs');
+  if (tabsEl) {
+    if (hasBoth) {
+      const drinkLabel = { az: 'İçkilər', ru: 'Напитки', en: 'Drinks' }[currentLang] || 'İçkilər';
+      const foodLabel  = { az: 'Yemәklər', ru: 'Блюда', en: 'Food' }[currentLang] || 'Yemәklər';
+      tabsEl.innerHTML = `
+        <button class="menu-section-tab ${currentMenuSection==='drink'?'active':''}" onclick="switchSection('drink')">${drinkLabel}</button>
+        <button class="menu-section-tab ${currentMenuSection==='food'?'active':''}"  onclick="switchSection('food')">${foodLabel}</button>
+      `;
+      tabsEl.style.display = 'flex';
+    } else {
+      tabsEl.style.display = 'none';
+      // Если только один тип — показываем всё
+      currentMenuSection = foodCats.length > 0 ? 'food' : 'drink';
+    }
+  }
+
+  // Если оба типа отсутствуют — стартуем с первого доступного
+  if (!hasBoth) {
+    currentMenuSection = drinkCats.length > 0 ? 'drink' : 'food';
+  }
+
+  renderSection(currentMenuSection);
+}
+
+function switchSection(section) {
+  currentMenuSection = section;
+
+  // Обновляем активный таб
+  document.querySelectorAll('.menu-section-tab').forEach(btn => {
+    const isDrink = btn.textContent.trim() === ({ az:'İçkilər', ru:'Напитки', en:'Drinks' }[currentLang]||'İçkilər');
+    btn.classList.toggle('active',
+      (section === 'drink' && isDrink) || (section === 'food' && !isDrink)
+    );
+  });
+
+  renderSection(section);
+
+  // Скролл к верху меню
+  const tabsEl = document.getElementById('menuSectionTabs');
+  if (tabsEl) tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderSection(section) {
+  const nav  = document.getElementById('stickyNav');
+  const body = document.getElementById('menuBody');
+  if (!nav || !body) return;
+
+  const cats = section === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  // Навигация категорий
+  nav.innerHTML = cats.map(c => {
+    const name = getCategoryName(c.category_translations, currentLang) || c.name || '';
+    return `<button class="cat-btn" data-category-id="${c.id}" onclick="scrollToSection('${c.id}',this)">${escapeHtml(name)}</button>`;
   }).join('');
-  
-  // Строим секции с блюдами
-  let sectionsHtml = '';
-  for (const category of allCategories) {
-    const items = allMenuItems.filter(item => item.category_id === category.id);
-    if (items.length === 0) continue;
-    
-    const catName = getCategoryName(category.category_translations, currentLang) || category.name || 'Kateqoriya';
-    
-    sectionsHtml += `
-      <div class="menu-section" id="section-${category.id}">
-        <div class="menu-section-header">
-          
-          <h2 class="section-h2">${escapeHtml(catName)}</h2>
-        </div>
+
+  // Секции блюд
+  let html = '';
+  for (const cat of cats) {
+    const items = allMenuItems.filter(i => i.category_id === cat.id);
+    if (!items.length) continue;
+    const catName = getCategoryName(cat.category_translations, currentLang) || cat.name || '';
+    html += `
+      <div class="menu-section" id="section-${cat.id}">
+        <div class="menu-section-header"><h2 class="section-h2">${escapeHtml(catName)}</h2></div>
         <div class="menu-grid">
           ${items.map(item => {
             const name = getDishName(item.dish_translations, currentLang) || item.name || '';
             const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
+            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_auto/') : '';
             return `
-              <div class="dish-card${!item.available ? ' unavailable' : ''}">
+              <div class="dish-card${!item.available?' unavailable':''}">
                 <div class="dish-img">
-                  ${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentNode.innerHTML='${item.emoji || '🍽️'}'">` : (item.emoji || '🍽️')}
+                  ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" loading="lazy" decoding="async">` : (item.emoji||'🍽️')}
                   ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
                   ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
                 </div>
@@ -901,23 +1010,20 @@ function buildMenu() {
                     <span class="dish-tag">${escapeHtml(catName)}</span>
                   </div>
                 </div>
-              </div>
-            `;
+              </div>`;
           }).join('')}
         </div>
-      </div>
-    `;
+      </div>`;
   }
-  
-  if (sectionsHtml === '') {
-    const emptyMsg = { az: 'Menyuda hələ heç bir yemək yoxdur. Sonra baxın!', ru: 'В меню пока нет блюд. Загляните позже!', en: 'No dishes in the menu yet. Check back later!' };
-    body.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`;
+
+  if (!html) {
+    const msg = { az: 'Bu bölmədə hələ məhsul yoxdur.', ru: 'В этом разделе пока нет позиций.', en: 'Nothing here yet.' };
+    body.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">${msg[currentLang]||msg.az}</div>`;
     return;
   }
-  
-  body.innerHTML = sectionsHtml;
-  
-  const firstBtn = document.querySelector('.cat-btn');
+
+  body.innerHTML = html;
+  const firstBtn = nav.querySelector('.cat-btn');
   if (firstBtn) firstBtn.classList.add('active');
   setTimeout(() => setupScrollSpy(), 200);
 }
@@ -934,55 +1040,59 @@ let scrollTimeout = null;
 
 function setupScrollSpy() {
   if (activeObserver) activeObserver.disconnect();
-  
-  const sections = allCategories
+
+  // Берём только категории текущего раздела
+  const currentCats = currentMenuSection === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  const sections = currentCats
     .map(c => document.getElementById('section-' + c.id))
     .filter(el => el !== null);
-    
+
   if (sections.length === 0) return;
-  
+
   activeObserver = new IntersectionObserver((entries) => {
     if (isScrollingManually) return;
-    
     let bestSection = null;
     let bestRatio = 0;
-    
     entries.forEach(entry => {
       if (entry.isIntersecting && entry.intersectionRatio > bestRatio) {
         bestRatio = entry.intersectionRatio;
         bestSection = entry.target;
       }
     });
-    
     if (bestSection) {
-      const sectionId = bestSection.id.replace('section-', '');
-      highlightActiveCategory(sectionId);
+      highlightActiveCategory(bestSection.id.replace('section-', ''));
     }
   }, { threshold: [0.1, 0.3, 0.5, 0.7], rootMargin: '-80px 0px -100px 0px' });
-  
-  sections.forEach(section => {
-    if (section) activeObserver.observe(section);
-  });
-  
-  window.addEventListener('scroll', () => {
-    if (scrollTimeout) clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      if (!isScrollingManually) {
-        updateActiveCategoryByScroll();
-      }
-    }, 100);
-  });
+
+  sections.forEach(s => activeObserver.observe(s));
+
+  window.removeEventListener('scroll', onScrollSpy);
+  window.addEventListener('scroll', onScrollSpy, { passive: true });
+}
+
+function onScrollSpy() {
+  if (scrollTimeout) clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    if (!isScrollingManually) updateActiveCategoryByScroll();
+  }, 100);
 }
 
 function updateActiveCategoryByScroll() {
-  const sections = allCategories
+  const currentCats = currentMenuSection === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  const sections = currentCats
     .map(c => document.getElementById('section-' + c.id))
     .filter(el => el !== null);
-    
-  const scrollPosition = window.scrollY + 120;
+
+  const scrollPosition = window.scrollY + 160;
   let currentSection = null;
   let minDistance = Infinity;
-  
+
   sections.forEach(section => {
     const distance = Math.abs(scrollPosition - section.offsetTop);
     if (distance < minDistance) {
@@ -990,10 +1100,9 @@ function updateActiveCategoryByScroll() {
       currentSection = section;
     }
   });
-  
+
   if (currentSection) {
-    const sectionId = currentSection.id.replace('section-', '');
-    highlightActiveCategory(sectionId);
+    highlightActiveCategory(currentSection.id.replace('section-', ''));
   }
 }
 
@@ -1024,21 +1133,16 @@ function highlightActiveCategory(categoryId) {
 
 function scrollToSection(categoryId, btn) {
   isScrollingManually = true;
-  
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
   const el = document.getElementById('section-' + categoryId);
   if (el) {
-    const offset = 80;
-    const elementPosition = el.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.scrollY - offset;
-    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    // Учитываем высоту navbar + section tabs + category nav
+    const offset = 170;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
-  
-  setTimeout(() => {
-    isScrollingManually = false;
-  }, 800);
+  setTimeout(() => { isScrollingManually = false; }, 1000);
 }
 
 // ========== ПОПАП ==========
@@ -1151,6 +1255,19 @@ async function init() {
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
+}
+
+// Пересобираем меню при смене языка
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('selected_language', lang);
+  i18next.changeLanguage(lang).then(() => {
+    updateUILanguage();
+    // Пересобираем секции и категории на новом языке
+    if (allCategories.length > 0) buildMenu();
+    const dd = document.getElementById('langDropdown');
+    if (dd) dd.classList.remove('show');
+  });
 }
 
 init();
