@@ -11,7 +11,8 @@
 <link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
 <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js"></script>
@@ -246,6 +247,7 @@ nav{
 }
 
 /* ===== SECTION TABS (İçkilər / Yemәklər) ===== */
+@keyframes shimmer { from{opacity:0.4} to{opacity:0.9} }
 .menu-section-tabs{
   position:sticky;
   top:70px;
@@ -804,6 +806,10 @@ function getCategoryName(translations, lang) {
 
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
+  // Запускаем settings И меню ОДНОВРЕМЕННО — не ждём settings перед загрузкой меню
+  const menuPromise = loadMenuData();
+  const popupPromise = loadPromoPopup();
+
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
     if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
@@ -812,10 +818,7 @@ async function loadAllSettings() {
   try { applyAppearanceSettings(); } catch(e) {}
   try { applyLogoSettings(); } catch(e) {}
 
-  await Promise.allSettled([
-    loadMenuData(),
-    loadPromoPopup(),
-  ]);
+  await Promise.allSettled([menuPromise, popupPromise]);
 
   try { applyMenuTexts(); } catch(e) {}
 }
@@ -874,18 +877,29 @@ function applyMenuTexts() {
 // ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
 async function loadMenuData() {
   try {
-    const { data: categories } = await supabaseClient
-      .from('categories')
-      .select('*, category_translations(*)')
-      .order('sort_order', { ascending: true });
-    
-    const { data: menuItems } = await supabaseClient
-      .from('menu_items')
-      .select('*, dish_translations(*)')
-      .order('sort_order', { ascending: true });
-    
-    allCategories = categories || [];
-    allMenuItems = menuItems || [];
+    // Показываем скелетон пока грузятся данные
+    const body = document.getElementById('menuBody');
+    if (body && !body.innerHTML) {
+      body.innerHTML = `<div style="padding:3rem 5%;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">
+        ${Array(6).fill('<div style="background:var(--milk);border-radius:16px;height:280px;animation:shimmer 1.5s infinite alternate"></div>').join('')}
+      </div>`;
+    }
+
+    // Оба запроса параллельно
+    const [catRes, itemRes] = await Promise.all([
+      supabaseClient
+        .from('categories')
+        .select('id, name, emoji, sort_order, category_type, category_translations(id, language, name)')
+        .order('sort_order', { ascending: true }),
+      supabaseClient
+        .from('menu_items')
+        .select('id, name, description, price, image_url, emoji, badge, available, sort_order, category_id, dish_translations(id, language, name, description)')
+        .eq('available', true)
+        .order('sort_order', { ascending: true })
+    ]);
+
+    allCategories = catRes.data || [];
+    allMenuItems  = itemRes.data || [];
     buildMenu();
   } catch(e) {
     console.error('Ошибка загрузки меню:', e);
@@ -994,7 +1008,7 @@ function renderSection(section) {
           ${items.map(item => {
             const name = getDishName(item.dish_translations, currentLang) || item.name || '';
             const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
-            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_auto/') : '';
+            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto:eco,w_400/') : '';
             return `
               <div class="dish-card${!item.available?' unavailable':''}">
                 <div class="dish-img">
