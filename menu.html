@@ -13,7 +13,8 @@
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js" defer></script>
@@ -374,7 +375,9 @@ nav{
   border:1px solid var(--latte);
   transition:all 0.3s;
   display:flex;
-  flex-direction:column
+  flex-direction:column;
+  content-visibility:auto;
+  contain-intrinsic-size:0 420px
 }
 .dish-card:hover{
   transform:translateY(-3px);
@@ -393,8 +396,7 @@ nav{
   justify-content:center;
   font-size:3rem;
   position:relative;
-  overflow:hidden;
-  contain:strict
+  overflow:hidden
 }
 .dish-img img{
   width:100%;
@@ -580,6 +582,11 @@ footer p{
   .menu-grid{
     grid-template-columns:1fr
   }
+}
+
+@keyframes skeletonShimmer {
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
 }
 </style>
 </head>
@@ -808,6 +815,7 @@ function getCategoryName(translations, lang) {
 
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
+  showSkeleton();
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
     if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
@@ -878,18 +886,20 @@ function applyMenuTexts() {
 // ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
 async function loadMenuData() {
   try {
-    const { data: categories } = await supabaseClient
-      .from('categories')
-      .select('*, category_translations(*)')
-      .order('sort_order', { ascending: true });
-    
-    const { data: menuItems } = await supabaseClient
-      .from('menu_items')
-      .select('*, dish_translations(*)')
-      .order('sort_order', { ascending: true });
-    
-    allCategories = categories || [];
-    allMenuItems = menuItems || [];
+    // Параллельные запросы + только доступные блюда
+    const [catRes, itemRes] = await Promise.all([
+      supabaseClient
+        .from('categories')
+        .select('id,name,emoji,sort_order,category_type,category_translations(id,language,name)')
+        .order('sort_order', { ascending: true }),
+      supabaseClient
+        .from('menu_items')
+        .select('id,name,description,price,image_url,emoji,badge,available,sort_order,category_id,dish_translations(id,language,name,description)')
+        .eq('available', true)
+        .order('sort_order', { ascending: true })
+    ]);
+    allCategories = catRes.data || [];
+    allMenuItems  = itemRes.data || [];
     buildMenu();
   } catch(e) {
     console.error('Ошибка загрузки меню:', e);
@@ -911,6 +921,14 @@ function showErrorMessage(message) {
 }
 
 let currentMenuSection = 'drink'; // стартуем с İçkilər как на скриншоте
+
+function showSkeleton() {
+  const body = document.getElementById('menuBody');
+  if (!body || body.innerHTML) return;
+  body.innerHTML = '<div style="padding:2rem 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">' +
+    Array(6).fill('<div style="border-radius:20px;overflow:hidden;border:1px solid var(--latte);background:var(--white)"><div style="height:200px;background:linear-gradient(90deg,var(--latte) 25%,var(--milk) 50%,var(--latte) 75%);background-size:200% 100%;animation:skeletonShimmer 1.4s infinite"></div><div style="padding:1.2rem"><div style="height:16px;background:var(--latte);border-radius:8px;margin-bottom:10px;width:70%;animation:skeletonShimmer 1.4s infinite"></div><div style="height:12px;background:var(--milk);border-radius:8px;margin-bottom:8px;animation:skeletonShimmer 1.4s infinite"></div><div style="height:12px;background:var(--milk);border-radius:8px;width:50%;animation:skeletonShimmer 1.4s infinite"></div></div></div>').join('') +
+    '</div>';
+}
 
 function buildMenu() {
   const body = document.getElementById('menuBody');
@@ -1001,12 +1019,12 @@ function renderSection(section) {
             const name = getDishName(item.dish_translations, currentLang) || item.name || '';
             const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
             const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto:eco,w_400/') : '';
-            const isLCP = (catIdx === 0 && itemIdx === 0);
+            const isLCP = (catIdx === 1 && itemIdx === 0);
             const imgLoad = isLCP ? 'fetchpriority="high" decoding="sync"' : 'loading="lazy" decoding="async"';
             return `
               <div class="dish-card${!item.available?' unavailable':''}">
                 <div class="dish-img">
-                  ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" ${imgLoad}>` : (item.emoji||'🍽️')}
+                  ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" width="400" height="250" ${imgLoad}>` : (item.emoji||'🍽️')}
                   ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
                   ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
                 </div>
