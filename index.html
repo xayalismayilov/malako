@@ -78,7 +78,7 @@ body.bg-image-set::before {
   z-index: -1;
   pointer-events: none;
 }
-/* iOS/mobile fix: background-attachment:fixed не работает корректно на мобильных */
+/* iOS/mobile fix: background-attachment:fixed не работает корректно на мобильных 
 @media (max-width: 768px), (hover: none) {
   body {
     background-attachment: scroll;
@@ -88,6 +88,22 @@ body.bg-image-set::before {
     background-position: center center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
+  }
+  body.bg-image-set::before {
+    position: fixed;
+    min-height: 100%;
+  }
+}*/
+  @media (max-width: 768px), (hover: none) {
+  body {
+    background-attachment: scroll;
+  }
+  body.bg-image-set {
+    background-attachment: scroll !important;
+    background-position: center center !important;
+    background-size: contain !important;        /* ← изменено */
+    background-repeat: no-repeat !important;
+    background-color: #F5F0E8;                /* добавлен цвет фона */
   }
   body.bg-image-set::before {
     position: fixed;
