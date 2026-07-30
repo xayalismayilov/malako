@@ -3,439 +3,682 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Malako Café Baku — Specialty Coffee & Food | malako.az</title>
-<meta name="description" content="Malako — Bakıda ən yaxşı specialty qəhvə, dadlı səhər yeməkləri, desertlər və rahat atmosfer. Malako kafe, Malako menu, Malako Baku.">
-<meta name="keywords" content="malako, malako baku, malako menu, malako kafe, malako cafe, malako az, malako coffee, specialty coffee baku, кофе баку, кафе баку, малако, малако баку, malako azerbaycan, coffee shop baku, breakfast baku, baku cafe">
-<meta name="author" content="Malako Café">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#3b2a20">
-<link rel="canonical" href="https://malako.az/">
-<meta property="og:type" content="restaurant">
-<meta property="og:title" content="Malako Café Baku — Specialty Coffee & Food">
-<meta property="og:description" content="Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer. 2016-cı ildən.">
-<meta property="og:url" content="https://malako.az/">
-<meta property="og:site_name" content="Malako">
-<meta property="og:locale" content="az_AZ">
-<meta property="og:locale:alternate" content="ru_RU">
-<meta property="og:locale:alternate" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Malako Café Baku — Specialty Coffee & Food">
-<meta name="twitter:description" content="Bakıda specialty qəhvə və dadlı səhər yeməkləri. 2016-cı ildən.">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CafeOrCoffeeShop","name":"Malako","alternateName":["Malako Café","Malako Coffee","Малако"],"description":"Specialty Coffee & Food in Baku since 2016. Breakfast, desserts, Colombian coffee.","url":"https://malako.az","menu":"https://malako.az/menu","hasMenu":"https://malako.az/menu","servesCuisine":["Coffee","Breakfast","Desserts","Bowls","Burgers"],"priceRange":"$$","currenciesAccepted":"AZN","paymentAccepted":"Cash, Credit Card","address":{"@type":"PostalAddress","addressLocality":"Baku","addressCountry":"AZ"},"geo":{"@type":"GeoCoordinates","addressCountry":"AZ"},"openingHours":"Mo-Su 08:00-23:00","sameAs":[],"keywords":"malako, malako baku, specialty coffee, кофе баку, кафе баку"}
-</script>
-  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dnkapcgvr/image/upload/v1782735994/6895efb96ab951f1d2d657a8_ns1ibc.avif">
+<title>Menyu — Malako Café</title>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dnkapcgvr/image/upload/v1782735994/6895efb96ab951f1d2d657a8_ns1ibc.avif">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://wlnifdqfnxhqlyvlmadi.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
 <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
-<link rel="dns-prefetch" href="https://wlnifdqfnxhqlyvlmadi.supabase.co">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/8.0.4/i18nextBrowserLanguageDetector.min.js"></script>
 <style>
-:root {
-  --cream: #FAF6F0;
-  --milk: #F5EDE0;
-  --latte: #E8D5B7;
-  --caramel: #C4965A;
-  --mocha: #8B6343;
-  --espresso: #4A3020;
-  --dark: #2C1A0E;
-  --white: #FFFFFF;
-  --text-muted: #9B7B5A;
-  --border: rgba(139,99,67,0.2);
-  --shadow: rgba(74,48,32,0.08);
-  --overlay: rgba(250,246,240,0.88);
+:root{
+  --cream:#FAF6F0;
+  --milk:#F5EDE0;
+  --latte:#E8D5B7;
+  --caramel:#C4965A;
+  --mocha:#8B6343;
+  --espresso:#4A3020;
+  --dark:#2C1A0E;
+  --white:#FFFFFF;
+  --text-muted:#9B7B5A;
+  --border:rgba(139,99,67,0.2);
+  --shadow:rgba(74,48,32,0.08);
 }
- 
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   font-family:'Jost',sans-serif;
   color:var(--dark);
-  overflow-x:hidden;
-  min-height:100vh;
-  background-color: #F5F0E8;
-  background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-  background-repeat: repeat;
-  background-attachment: fixed;
+  background-color:#F5F0E8;
+  background-image:url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  background-repeat:repeat;
+  background-attachment:fixed;
 }
-body.bg-image-set {
-  background: var(--bg-image) center/cover fixed no-repeat;
+body.bg-image-set{background:var(--bg-image) center/cover fixed no-repeat}
+body.bg-image-set::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(250,246,240,0.85);z-index:-1;pointer-events:none}
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  padding:0 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:70px;
+  background:rgba(250,246,240,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border)
 }
-body.bg-image-set::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(250, 246, 240, 0.55);
-  z-index: -1;
-  pointer-events: none;
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem;
+  color:var(--espresso);
+  text-decoration:none
 }
-/* iOS/mobile fix: background-attachment:fixed не работает корректно на мобильных */
-@media (max-width: 768px), (hover: none) {
-  body {
-    background-attachment: scroll;
-  }
-  body.bg-image-set {
-    background-attachment: scroll;
-    background-position: center top;
-    background-size: cover;
-  }
-  body.bg-image-set::before {
-    position: absolute;
-    min-height: 100%;
-  }
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:1rem
 }
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;transition:all 0.4s;background:rgba(250,246,240,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:600;color:var(--espresso);text-decoration:none;letter-spacing:0.02em}
-.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
-.nav-links a{text-decoration:none;color:var(--mocha);font-size:0.9rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s}
-.nav-links a:hover{color:var(--caramel)}
-.nav-right{display:flex;align-items:center;gap:1rem}
-.btn-reserve{background:var(--espresso);color:var(--cream);padding:0.55rem 1.3rem;border-radius:50px;font-size:0.82rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;white-space:nowrap}
-.btn-reserve:hover{background:var(--caramel);transform:translateY(-1px)}
-.btn-menu-link{color:var(--mocha);text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--border);padding:0.55rem 1.3rem;border-radius:50px;transition:all 0.3s}
-.btn-menu-link:hover{border-color:var(--caramel);color:var(--caramel)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:5px}
-.hamburger span{width:24px;height:2px;background:var(--espresso);transition:all 0.3s;display:block}
-.lang-switcher{position:relative;display:inline-flex;align-items:center;margin-left:1rem}
-.lang-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:0.55rem 1rem;font-size:0.82rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;color:var(--mocha);transition:all 0.3s;display:flex;align-items:center;gap:0.4rem}
-.lang-btn:hover{border-color:var(--caramel);color:var(--caramel)}
-.lang-btn .lang-flag{font-size:1.1rem}
-.lang-dropdown{position:absolute;top:100%;right:0;margin-top:0.5rem;background:var(--white);border-radius:16px;border:1px solid var(--latte);box-shadow:0 10px 30px rgba(0,0,0,0.1);min-width:140px;z-index:1000;display:none;overflow:hidden}
-.lang-dropdown.show{display:block}
-.lang-option{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;cursor:pointer;transition:background 0.2s;font-size:0.85rem;color:var(--mocha)}
-.lang-option:hover{background:var(--milk)}
-.lang-option.active{background:var(--milk);color:var(--caramel);font-weight:500}
-.mobile-lang-section{display:flex;justify-content:center;gap:1rem;padding-top:1.5rem;margin-top:1rem;border-top:1px solid var(--border)}
-.mobile-lang-item{display:flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:50px;cursor:pointer;transition:all 0.3s;font-size:0.85rem;color:var(--mocha);background:var(--milk)}
-.mobile-lang-item.active{background:var(--espresso);color:var(--cream)}
-@media (max-width:768px){.nav-right{gap:0.5rem}.lang-btn{padding:0.55rem 0.8rem}}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.hero-bg-pattern{position:absolute;inset:0;opacity:0.04;background-image:radial-gradient(circle,var(--espresso) 1px,transparent 1px);background-size:40px 40px}
-.hero-content{text-align:center;z-index:2;padding:0 1rem;animation:fadeInUp 1s ease}
-.hero-tagline{font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.5rem;font-weight:500}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:400;color:var(--espresso);line-height:1;margin-bottom:1rem;letter-spacing:-0.02em}
-.hero-title em{font-style:italic;color:var(--caramel)}
-.hero-subtitle{font-size:1.1rem;color:var(--mocha);font-weight:300;margin-bottom:2.5rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
-.hero-buttons{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
-.btn-primary{background:var(--espresso);color:var(--cream);padding:0.85rem 2.2rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block}
-.btn-primary:hover{background:var(--caramel);transform:translateY(-2px);box-shadow:0 8px 25px rgba(74,48,32,0.2)}
-.btn-outline{border:1.5px solid var(--espresso);color:var(--espresso);padding:0.85rem 2.2rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block}
-.btn-outline:hover{background:var(--espresso);color:var(--cream)}
-.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;animation:bounce 2s infinite}
-.scroll-indicator::after{content:'';width:1px;height:40px;background:linear-gradient(var(--caramel),transparent);display:block}
-.hero-float-card{position:absolute;background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);border-radius:20px;padding:1rem 1.4rem;border:1px solid var(--latte);box-shadow:0 8px 30px var(--shadow)}
-.hero-float-card-1{top:20%;left:5%;animation:float 6s ease-in-out infinite}
-.hero-float-card-2{bottom:25%;right:5%;animation:float 8s ease-in-out infinite 2s}
-.float-card-icon{font-size:1.5rem;margin-bottom:0.3rem}
-.float-card-label{font-size:0.75rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase}
-.float-card-value{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--espresso)}
-.ticker{background:var(--espresso);color:var(--latte);padding:0.85rem 0;overflow:hidden;white-space:nowrap}
-.ticker-inner{display:inline-flex;gap:3rem;animation:ticker 30s linear infinite}
-.ticker-item{font-size:0.82rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:400}
-.ticker-dot{color:var(--caramel)}
-.section{padding:6rem 5%;position:relative;background:rgba(250,246,240,0.85);backdrop-filter:blur(2px);margin:1rem 0;border-radius:0}
-.section:nth-child(even){background:rgba(245,237,224,0.55)}
-.section-label{font-size:0.78rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:1rem;font-weight:500}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--espresso);margin-bottom:1.5rem;line-height:1.15}
-.section-title em{font-style:italic;color:var(--caramel)}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;margin-top:4rem}
-.feature-card{background:var(--white);border-radius:24px;padding:2.5rem 2rem;border:1px solid var(--latte);transition:all 0.3s;position:relative;overflow:hidden}
-.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--latte),var(--caramel));transform:scaleX(0);transition:transform 0.3s}
-.feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px var(--shadow)}
-.feature-card:hover::before{transform:scaleX(1)}
-.feature-icon{width:56px;height:56px;background:var(--milk);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1.5rem}
-.feature-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--espresso);margin-bottom:0.8rem}
-.feature-card p{font-size:0.9rem;color:var(--mocha);line-height:1.7}
-.menu-preview{}
-.menu-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:3rem}
-.menu-tab{padding:0.6rem 1.4rem;border-radius:50px;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--mocha);transition:all 0.3s;font-family:'Jost',sans-serif;font-weight:400}
-.menu-tab.active,.menu-tab:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
-.menu-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
-.menu-card{background:var(--white);border-radius:20px;overflow:hidden;border:1px solid var(--latte);transition:all 0.3s}
-.menu-card:hover{transform:translateY(-4px);box-shadow:0 15px 40px var(--shadow)}
-.menu-card-img{height:250px;background:linear-gradient(135deg,var(--latte),var(--milk));display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
-.menu-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.menu-card-badge{position:absolute;top:12px;right:12px;background:var(--caramel);color:var(--white);font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;z-index:1}
-.menu-card-body{padding:1.3rem}
-.menu-card-body h4{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--espresso);margin-bottom:0.4rem}
-.menu-card-body p{font-size:0.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:1rem}
-.menu-card-footer{display:flex;align-items:center;justify-content:space-between}
-.menu-price{font-size:1.1rem;font-weight:600;color:var(--caramel);font-family:'Playfair Display',serif}
-.menu-tag{font-size:0.7rem;color:var(--text-muted);background:var(--milk);padding:0.2rem 0.6rem;border-radius:20px;letter-spacing:0.05em}
-.btn-all-menu{display:inline-flex;align-items:center;gap:0.5rem;margin-top:3rem;color:var(--espresso);font-weight:500;letter-spacing:0.08em;text-transform:uppercase;font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--caramel);padding-bottom:2px;transition:all 0.3s}
-.btn-all-menu:hover{color:var(--caramel)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-.about-image-stack{position:relative;height:500px}
-.about-img-main{width:75%;height:380px;border-radius:28px;position:absolute;top:0;left:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:5rem;background-size:cover;background-position:center}
-.about-img-sub{width:55%;height:220px;border-radius:20px;position:absolute;bottom:0;right:0;border:5px solid var(--cream);display:flex;align-items:center;justify-content:center;font-size:3.5rem;background-size:cover;background-position:center}
-.about-stat{position:absolute;top:40%;right:-5%;background:var(--white);border-radius:20px;padding:1.2rem 1.5rem;border:1px solid var(--latte);box-shadow:0 8px 30px var(--shadow)}
-.about-stat-num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--caramel);font-weight:600;display:block}
-.about-stat-label{font-size:0.78rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase}
-.about-content p{font-size:1rem;color:var(--mocha);line-height:1.8;margin-bottom:1.5rem}
-.about-features{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap}
-.about-feat-item{display:flex;align-items:center;gap:0.6rem;font-size:0.88rem;color:var(--espresso);font-weight:500}
-.about-feat-item::before{content:'';width:6px;height:6px;background:var(--caramel);border-radius:50%;flex-shrink:0}
-.cashback-section{background:var(--espresso);color:var(--cream);border-radius:32px;margin:0 5%;padding:5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-.cashback-label{font-size:0.78rem;letter-spacing:0.25em;color:var(--latte);text-transform:uppercase;margin-bottom:1rem}
-.cashback-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);margin-bottom:1.5rem;line-height:1.2}
-.cashback-title em{font-style:italic;color:var(--caramel)}
-.cashback-text{color:var(--latte);line-height:1.7;margin-bottom:2rem;font-size:0.95rem}
-.cashback-steps{display:flex;flex-direction:column;gap:1rem}
-.cashback-step{display:flex;align-items:center;gap:1rem;font-size:0.9rem;color:var(--latte)}
-.step-num{width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:var(--caramel);flex-shrink:0;border:1px solid rgba(255,255,255,0.15)}
-.cashback-card{background:rgba(255,255,255,0.06);border-radius:24px;padding:3rem;border:1px solid rgba(255,255,255,0.1);text-align:center}
-.cashback-percent{font-family:'Playfair Display',serif;font-size:6rem;color:var(--caramel);line-height:1;font-weight:600}
-.cashback-sub{font-size:0.9rem;color:var(--latte);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.5rem}
-.promo-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}
-.promo-card-item{background:var(--white);border-radius:20px;overflow:hidden;border:1px solid var(--latte);transition:all 0.3s}
-.promo-card-item:hover{transform:translateY(-4px);box-shadow:0 15px 40px var(--shadow)}
-.promo-card-img{height:160px;background:linear-gradient(135deg,var(--caramel),var(--espresso));display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
-.promo-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.promo-card-body{padding:1.3rem}
-.promo-card-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--espresso);margin-bottom:0.5rem}
-.promo-card-body p{font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin-bottom:1rem}
-.promo-card-btn{display:inline-block;background:var(--caramel);color:white;padding:0.5rem 1.2rem;border-radius:50px;font-size:0.8rem;text-decoration:none;transition:all 0.3s}
-.promo-card-btn:hover{background:var(--espresso)}
-.branches-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
-.branch-card{background:var(--white);border-radius:20px;padding:2rem;border:1px solid var(--latte);transition:all 0.3s;cursor:pointer;display:block!important;opacity:1!important;visibility:visible!important}
-.branch-card:hover{border-color:var(--caramel);transform:translateY(-4px);box-shadow:0 12px 35px var(--shadow)}
-.branch-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--espresso);margin-bottom:0.5rem}
-.branch-addr{font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5}
-.branch-phone{font-size:0.9rem;color:var(--caramel);font-weight:500;text-decoration:none;display:block;margin-bottom:1.2rem}
-.btn-book-branch{width:100%;background:var(--milk);border:1px solid var(--latte);color:var(--espresso);padding:0.65rem;border-radius:12px;font-size:0.83rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.3s;font-weight:500}
-.btn-book-branch:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
-.modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.6);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex}
-.modal{background:var(--cream);border-radius:28px;padding:3rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
-.modal-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--mocha);line-height:1}
-.modal-close:hover{color:var(--espresso)}
-.modal h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--espresso);margin-bottom:0.5rem}
-.modal-branch-name{font-size:0.85rem;color:var(--caramel);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:2rem}
-.form-group{margin-bottom:1.3rem}
-.form-group label{display:block;font-size:0.82rem;color:var(--mocha);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.5rem;font-weight:500}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.85rem 1rem;border:1px solid var(--latte);border-radius:12px;font-family:'Jost',sans-serif;font-size:0.95rem;background:var(--white);color:var(--espresso);transition:border 0.3s;outline:none}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--caramel)}
-.form-group textarea{resize:none;height:90px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.btn-submit{width:100%;background:var(--espresso);color:var(--cream);border:none;padding:1rem;border-radius:50px;font-size:0.9rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.3s;margin-top:0.5rem}
-.btn-submit:hover{background:var(--caramel);transform:translateY(-1px)}
-.wa-note{text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:0.8rem;display:flex;align-items:center;justify-content:center;gap:0.3rem}
-.promo-popup{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);z-index:2000;background:var(--white);border-radius:20px;border:1px solid var(--latte);box-shadow:0 20px 60px rgba(74,48,32,0.25);padding:1rem 1.5rem;max-width:450px;width:90%;display:none!important;align-items:center;gap:1rem;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
-.promo-popup.show{display:flex!important;transform:translateX(-50%) translateY(0)}
-.promo-icon{width:80px;height:80px;border-radius:16px;flex-shrink:0;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:var(--milk);display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden}
-.promo-icon img{width:100%;height:100%;object-fit:cover}
-.promo-content{flex:1}
-.promo-content h4{font-family:'Playfair Display',serif;color:var(--espresso);font-size:1rem;margin-bottom:0.3rem;line-height:1.3}
-.promo-content p{font-size:0.8rem;color:var(--text-muted);line-height:1.4;margin-bottom:0.5rem}
-.promo-content a:hover{background:var(--espresso)!important}
-.promo-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);padding:4px 8px;flex-shrink:0;transition:color 0.2s;align-self:flex-start}
-.promo-close:hover{color:var(--espresso)}
-@media (max-width:500px){.promo-popup{flex-direction:column;text-align:center;padding:1rem}.promo-icon{width:100px;height:100px;margin-bottom:0.5rem}}
-footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:3rem;margin-bottom:3rem}
-.footer-brand h3{font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream);margin-bottom:0.8rem}
-.footer-brand p{font-size:0.88rem;color:rgba(232,213,183,0.7);line-height:1.7;max-width:260px}
-.footer-socials{display:flex;gap:0.8rem;margin-top:1.5rem}
-.social-link{width:38px;height:38px;background:rgba(255,255,255,0.06);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;color:var(--latte);transition:all 0.3s;border:1px solid rgba(255,255,255,0.08)}
-.social-link:hover{background:var(--caramel);border-color:var(--caramel)}
-.footer-col h4{font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.2rem}
-.footer-col ul{list-style:none}
-.footer-col ul li{margin-bottom:0.6rem}
-.footer-col ul li a{color:rgba(232,213,183,0.7);text-decoration:none;font-size:0.88rem;transition:color 0.3s}
-.footer-col ul li a:hover{color:var(--cream)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:0.8rem;color:rgba(232,213,183,0.5)}
-.mobile-nav{position:fixed;inset:0;background:var(--cream);z-index:999;transform:translateX(100%);transition:transform 0.4s;display:flex;flex-direction:column;padding:6rem 2rem 2rem;gap:0.5rem}
-.mobile-nav.open{transform:translateX(0)}
-.mobile-nav a{font-family:'Playfair Display',serif;font-size:2rem;color:var(--espresso);text-decoration:none;padding:0.5rem 0;border-bottom:1px solid var(--latte);font-style:italic}
-.mobile-nav .btn-reserve{font-family:'Jost',sans-serif;font-style:normal;font-size:0.9rem;text-align:center;margin-top:1rem;display:block}
-
-
-
-
-
-
-
-
-
-@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
-.fade-up{opacity:0;transform:translateY(30px);transition:all 0.7s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
-.slider-section{position:relative;overflow:hidden;background:var(--espresso);width:100%}
-.slider-track{display:flex;transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);will-change:transform}
-.slide{min-width:100%;position:relative;height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
-.slide-content{position:relative;z-index:2;text-align:center;padding:2rem 8%;max-width:780px;width:100%;margin:0 auto;box-sizing:border-box;left:50%;transform:translateX(-50%)}
-.slide-tag{display:inline-block;font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--latte);border:1px solid rgba(232,213,183,0.35);padding:0.3rem 0.9rem;border-radius:30px;margin-bottom:1.2rem;font-weight:400}
-.slide-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3.5rem);color:var(--white);line-height:1.15;margin-bottom:1rem;font-weight:400}
-.slide-title em{font-style:italic;color:var(--caramel)}
-.slide-desc{font-size:clamp(0.9rem,2vw,1.05rem);color:rgba(255,255,255,0.82);line-height:1.7;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto}
-.slide-btn{display:inline-block;padding:0.8rem 2rem;border-radius:50px;font-size:0.85rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;cursor:pointer;border:none;font-family:'Jost',sans-serif}
-.slide-btn-primary{background:var(--caramel);color:var(--white)}
-.slide-btn-primary:hover{background:var(--white);color:var(--espresso)}
-.slide-btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.6)!important}
-.slide-btn-outline:hover{background:var(--white);color:var(--espresso)}
-.slider-arrow{display:none!important}
-.slider-arrow:hover{background:var(--caramel);border-color:var(--caramel)}
-.slider-arrow-prev{left:1.5rem}
-.slider-arrow-next{right:1.5rem}
-.slider-dots{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:10}
-.slider-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:all 0.3s;border:none;padding:0}
-.slider-dot.active{width:24px;border-radius:4px;background:var(--caramel)}
-.slide-emoji-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14rem;opacity:0.06;user-select:none;pointer-events:none}
-.success-msg{background:var(--milk);border:1px solid var(--caramel);border-radius:16px;padding:1.5rem;text-align:center;display:none;margin-top:1rem}
-.success-msg.show{display:block}
-.success-msg h3{font-family:'Playfair Display',serif;color:var(--espresso);margin-bottom:0.4rem}
-.success-msg p{font-size:0.85rem;color:var(--mocha)}
-@media(max-width:1024px){
-  .about-grid{grid-template-columns:1fr}
-  .about-image-stack{height:350px}
-  .cashback-section{grid-template-columns:1fr;padding:3rem}
-  .footer-grid{grid-template-columns:1fr 1fr}
-  .hero-float-card{display:none}
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:0.8rem
+}
+.nav-back{
+  color:var(--mocha);
+  text-decoration:none;
+  font-size:0.85rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+  border:1px solid var(--border);
+  padding:0.5rem 1.1rem;
+  border-radius:50px;
+  transition:all 0.3s
+}
+.nav-back:hover{
+  border-color:var(--caramel);
+  color:var(--caramel)
+}
+.lang-switcher{
+  position:relative;
+  display:inline-flex;
+  align-items:center
+}
+.lang-btn{
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:50px;
+  padding:0.45rem 0.9rem;
+  font-size:0.78rem;
+  font-weight:500;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  cursor:pointer;
+  font-family:'Jost',sans-serif;
+  color:var(--mocha);
+  transition:all 0.3s;
+  display:flex;
+  align-items:center;
+  gap:0.4rem
+}
+.lang-btn:hover{
+  border-color:var(--caramel);
+  color:var(--caramel)
+}
+.lang-dropdown{
+  position:absolute;
+  top:100%;
+  right:0;
+  margin-top:0.5rem;
+  background:var(--white);
+  border-radius:16px;
+  border:1px solid var(--latte);
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  min-width:150px;
+  z-index:1000;
+  display:none;
+  overflow:hidden
+}
+.lang-dropdown.show{
+  display:block
+}
+.lang-option{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.7rem 1rem;
+  cursor:pointer;
+  font-size:0.85rem;
+  color:var(--mocha);
+  transition:background 0.2s
+}
+.lang-option:hover{
+  background:var(--milk)
+}
+.lang-option.active{
+  background:var(--milk);
+  color:var(--caramel);
+  font-weight:500
+}
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:5px
+}
+.hamburger span{
+  width:24px;
+  height:2px;
+  background:var(--espresso);
+  display:block
+}
+.mobile-nav{
+  position:fixed;
+  inset:0;
+  background:var(--cream);
+  z-index:999;
+  transform:translateX(100%);
+  transition:transform 0.4s;
+  display:flex;
+  flex-direction:column;
+  padding:6rem 2rem 2rem;
+  gap:0.5rem
+}
+.mobile-nav.open{
+  transform:translateX(0)
+}
+.mobile-nav a{
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem;
+  color:var(--espresso);
+  text-decoration:none;
+  padding:0.5rem 0;
+  border-bottom:1px solid var(--latte);
+  font-style:italic
+}
+.mobile-lang-section{
+  display:flex;
+  justify-content:center;
+  gap:1rem;
+  padding-top:1.5rem;
+  margin-top:1rem;
+  border-top:1px solid var(--border)
+}
+.mobile-lang-item{
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+  padding:0.5rem 1rem;
+  border-radius:50px;
+  cursor:pointer;
+  transition:all 0.3s;
+  font-size:0.85rem;
+  color:var(--mocha);
+  background:var(--milk)
+}
+.mobile-lang-item.active{
+  background:var(--espresso);
+  color:var(--cream)
 }
 @media(max-width:768px){
-  .nav-links{display:none}
-  .btn-reserve,.btn-menu-link{display:none}
   .hamburger{display:flex}
-  .section{padding:4rem 5%}
-  .about-stat{display:none}
-  .form-row{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr}
-  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center}
-  .cashback-section{margin:0 4%;padding:2.5rem 2rem}
-  .promo-cards-grid{grid-template-columns:1fr}
+  .nav-back{display:none}
+  #currentLangText{display:inline}
+}
+
+.menu-hero{
+  background:rgba(245,237,224,0.85);
+  padding:120px 5% 4rem;
+  text-align:center
+}
+.menu-hero p{
+  font-size:0.82rem;
+  letter-spacing:0.25em;
+  color:var(--caramel);
+  text-transform:uppercase;
+  margin-bottom:1rem
+}
+.menu-hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem,8vw,5rem);
+  color:var(--espresso);
+  margin-bottom:1rem
+}
+.menu-hero h1 em{
+  font-style:italic;
+  color:var(--caramel)
+}
+
+/* ===== SECTION TABS (İçkilər / Yemәklər) ===== */
+.menu-section-tabs{
+  position:sticky;
+  top:70px;
+  z-index:51;
+  background:rgba(250,246,240,0.97);
+  backdrop-filter:blur(12px);
+  display:flex;
+  justify-content:center;
+  border-bottom:1px solid var(--border);
+  padding:0;
+}
+.menu-section-tab{
+  flex:0 1 auto;
+  min-width:160px;
+  padding:1.1rem 3rem;
+  border:none;
+  background:transparent;
+  font-family:'Jost',sans-serif;
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:0.04em;
+  color:var(--text-muted);
+  cursor:pointer;
+  position:relative;
+  transition:color 0.25s;
+  text-align:center;
+}
+.menu-section-tab::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;
+  left:0;
+  right:0;
+  height:2.5px;
+  background:var(--espresso);
+  border-radius:2px 2px 0 0;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.menu-section-tab.active{
+  color:var(--espresso);
+  font-weight:600;
+}
+.menu-section-tab.active::after{
+  opacity:1;
+}
+
+/* ===== STICKY CATEGORY NAV ===== */
+.menu-sticky-nav{
+  position:sticky;
+  top:120px;
+  z-index:50;
+  background:rgba(250,246,240,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0.75rem 5%;
+  display:flex;
+  gap:0.5rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.menu-sticky-nav::-webkit-scrollbar{
+  display:none
+}
+.cat-btn{
+  padding:0.55rem 1.3rem;
+  border-radius:50px;
+  font-size:0.82rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--mocha);
+  transition:all 0.3s;
+  font-family:'Jost',sans-serif;
+  white-space:nowrap;
+  font-weight:400;
+  flex-shrink:0;
+}
+.cat-btn.active,.cat-btn:hover{
+  background:var(--espresso);
+  color:var(--cream);
+  border-color:var(--espresso);
+}
+@media(max-width:768px){
+  .menu-sticky-nav{top:118px}
+  .menu-section-tab{font-size:0.9rem}
+}
+
+.menu-body{
+  padding:3rem 5%;
+  max-width:1400px;
+  margin:0 auto
+}
+.menu-section{
+  margin-bottom:4rem
+}
+.menu-section-header{
+  display:flex;
+  align-items:center;
+  gap:1.5rem;
+  margin-bottom:2rem;
+  padding-bottom:1rem;
+  border-bottom:1px solid var(--latte)
+}
+.section-emoji{
+  font-size:2rem
+}
+.section-h2{
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem;
+  color:var(--espresso)
+}
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5rem
+}
+.dish-card{
+  background:var(--white);
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--latte);
+  transition:all 0.3s;
+  display:flex;
+  flex-direction:column;
+  content-visibility:auto;
+  contain-intrinsic-size:0 420px
+}
+.dish-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 35px var(--shadow)
+}
+.dish-card.unavailable{
+  opacity:0.45;
+  pointer-events:none
+}
+.dish-img{
+  height:250px;
+  min-height:250px;
+  background:linear-gradient(135deg,var(--latte),var(--milk));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:3rem;
+  position:relative;
+  overflow:hidden;
+  contain:strict
+}
+.dish-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:absolute;
+  inset:0
+}
+.dish-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:var(--caramel);
+  color:var(--white);
+  font-size:0.68rem;
+  padding:0.2rem 0.65rem;
+  border-radius:20px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  z-index:1
+}
+.dish-unavail-badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  font-size:0.68rem;
+  padding:0.2rem 0.65rem;
+  border-radius:20px;
+  z-index:1
+}
+.dish-body{
+  padding:1.2rem;
+  flex:1;
+  display:flex;
+  flex-direction:column
+}
+.dish-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;
+  color:var(--espresso);
+  margin-bottom:0.4rem
+}
+.dish-desc{
+  font-size:0.82rem;
+  color:var(--text-muted);
+  line-height:1.5;
+  margin-bottom:1rem;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden
+}
+/* ===== DISH MODAL ===== */
+.dish-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:opacity 0.3s,visibility 0.3s;backdrop-filter:blur(6px)}
+.dish-modal-overlay.open{opacity:1;visibility:visible}
+.dish-modal-box{background:var(--white);border-radius:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;transform:scale(0.88) translateY(30px);transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 30px 80px rgba(0,0,0,0.28);position:relative}
+.dish-modal-overlay.open .dish-modal-box{transform:scale(1) translateY(0)}
+.dish-modal-img{width:100%;height:300px;object-fit:cover;border-radius:24px 24px 0 0;display:block}
+.dish-modal-no-img{height:220px;background:linear-gradient(135deg,var(--latte),var(--milk));display:flex;align-items:center;justify-content:center;font-size:5rem;border-radius:24px 24px 0 0}
+.dish-modal-body{padding:1.6rem}
+.dish-modal-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.92);border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.18);transition:all 0.2s;z-index:10}
+.dish-modal-close:hover{background:var(--espresso);color:white;transform:scale(1.1)}
+.dish-modal-name{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--espresso);margin-bottom:0.6rem;line-height:1.25}
+.dish-modal-desc{font-size:0.9rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.4rem}
+.dish-modal-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1.1rem;border-top:1px solid var(--latte)}
+.dish-modal-price{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--caramel);font-weight:600}
+.dish-modal-tag{font-size:0.75rem;color:var(--text-muted);background:var(--milk);padding:0.3rem 0.8rem;border-radius:20px}
+.dish-modal-badge{background:var(--caramel);color:white;font-size:0.72rem;padding:0.3rem 0.9rem;border-radius:20px;letter-spacing:0.07em;text-transform:uppercase}
+@media(max-width:540px){
+  .dish-modal-overlay{align-items:flex-end;padding:0}
+  .dish-modal-box{border-radius:24px 24px 0 0;max-height:95vh;width:100%;max-width:100%}
+  .dish-modal-img{height:240px;border-radius:24px 24px 0 0}
+  .dish-modal-no-img{height:180px;border-radius:24px 24px 0 0}
+}
+.dish-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+.dish-price{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;
+  color:var(--caramel);
+  font-weight:600
+}
+.dish-tag{
+  font-size:0.7rem;
+  color:var(--text-muted);
+  background:var(--milk);
+  padding:0.18rem 0.55rem;
+  border-radius:20px
+}
+
+.promo-popup{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%) translateY(100px);
+  z-index:2000;
+  background:var(--white);
+  border-radius:20px;
+  border:1px solid var(--latte);
+  box-shadow:0 20px 60px rgba(74,48,32,0.25);
+  padding:1rem 1.5rem;
+  max-width:450px;
+  width:90%;
+  display:none!important;
+  align-items:center;
+  gap:1rem;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)
+}
+.promo-popup.show{
+  display:flex!important;
+  transform:translateX(-50%) translateY(0)
+}
+.promo-icon{
+  width:80px;
+  height:80px;
+  border-radius:16px;
+  flex-shrink:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-color:var(--milk);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  overflow:hidden
+}
+.promo-icon img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+.promo-content{
+  flex:1
+}
+.promo-content h4{
+  font-family:'Playfair Display',serif;
+  color:var(--espresso);
+  font-size:1rem;
+  margin-bottom:0.3rem;
+  line-height:1.3
+}
+.promo-content p{
+  font-size:0.8rem;
+  color:var(--text-muted);
+  line-height:1.4;
+  margin-bottom:0.5rem
+}
+.promo-content a:hover{
+  background:var(--espresso)!important
+}
+.promo-close{
+  background:none;
+  border:none;
+  font-size:1.3rem;
+  cursor:pointer;
+  color:var(--text-muted);
+  padding:4px 8px;
+  flex-shrink:0;
+  transition:color 0.2s;
+  align-self:flex-start
+}
+.promo-close:hover{
+  color:var(--espresso)
+}
+@media (max-width:500px){
+  .promo-popup{
+    flex-direction:column;
+    text-align:center;
+    padding:1rem
+  }
+  .promo-icon{
+    width:100px;
+    height:100px;
+    margin-bottom:0.5rem
+  }
+}
+
+footer{
+  background:var(--dark);
+  color:var(--latte);
+  padding:3rem 5%;
+  text-align:center
+}
+footer a{
+  color:var(--caramel);
+  text-decoration:none;
+  font-size:0.9rem;
+  margin:0 1rem
+}
+footer p{
+  margin-top:1rem;
+  font-size:0.8rem;
+  color:rgba(232,213,183,0.5)
+}
+
+@media(max-width:768px){
+  .menu-grid{
+    grid-template-columns:1fr
+  }
 }
 @media(max-width:480px){
-  .hero-title{font-size:3rem}
-  .menu-items{grid-template-columns:1fr}
-  .branches-grid{grid-template-columns:1fr}
-  .modal{padding:2rem 1.5rem;border-radius:20px}
+  .menu-grid{
+    grid-template-columns:1fr
+  }
 }
-/* Слайдер адаптив */
-@media (max-width: 1024px) { .slide { height: 480px; } }
-@media (max-width: 768px) {
-  .slider-section { height: auto !important; }
-  .slide { height: 75vh !important; min-height: 480px !important; max-height: 700px; }
-  .slide-content { padding: 1.5rem 1.4rem !important; width: 100% !important; max-width: 100% !important; left: 0 !important; right: 0 !important; transform: translateY(-50%) !important; }
-  .slide-tag { font-size: 0.68rem !important; }
-  .slide-title { font-size: clamp(1.4rem, 7vw, 2.2rem) !important; }
-  .slide-desc { font-size: 0.88rem !important; }
-  .slider-arrow { width: 36px !important; height: 36px !important; }
-  .slider-arrow-prev { left: 0.75rem !important; }
-  .slider-arrow-next { right: 0.75rem !important; }
-}
-@media (max-width: 480px) {
-  .slide { height: 80vh !important; min-height: 500px !important; }
-  .slide-buttons { flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; width: 90% !important; margin: 0 auto !important; }
-  .slide-btn { width: 100% !important; text-align: center !important; }
+
+@keyframes skeletonShimmer {
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
 }
 </style>
 </head>
 <body>
- 
-<!-- NAVi -->
-<nav id="navbar">
-  <a href="#" class="nav-logo" id="navLogo"> </a>
-  <ul class="nav-links">
-    <li><a href="#home" id="navHomeLink" data-i18n="nav_home">Ana səhifə</a></li>
-    <li><a href="#menu" id="navMenuLink" data-i18n="nav_menu">Menyu</a></li>
-    <li><a href="#about" id="navAboutLink" data-i18n="nav_about">Haqqımızda</a></li>
-    <!-- <li><a href="#cashback" id="navCashbackLink" data-i18n="nav_cashback">Keşbek</a></li> -->
-    <li><a href="#branches" id="navBranchesLink" data-i18n="nav_branches">Filiallar</a></li>
-  </ul>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html" class="nav-logo" id="navLogo"> </a>
+    <a href="index.html" class="nav-back" id="backToMainBtn" data-i18n="back_to_main">← Ana səhifə</a>
+  </div>
   <div class="nav-right">
-    <a href="menu.html" class="btn-menu-link" id="navMenuBtn" data-i18n="nav_menu_btn">Menyu</a>
-    <!-- <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>-->
     <div class="lang-switcher">
-      <button class="lang-btn" id="langBtn"><span id="currentLangText">AZ</span><span>▼</span></button>
+      <button class="lang-btn" id="langBtn">
+        <!--<span id="currentLangFlag">🇦🇿</span>-->
+        <span id="currentLangText">AZ</span>
+        <span>▼</span>
+      </button>
       <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" data-lang="az">AZE — Azərbaycan</div>
+        <div class="lang-option active" data-lang="az">AZ — Azərbaycan</div>
         <div class="lang-option" data-lang="ru">RU — Русский</div>
-        <div class="lang-option" data-lang="en">ENG — English</div>
+        <div class="lang-option" data-lang="en">EN — English</div>
       </div>
     </div>
-    <button class="hamburger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
- 
-<!-- MOBILE NAV -->
+
 <div class="mobile-nav" id="mobileNav">
-  <a href="#home" onclick="closeMobileNav()" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
-  <a href="#menu" onclick="closeMobileNav()" id="mobileNavMenu" data-i18n="nav_menu">Menyu</a>
-  <a href="#about" onclick="closeMobileNav()" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>
-  <!-- <a href="#cashback" onclick="closeMobileNav()" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>-->
-  <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
-  <!-- <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>-->
+  <a href="index.html" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
+  <!--<a href="index.html#branches" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>
+  <a href="index.html#cashback" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>
+  <a href="index.html#about" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>-->
   <div class="mobile-lang-section">
     <div class="mobile-lang-item active" data-lang="az">AZE</div>
     <div class="mobile-lang-item" data-lang="ru">RU</div>
     <div class="mobile-lang-item" data-lang="en">ENG</div>
   </div>
 </div>
- 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg-pattern"></div>
-  <div class="hero-float-card hero-float-card-1"><div class="float-card-icon">☕</div><div class="float-card-label" id="heroFloatLabel" data-i18n="hero_float1_label">Specialty Coffee</div><div class="float-card-value" id="heroFloatValue" data-i18n="hero_float1_value">Kolumbiya</div></div>
-  <div class="hero-float-card hero-float-card-2"><div class="float-card-icon">🏆</div><div class="float-card-label" id="heroFloatLabel2" data-i18n="hero_float2_label">İşləyirik</div><div class="float-card-value" id="heroFloatValue2" data-i18n="hero_float2_value">2016-cı ildən</div></div>
-  <div class="hero-content">
-    <p class="hero-tagline" id="heroTagline" data-i18n="hero_tagline">Specialty Coffee & Food</p>
-    <!--<h1 class="hero-title" id="heroTitle">Malako<br><em>Café</em></h1>-->
-    <h1 class="hero-title" id="heroTitle"><img src="https://res.cloudinary.com/dnkapcgvr/image/upload/v1783168645/erasebg-transformed_1_c0fj7a.png" alt="Malako Café" style="max-height:100px; width:90%; object-fit:contain;"><br><em>Café</em></h1>
-    <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero_subtitle">Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə</p>
-    <div class="hero-buttons">
-      <a href="menu.html" class="btn-primary" id="heroMenuBtn" data-i18n="hero_btn_menu">Menyuya bax</a>
-      <!--<a href="#branches" class="btn-outline" id="heroReserveBtn" data-i18n="hero_btn_reserve">Masa rezerv et</a> -->
-    </div>
-  </div>
-  <div class="scroll-indicator" id="heroScroll" data-i18n="hero_scroll">Aşağı diyirin</div>
-</section>
- 
-<!-- TICKER -->
-<div class="ticker"><div class="ticker-inner"><span class="ticker-item">✦ Specialty Coffee</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerBreakfast" data-i18n="ticker_breakfast">Hər gün səhər yeməyi</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerDesserts" data-i18n="ticker_desserts">Orijinal desertlər</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCashback" data-i18n="ticker_cashback">orijinal dad</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerCoffee" data-i18n="ticker_coffee">Kolumbiya qovrulmuş qəhvə</span><span class="ticker-item ticker-dot">✦</span><span class="ticker-item" id="tickerAtmosphere" data-i18n="ticker_atmosphere">Rahat atmosfer</span><span class="ticker-item ticker-dot">✦</span></div></div>
- 
-<!-- SLIDER -->
-<section class="slider-section" id="slider" style="display: none;"><div class="slider-track" id="sliderTrack"></div><div class="slider-dots" id="sliderDots"></div></section>
- 
-<!-- FEATURES -->
-<section class="section" id="why" style="display: none;"><p class="section-label fade-up" id="whyLabel" data-i18n="why_label">Niyə biz</p><h2 class="section-title fade-up" id="whyTitle" data-i18n="why_title">Bizi xüsusi edən nədir</h2><div class="features-grid" id="featuresGrid"></div></section>
- 
-<!-- MENU PREVIEW -->
-<section class="section menu-preview" id="menu" style="display: none;"><p class="section-label fade-up" id="menuLabel" data-i18n="menu_label">Menyumuz</p><h2 class="section-title fade-up" id="menuTitle" data-i18n="menu_title">Ən yaxşısını dadın</h2><div class="menu-tabs fade-up" id="menuTabs"></div><div class="menu-items" id="menuGrid"></div><a href="menu.html" class="btn-all-menu fade-up" id="menuFullLink" data-i18n="menu_full">Tam menyu →</a></section>
- 
-<!-- ABOUT -->
-<section class="section" id="about" style="display: none;"><div class="about-grid"><div class="about-image-stack fade-up"><div class="about-img-main" id="aboutImgMain"></div><div class="about-img-sub" id="aboutImgSub"></div><div class="about-stat"><span class="about-stat-num" id="aboutYear">2016</span><span class="about-stat-label" id="aboutYearLabel" data-i18n="about_year_label">Təsis ili</span></div></div><div class="about-content fade-up"><p class="section-label" id="aboutNavLabel" data-i18n="about_nav_label">Haqqımızda</p><h2 class="section-title" id="aboutTitle" data-i18n="about_title">Malako-nun hekayəsi</h2><p id="aboutText1"></p><p id="aboutText2"></p><p id="aboutText3"></p><div class="about-features" id="aboutFeatures"></div></div></div></section>
- 
-<!-- CASHBACK -->
-<div id="cashback" style="padding:0 0 4rem; display: none;"><div class="cashback-section fade-up"><div><p class="cashback-label" id="cashbackLabel" data-i18n="cashback_label">Loyallıq proqramı</p><h2 class="cashback-title" id="cashbackTitle" data-i18n="cashback_title">Hər sifarişdə keşbek qazanın</h2><p class="cashback-text" id="cashbackText" data-i18n="cashback_text">QR kodu skan edin, proqrama qoşulun və Malako-nun istənilən filialında hər alışdan 5% keşbek qazanın.</p><div class="cashback-steps"><div class="cashback-step"><span class="step-num">1</span><span id="cashbackStep1" data-i18n="cashback_step1">Malako tətbiqini yükləyin</span></div><div class="cashback-step"><span class="step-num">2</span><span id="cashbackStep2" data-i18n="cashback_step2">1 dəqiqəyə qeydiyyatdan keçin</span></div><div class="cashback-step"><span class="step-num">3</span><span id="cashbackStep3" data-i18n="cashback_step3">Hər ziyarətdə QR skan edin</span></div></div><a href="#" class="btn-primary" style="display:inline-block;margin-top:2rem" id="cashbackBtn" data-i18n="cashback_btn">Qoşulun</a></div><div class="cashback-card"><div class="cashback-percent">5%</div><div class="cashback-sub" id="cashbackPercentLabel" data-i18n="cashback_percent">Hər alışdan keşbek</div><div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85rem;color:rgba(232,213,183,0.6);line-height:1.7" id="cashbackTextBottom" data-i18n="cashback_text_bottom">Balları toplayın və menyunun istənilən məhsuluna xərcləyin</div></div></div></div>
- 
-<!-- PROMO CARDS -->
-<section class="section" id="promos" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="promosLabel" data-i18n="promos_label">Aksiyalar</p><h2 class="section-title fade-up" id="promosTitle" data-i18n="promos_title">Təkliflərimiz</h2><div class="promo-cards-grid" id="promoCardsGrid"></div></section>
- 
-<!-- BRANCHES -->
-<section class="section" id="branches" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="branchesLabel" data-i18n="branches_label">Ünvanlarımız</p><h2 class="section-title fade-up" id="branchesTitle" data-i18n="branches_title">Ən yaxın filialı tapın</h2><div class="branches-grid" id="branchesGrid"></div></section>
- 
-<!-- RESERVATION MODAL 
-<div class="modal-overlay" id="reservationModal"><div class="modal"><button class="modal-close" onclick="closeReservation()">×</button><h2 id="reserveTitle" data-i18n="reserve_title">Masa rezervasiyası</h2><p class="modal-branch-name" id="modalBranchName">Malako — Mərkəz</p><div id="reservationForm"><div class="form-group"><label id="reserveNameLabel" data-i18n="reserve_name">Adınız</label><input type="text" id="resName" placeholder="Adınızı daxil edin"></div><div class="form-group"><label id="reservePhoneLabel" data-i18n="reserve_phone">WhatsApp nömrəsi</label><input type="tel" id="resPhone" placeholder="+994 50 000-00-00"></div><div class="form-row"><div class="form-group"><label id="reserveDateLabel" data-i18n="reserve_date">Tarix</label><input type="date" id="resDate"></div><div class="form-group"><label id="reserveTimeLabel" data-i18n="reserve_time">Vaxt</label><input type="time" id="resTime" value="12:00"></div></div><div class="form-group"><label id="reserveGuestsLabel" data-i18n="reserve_guests">Qonaq sayı</label><select id="resGuests"><option value="1">1 qonaq</option><option value="2" selected>2 qonaq</option><option value="3">3 qonaq</option><option value="4">4 qonaq</option><option value="5">5 qonaq</option><option value="6">6 qonaq</option><option value="7+">7+ qonaq</option></select></div><div class="form-group"><label id="reserveNoteLabel" data-i18n="reserve_note">Arzular (istəyə bağlı)</label><textarea id="resNote" placeholder="Xüsusi arzular, allergiyalar, münasibət..."></textarea></div><button class="btn-submit" onclick="submitReservation()" id="reserveSubmitBtn" data-i18n="reserve_submit">Müraciət göndər</button><p class="wa-note" id="reserveNoteWa" data-i18n="reserve_note_wa">📱 Təsdiq menecer tərəfindən WhatsApp-da göndəriləcək</p></div><div class="success-msg" id="successMsg"><h3 id="reserveSuccessTitle" data-i18n="reserve_success_title">Müraciət göndərildi! ✓</h3><p id="reserveSuccessText" data-i18n="reserve_success_text">Menecer bir neçə dəqiqə ərzində rezervasiyanı təsdiqləmək üçün WhatsApp vasitəsilə sizinlə əlaqə saxlayacaq.</p></div></div></div>-->
- 
+
+<div class="menu-hero">
+  <p id="menuHeroLabel" data-i18n="menu_page_label">Tam menyu</p>
+  <h1><span id="menuHeroPre" data-i18n="menu_page_pre">Bizim</span> <em id="menuHeroEm" data-i18n="menu_page_em">yeməklər</em> <span id="menuHeroPost" data-i18n="menu_page_post">və içkilər</span></h1>
+</div>
+
+<div class="menu-section-tabs" id="menuSectionTabs"></div>
+<div class="menu-sticky-nav" id="stickyNav"></div>
+<div class="menu-body" id="menuBody"></div>
+
 <!-- PROMO POPUP -->
-<div class="promo-popup" id="promoPopup" style="display:none"><div class="promo-icon" id="promoIcon"></div><div class="promo-content"><h4 id="promoTitle"></h4><p id="promoDesc"></p><a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a></div><button class="promo-close" onclick="closePromo()">×</button></div>
- 
- 
-<!-- FOOTER -->
-<footer><div class="footer-grid"><div class="footer-brand"><h3>Malako</h3><p id="footerBrandText" data-i18n="footer_brand_text">Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer üçün sevimli yeriniz.</p><div class="footer-socials"><a href="#" class="social-link">📷</a><a href="#" class="social-link">📘</a><a href="#" class="social-link">🎵</a></div></div><div class="footer-col"><h4 id="footerNavTitle" data-i18n="footer_nav">Naviqasiya</h4><ul><li><a href="#home" id="footerNavHome" data-i18n="nav_home">Ana səhifə</a></li><li><a href="menu.html" id="footerNavMenu" data-i18n="nav_menu">Menyu</a></li><li><a href="#about" id="footerNavAbout" data-i18n="nav_about">Haqqımızda</a></li><li><a href="#cashback" id="footerNavCashback" data-i18n="nav_cashback">Keşbek</a></li><li><a href="#branches" id="footerNavBranches" data-i18n="nav_branches">Filiallar</a></li></ul></div><div class="footer-col"><h4 id="footerCompanyTitle" data-i18n="footer_company">Şirkət</h4><ul><li><a href="#" id="footerCareer" data-i18n="footer_career">Karyera</a></li><li><a href="#" id="footerFranchise" data-i18n="footer_franchise">Franshiza</a></li><li><a href="#" id="footerCorporate" data-i18n="footer_corporate">Korporativlərə</a></li><li><a href="#" id="footerPrivacy" data-i18n="footer_privacy">Məxfilik siyasəti</a></li></ul></div><div class="footer-col"><h4 id="footerContactsTitle" data-i18n="footer_contacts">Əlaqə</h4><ul><li><a href="tel:+994501234501" id="footerPhone">+994 50 123-45-01</a></li><li><a href="mailto:hello@malako.az" id="footerEmail">hello@malako.az</a></li><li><a href="#" id="footerWhatsApp" data-i18n="footer_whatsapp">WhatsApp</a></li></ul><div style="margin-top:1.5rem;font-size:0.82rem;color:rgba(232,213,183,0.5)" id="workHours">B–B: 08:00–23:00</div></div></div><div class="footer-bottom"><span>© 2024 Malako. <span id="footerRights" data-i18n="footer_rights">Bütün hüquqlar qorunur.</span></span><span data-i18n="footer_city">Bakı, Azərbaycan</span></div></footer>
- 
+<div class="promo-popup" id="promoPopup" style="display: none;">
+  <div class="promo-icon" id="promoIcon"></div>
+  <div class="promo-content">
+    <h4 id="promoTitle"></h4>
+    <p id="promoDesc"></p>
+    <a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a>
+  </div>
+  <button class="promo-close" onclick="closePromo()">×</button>
+</div>
+
+<footer>
+  <a href="index.html" id="footerHomeLink" data-i18n="nav_home">Ana səhifə</a>
+  <!-- <a href="index.html#branches" id="footerReserveLink" data-i18n="nav_reserve">Masa rezerv et</a>
+  <a href="index.html#cashback" id="footerCashbackLink" data-i18n="nav_cashback">Keşbek</a>-->
+  <p>© 2024 Malako Café — <span id="footerCity" data-i18n="footer_city">Bakı, Azərbaycan</span></p>
+</footer>
+
 <script>
 // ========== SUPABASE КОНФИГУРАЦИЯ ==========
 const SUPABASE_URL = 'https://wlnifdqfnxhqlyvlmadi.supabase.co';
@@ -443,9 +686,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
-let sliderSlides = [], currentSlide = 0, sliderTimer = null;
-let allCategories = [], allMenuItems = [], currentCategory = '';
-let popupTimeout = null, popupShown = false;
+let allCategories = [];
+let allMenuItems = [];
+let popupTimeout = null;
+let popupShown = false;
 let currentLang = 'az';
 let siteSettings = {};
 
@@ -473,7 +717,6 @@ async function initI18n() {
         }
       });
     
-    // Загружаем язык из localStorage
     const savedLang = localStorage.getItem('selected_language');
     if (savedLang && ['az', 'ru', 'en'].includes(savedLang)) {
       currentLang = savedLang;
@@ -496,7 +739,6 @@ async function initI18n() {
 function updateUILanguage() {
   document.documentElement.lang = currentLang === 'az' ? 'az' : (currentLang === 'ru' ? 'ru' : 'en');
   
-  // Обновляем все элементы с data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key);
@@ -507,12 +749,10 @@ function updateUILanguage() {
     }
   });
   
-  // Обновляем флаг и текст кнопки языка
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
   
-  // Обновляем активный класс для опций языка
   document.querySelectorAll('.lang-option, .mobile-lang-item').forEach(opt => {
     const lang = opt.getAttribute('data-lang');
     if (lang === currentLang) {
@@ -532,11 +772,8 @@ function setLanguage(lang) {
   localStorage.setItem('selected_language', lang);
   i18next.changeLanguage(lang).then(() => {
     updateUILanguage();
-    // Перерисовываем контент, зависящий от языка
-    loadCategoriesAndMenu();
-    loadFeatures();
-    loadBranches();
-    loadAboutSection();
+    // Перерисовываем меню с новым языком
+    buildMenu();
     const dd = document.getElementById('langDropdown');
     if (dd) dd.classList.remove('show');
   });
@@ -576,7 +813,6 @@ function getDishTranslation(translations, lang) {
   if (!translations || translations.length === 0) return null;
   const found = translations.find(t => t.language === lang);
   if (found) return found;
-  // Fallback на AZ
   return translations.find(t => t.language === 'az') || translations[0] || null;
 }
 
@@ -605,371 +841,358 @@ function getCategoryName(translations, lang) {
 
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
+  showSkeleton();
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
     if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
   } catch(e) { console.warn('settings не загружены:', e); }
 
-  // Применяем настройки — секции показываются даже если settings пустой
-  try { loadLogoSettings(); } catch(e) {}
-  try { loadSiteBackground(); } catch(e) {}
-  loadSectionsVisibility();
+  try { applyAppearanceSettings(); } catch(e) {}
+  try { applyLogoSettings(); } catch(e) {}
 
-  // Загружаем данные параллельно
   await Promise.allSettled([
-    loadSlides(),
-    loadCategoriesAndMenu(),
-    loadFeatures(),
-    loadBranches(),
-    loadAboutSection(),
-    loadPromoCards(),
+    loadMenuData(),
     loadPromoPopup(),
   ]);
 
-  try { loadSettings(); } catch(e) {}
-  try { loadContactSettings(); } catch(e) {}
+  try { applyMenuTexts(); } catch(e) {}
+}
+
+// ========== ВНЕШНИЙ ВИД ==========
+function applyAppearanceSettings() {
+  const bgType = siteSettings.site_bg_type || 'preset';
+  const presets = {
+    stone: { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
+    paper: { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
+    concrete: { bg: '#E8E4D9', pattern: "url('https://www.transparenttextures.com/patterns/concrete-wall.png')" },
+    map: { bg: '#EAE5D9', pattern: "url('https://www.transparenttextures.com/patterns/cartographer.png')" }
+  };
+  if (bgType === 'preset') {
+    const p = presets[siteSettings.site_bg_preset || 'stone'] || presets.stone;
+    document.body.style.background = `${p.pattern} ${p.bg}`;
+    document.body.style.backgroundRepeat = 'repeat';
+    document.body.classList.remove('bg-image-set');
+  } else if (bgType === 'image' && siteSettings.site_bg_image) {
+    document.body.classList.add('bg-image-set');
+    document.body.style.setProperty('--bg-image', `url('${siteSettings.site_bg_image}')`);
+    document.body.style.background = `var(--bg-image) center/cover no-repeat fixed`;
+  } else if (bgType === 'color') {
+    document.body.classList.remove('bg-image-set');
+    document.body.style.background = siteSettings.site_bg_color || '#F5F0E8';
+  }
 }
 
 // ========== ЛОГОТИП ==========
-function loadLogoSettings() {
-  try {
-    const settings = siteSettings;
-    const logoType = settings.logo_type || 'text';
-    const logoLink = document.querySelector('.nav-logo');
-    if (!logoLink) return;
-    if (logoType === 'text') {
-      const logoText = settings.logo_text || 'Malako';
-      const textSize = settings.logo_text_size || '28';
-      const textColor = settings.logo_text_color || '#4A3020';
-      logoLink.innerHTML = logoText;
-      logoLink.style.fontSize = textSize + 'px';
-      logoLink.style.color = textColor;
-      logoLink.style.fontFamily = "'Playfair Display', serif";
-      logoLink.style.fontWeight = '600';
-    } else {
-      const logoImage = settings.logo_image;
-      const logoWidth = settings.logo_width || '180';
-      const logoHeight = settings.logo_height || 'auto';
-      if (logoImage) {
-        logoLink.innerHTML = `<img src="${logoImage}" alt="Malako" style="height:${logoHeight}; width:${logoWidth}px; max-height:50px; object-fit:contain">`;
-      } else {
-        logoLink.innerHTML = 'Malako';
-      }
-    }
-  } catch(e) { console.error('Ошибка загрузки логотипа:', e); }
-}
-
-// ========== ФОН ==========
-function loadSiteBackground() {
-  try {
-    const settings = siteSettings;
-    const bgType = settings.site_bg_type || 'preset';
-    const presets = {
-      stone:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
-      paper:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
-      concrete: { bg: '#E8E4D9', pattern: "url('https://www.transparenttextures.com/patterns/concrete-wall.png')" },
-      map:      { bg: '#EAE5D9', pattern: "url('https://www.transparenttextures.com/patterns/cartographer.png')" }
-    };
-    if (bgType === 'preset') {
-      const preset = settings.site_bg_preset || 'stone';
-      const p = presets[preset] || presets.stone;
-      document.body.style.background = `${p.pattern} ${p.bg}`;
-      document.body.style.backgroundRepeat = 'repeat';
-      document.body.classList.remove('bg-image-set');
-    } else if (bgType === 'image' && settings.site_bg_image) {
-      document.body.classList.add('bg-image-set');
-      document.body.style.setProperty('--bg-image', `url('${settings.site_bg_image}')`);
-      const isMobile = window.matchMedia('(max-width: 768px), (hover: none)').matches;
-      document.body.style.background = `var(--bg-image) center ${isMobile ? 'top' : 'center'}/cover no-repeat`;
-      document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
-    } else if (bgType === 'color') {
-      document.body.classList.remove('bg-image-set');
-      document.body.style.background = settings.site_bg_color || '#F5F0E8';
-    }
-  } catch(e) { console.error('Ошибка загрузки фона:', e); }
-}
-
-// ========== ВИДИМОСТЬ СЕКЦИЙ ==========
-function loadSectionsVisibility() {
-  const s = siteSettings;
-  const map = {
-    slider: { id: 'slider', key: 'section_slider' },
-    why:    { id: 'why',    key: 'section_features' },
-    menu:   { id: 'menu',   key: 'section_menu_preview' },
-    about:  { id: 'about',  key: 'section_about' },
-    cashback: { id: 'cashback', key: 'section_cashback' },
-    branches: { id: 'branches', key: 'section_branches' },
-    promos:   { id: 'promos',   key: 'section_promos' },
-  };
-  Object.values(map).forEach(({ id, key }) => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = (s[key] === 'false') ? 'none' : '';
-  });
-}
-
-// ========== КОНТАКТЫ ==========
-function loadContactSettings() {
-  const s = siteSettings;
-  const footerPhone = document.getElementById('footerPhone');
-  if (footerPhone) footerPhone.setAttribute('href', `tel:${s.default_wa_number || '994501234501'}`);
-  const workHours = document.getElementById('workHours');
-  if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
-}
-
-// ========== СЛАЙДЕР ==========
-async function loadSlides() {
-  const { data } = await supabaseClient.from('slides').select('*').order('sort_order');
-  sliderSlides = (data || []).filter(s => s.is_active !== false);
-  buildSlider();
-}
-
-function buildSlider() {
-  const track = document.getElementById('sliderTrack');
-  const dots = document.getElementById('sliderDots');
-  if (!track) return;
-  if (sliderSlides.length === 0) { track.innerHTML = '<div class="slide" style="display:flex; align-items:center; justify-content:center; height:520px; background:var(--espresso); color:white;">Aktiv slayd yoxdur</div>'; if (dots) dots.innerHTML = ''; return; }
-  track.innerHTML = sliderSlides.map((s, i) => {
-    let bgStyle = '', mediaContent = '';
-    if (s.video_url && s.video_url.trim() !== '') {
-      let videoUrl = s.video_url.trim();
-      if (videoUrl.includes('player.cloudinary.com/embed')) { try { const u = new URL(videoUrl); const cloud = u.searchParams.get('cloud_name'); const pid = u.searchParams.get('public_id'); if(cloud && pid) videoUrl = `https://res.cloudinary.com/${cloud}/video/upload/${pid}.mp4`; } catch(e) {} }
-      if (videoUrl.includes('res.cloudinary.com') && videoUrl.includes('/video/upload/') && !videoUrl.endsWith('.mp4')) videoUrl = videoUrl.split('?')[0] + '.mp4';
-      if (videoUrl.includes('drive.google.com')) { const match = videoUrl.match(/\/d\/(.+?)\//); if(match && match[1]) videoUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`; }
-      const isValidVideo = videoUrl.endsWith('.mp4') || videoUrl.includes('/video/upload/') || videoUrl.includes('drive.google.com/uc');
-      if (isValidVideo) mediaContent = `<video id="slideVideo${i}" autoplay muted loop playsinline webkit-playsinline="true" x5-playsinline="true" x5-video-player-type="h5" preload="auto" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;"><source src="${videoUrl}" type="video/mp4"></video>`;
-      else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
-    } else if (s.image_url && s.image_url.trim() !== '') bgStyle = `background-image: url('${s.image_url}'); background-size: cover; background-position: center;`;
-    else bgStyle = `background: ${s.bg_color || 'var(--espresso)'};`;
-    let buttonsHtml = '';
-    if (s.btn_text && s.btn_text.trim() !== '') { const btnStyle = (s.btn_style === 'outline') ? 'slide-btn-outline' : 'slide-btn-primary'; buttonsHtml += `<a href="${s.btn_url || '#'}" class="slide-btn ${btnStyle}">${s.btn_text}</a>`; }
-    if (s.btn2_text && s.btn2_text.trim() !== '' && s.btn2_url) buttonsHtml += `<a href="${s.btn2_url}" class="slide-btn slide-btn-outline" style="border:1.5px solid rgba(255,255,255,0.6); background:transparent;">${s.btn2_text}</a>`;
-    return `<div class="slide" style="position:relative; ${bgStyle}">${mediaContent}<div class="slide-emoji-bg" style="position:absolute; z-index:0; opacity:0.1;">${s.emoji || ''}</div><div class="slide-overlay" style="position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:1;"></div><div class="slide-content" style="position:absolute; z-index:2; text-align:center; padding:2rem 8%; width:100%; left:0; right:0; top:50%; transform:translateY(-50%);"><span class="slide-tag">${s.tag || ''}</span><h2 class="slide-title">${s.title || ''}</h2><p class="slide-desc">${s.description || ''}</p><div class="slide-buttons" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">${buttonsHtml}</div></div></div>`;
-  }).join('');
-  if (dots) dots.innerHTML = sliderSlides.map((_, i) => `<button class="slider-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
-  currentSlide = 0; if(track) track.style.transform = 'translateX(0)'; resetTimer();
-  initSliderVideos();
-}
-
-// ========== НАДЁЖНЫЙ ЗАПУСК ВИДЕО В СЛАЙДЕРЕ (для iOS Safari) ==========
-function initSliderVideos() {
-  const videos = document.querySelectorAll('.slide video');
-
-  const tryPlay = (video) => {
-    // iOS Safari иногда требует, чтобы muted был установлен именно как JS-свойство,
-    // а не только HTML-атрибут
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => { /* будет повторная попытка ниже */ });
-    }
-  };
-
-  videos.forEach(video => {
-    // Запускаем как только видео готово отдавать кадры
-    video.addEventListener('loadedmetadata', () => tryPlay(video));
-    video.addEventListener('canplay', () => tryPlay(video));
-    // Если видео уже готово (кэш) — пробуем сразу
-    if (video.readyState >= 2) tryPlay(video);
-  });
-
-  // Несколько повторных попыток в первые секунды (на случай если Safari отложил decode)
-  [50, 300, 800, 1500, 3000].forEach(delay => {
-    setTimeout(() => videos.forEach(tryPlay), delay);
-  });
-
-  // Гарантированный запуск при первом касании/клике пользователя —
-  // на iOS это всегда срабатывает, даже если автозапуск был заблокирован
-  const unlockOnInteraction = () => {
-    videos.forEach(tryPlay);
-    document.removeEventListener('touchstart', unlockOnInteraction);
-    document.removeEventListener('click', unlockOnInteraction);
-  };
-  document.addEventListener('touchstart', unlockOnInteraction, { once: true, passive: true });
-  document.addEventListener('click', unlockOnInteraction, { once: true });
-
-  // Перезапуск при возврате на вкладку (свайп между приложениями на iOS останавливает видео)
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) videos.forEach(tryPlay);
-  });
-}
-
-function goToSlide(n) { if(sliderSlides.length===0) return; currentSlide = Math.min(Math.max(0, n), sliderSlides.length-1); const track = document.getElementById('sliderTrack'); if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide)); resetTimer(); const activeVideo = document.getElementById('slideVideo' + currentSlide); if (activeVideo) { activeVideo.muted = true; activeVideo.play().catch(()=>{}); } }
-
-function slideNext() { if(sliderSlides.length>1) goToSlide((currentSlide+1)%sliderSlides.length); }
-
-function slidePrev() { if(sliderSlides.length>1) goToSlide((currentSlide-1+sliderSlides.length)%sliderSlides.length); }
-
-function resetTimer() { clearInterval(sliderTimer); if(sliderSlides.length>1) sliderTimer = setInterval(slideNext, 5000); }
-
-// ========== FEATURES (С ИСПОЛЬЗОВАНИЕМ ПЕРЕВОДОВ ИЗ SETTINGS) ==========
-async function loadFeatures() {
-  const grid = document.getElementById('featuresGrid');
-  if(!grid) return;
-  
-  const s = siteSettings;
-  const lang = currentLang;
-  
-  function getFeatureText(baseKey, fallbacks) {
-    const key = baseKey + '_' + lang;
-    if (s[key]) return s[key];
-    if (s[baseKey]) return s[baseKey];
-    return fallbacks[lang] || fallbacks.az || '';
+function applyLogoSettings() {
+  const logoLink = document.querySelector('.nav-logo');
+  if (!logoLink) return;
+  if ((siteSettings.logo_type || 'text') === 'text') {
+    logoLink.innerHTML = siteSettings.logo_text || 'Malako';
+    logoLink.style.fontSize = (siteSettings.logo_text_size || '28') + 'px';
+    logoLink.style.color = siteSettings.logo_text_color || '#4A3020';
+    logoLink.style.fontFamily = "'Playfair Display', serif";
+    logoLink.style.fontWeight = '600';
+  } else if (siteSettings.logo_image) {
+    logoLink.innerHTML = `<img src="${siteSettings.logo_image}" alt="Malako" style="height:${siteSettings.logo_height || 'auto'}; width:${siteSettings.logo_width || '180'}px; max-height:50px; object-fit:contain">`;
   }
-  
-  const features = [
-    { 
-      icon: '☕', 
-      title: getFeatureText('feature1_title', { az: 'Öz qovurma', ru: 'Собственная обжарка', en: 'Own roasting' }), 
-      desc: getFeatureText('feature1_desc', { az: 'Kolumbiya qəhvəsi, unikal texnologiya ilə qovrulur. Hər fincanda zəngin dad və ətir.', ru: 'Колумбийский кофе, обжаренный по уникальной технологии. Насыщенный вкус и аромат в каждой чашке.', en: 'Colombian coffee roasted with a unique technique. Rich flavour and aroma in every cup.' }) 
-    },
-    { 
-      icon: '🥗', 
-      title: getFeatureText('feature2_title', { az: 'Dadlı mətbəx', ru: 'Вкусная кухня', en: 'Delicious kitchen' }), 
-      desc: getFeatureText('feature2_desc', { az: 'Tam səhər yeməkləri, doyumlu bol qablar, burgerlər və zərif desertlər — hər zövq üçün nəsə var.', ru: 'Полные завтраки, сытные порции, бургеры и нежные десерты — что-то для каждого.', en: 'Full breakfasts, hearty portions, burgers and delicate desserts — something for every taste.' }) 
-    },
-    { 
-      icon: '🌿', 
-      title: getFeatureText('feature3_title', { az: 'Rahat atmosfer', ru: 'Уютная атмосфера', en: 'Cozy atmosphere' }), 
-      desc: getFeatureText('feature3_desc', { az: 'Düşünülmüş interyer, isti işıqlandırma və yenilənən pleylistlər ideal mühit yaradır.', ru: 'Продуманный интерьер, тёплое освещение и обновляемые плейлисты создают идеальную атмосферу.', en: 'Thoughtful interior, warm lighting and updated playlists create the perfect setting.' }) 
-    },
-    { 
-      icon: '⭐', 
-      title: getFeatureText('feature4_title', { az: 'Yüksək xidmət', ru: 'Высокий сервис', en: 'High service' }), 
-      desc: getFeatureText('feature4_desc', { az: 'Xidmətin keyfiyyəti bizim fəlsəfəmizin əsasını təşkil edir. Hər rəy təhlil edilir və səviyyəmizi yaxşılaşdırır.', ru: 'Качество сервиса — основа нашей философии. Каждый отзыв анализируется и помогает нам расти.', en: 'Service quality is the core of our philosophy. Every review is analysed and helps us improve.' }) 
-    }
-  ];
-  
-  grid.innerHTML = features.map(f => 
-    `<div class="feature-card fade-up"><div class="feature-icon">${f.icon}</div><h3>${f.title}</h3><p>${f.desc}</p></div>`
-  ).join('');
 }
 
-// ========== МЕНЮ ==========
-async function loadCategoriesAndMenu() {
+// ========== ТЕКСТЫ МЕНЮ ==========
+function applyMenuTexts() {
+  const heroLabel = document.getElementById('menuHeroLabel');
+  const heroEm = document.getElementById('menuHeroEm');
+  const heroPre = document.getElementById('menuHeroPre');
+  const heroPost = document.getElementById('menuHeroPost');
+  if (heroLabel) heroLabel.textContent = i18next.t('menu_page_label');
+  if (heroEm) heroEm.textContent = i18next.t('menu_page_em');
+  if (heroPre) heroPre.textContent = i18next.t('menu_page_pre');
+  if (heroPost) heroPost.textContent = i18next.t('menu_page_post');
+}
+
+// ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
+async function loadMenuData() {
   try {
-    // Загружаем категории с переводами
-    const { data: categories } = await supabaseClient
-      .from('categories')
-      .select('*, category_translations(*)')
-      .order('sort_order');
-    
-    // Загружаем блюда с переводами
-    const { data: menuItems } = await supabaseClient
-      .from('menu_items')
-      .select('*, dish_translations(*)')
-      .eq('available', true)
-      .order('sort_order');
-    
-    allCategories = categories || [];
-    allMenuItems = menuItems || [];
-    
-    // Строим табы для категорий
-    const tabs = document.getElementById('menuTabs');
-    if (tabs && allCategories.length) {
-      tabs.innerHTML = allCategories.map((c, i) => {
-        const name = getCategoryName(c.category_translations, currentLang) || c.name || 'Kateqoriya';
-        return `<button class="menu-tab ${i===0?'active':''}" onclick="filterMenu('${c.id}',this)">${name}</button>`;
-      }).join('');
-      currentCategory = allCategories[0]?.id || '';
-      renderMenu(currentCategory);
-    }
+    const [catRes, itemRes] = await Promise.all([
+      supabaseClient
+        .from('categories')
+        .select('id,name,emoji,sort_order,category_type,category_translations(id,language,name)')
+        .order('sort_order', { ascending: true }),
+      supabaseClient
+        .from('menu_items')
+        .select('id,name,description,price,image_url,emoji,badge,available,sort_order,category_id,dish_translations(id,language,name,description)')
+        .eq('available', true)
+        .order('sort_order', { ascending: true })
+    ]);
+    allCategories = catRes.data || [];
+    allMenuItems  = itemRes.data || [];
+    buildMenu();
   } catch(e) {
     console.error('Ошибка загрузки меню:', e);
+    showErrorMessage('Menyu yüklənərkən xəta baş verdi');
   }
 }
 
-function renderMenu(categoryId) {
-  const g = document.getElementById('menuGrid');
-  if (!g) return;
-  
-  const items = allMenuItems.filter(i => i.category_id === categoryId);
-  const cat = allCategories.find(c => c.id === categoryId);
-  const catName = cat ? getCategoryName(cat.category_translations, currentLang) || cat.name || '' : '';
-  
-  if (!items.length) {
-    const emptyMsg = { az: 'Bu kateqoriyada hələ heç bir yemək yoxdur', ru: 'В этой категории пока нет блюд', en: 'No items in this category yet' };
-    g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`;
+function showErrorMessage(message) {
+  const bodyContainer = document.getElementById('menuBody');
+  if (bodyContainer) {
+    bodyContainer.innerHTML = `
+      <div style="text-align:center;padding:3rem;color:var(--caramel)">
+        <p style="font-size:1.2rem;margin-bottom:1rem">⚠️</p>
+        <p>${message}</p>
+        <button onclick="location.reload()" style="margin-top:1rem;padding:0.5rem 1.5rem;background:var(--espresso);color:white;border:none;border-radius:50px;cursor:pointer">Səhifəni yenilə</button>
+      </div>
+    `;
+  }
+}
+
+let currentMenuSection = 'drink'; // стартуем с İçkilər как на скриншоте
+
+function showSkeleton() {
+  const body = document.getElementById('menuBody');
+  if (!body || body.innerHTML) return;
+  const card = '<div style="border-radius:20px;overflow:hidden;border:1px solid #E8D5B7;background:#fff"><div style="height:200px;background:linear-gradient(90deg,#E8D5B7 25%,#F5EDE0 50%,#E8D5B7 75%);background-size:200% 100%;animation:skeletonShimmer 1.4s infinite"></div><div style="padding:1.2rem"><div style="height:16px;background:#E8D5B7;border-radius:8px;margin-bottom:10px;width:70%;animation:skeletonShimmer 1.4s infinite"></div><div style="height:12px;background:#F5EDE0;border-radius:8px;margin-bottom:8px;animation:skeletonShimmer 1.4s infinite"></div><div style="height:12px;background:#F5EDE0;border-radius:8px;width:50%;animation:skeletonShimmer 1.4s infinite"></div></div></div>';
+  body.innerHTML = '<div style="padding:2rem 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">' + Array(6).fill(card).join('') + '</div>';
+}
+
+function buildMenu() {
+  const body = document.getElementById('menuBody');
+  if (!body) return;
+
+  if (allCategories.length === 0) {
+    const msg = { az: 'Menyu müvəqqəti əlçatan deyil.', ru: 'Меню временно недоступно.', en: 'Menu temporarily unavailable.' };
+    body.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">${msg[currentLang]||msg.az}</div>`;
     return;
   }
-  
-  g.innerHTML = items.slice(0,6).map(item => {
-    const name = getDishName(item.dish_translations, currentLang) || item.name || '';
-    const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
-    return `<div class="menu-card"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_400,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+
+  const drinkCats = allCategories.filter(c => c.category_type === 'drink');
+  const foodCats  = allCategories.filter(c => c.category_type !== 'drink');
+  const hasBoth   = drinkCats.length > 0 && foodCats.length > 0;
+
+  // Строим табы секций
+  const tabsEl = document.getElementById('menuSectionTabs');
+  if (tabsEl) {
+    if (hasBoth) {
+      const drinkLabel = { az: 'İçkilər', ru: 'Напитки', en: 'Drinks' }[currentLang] || 'İçkilər';
+      const foodLabel  = { az: 'Yemәklər', ru: 'Блюда', en: 'Food' }[currentLang] || 'Yemәklər';
+      tabsEl.innerHTML = `
+        <button class="menu-section-tab ${currentMenuSection==='drink'?'active':''}" onclick="switchSection('drink')">${drinkLabel}</button>
+        <button class="menu-section-tab ${currentMenuSection==='food'?'active':''}"  onclick="switchSection('food')">${foodLabel}</button>
+      `;
+      tabsEl.style.display = 'flex';
+    } else {
+      tabsEl.style.display = 'none';
+      // Если только один тип — показываем всё
+      currentMenuSection = foodCats.length > 0 ? 'food' : 'drink';
+    }
+  }
+
+  // Если оба типа отсутствуют — стартуем с первого доступного
+  if (!hasBoth) {
+    currentMenuSection = drinkCats.length > 0 ? 'drink' : 'food';
+  }
+
+  renderSection(currentMenuSection);
+}
+
+function switchSection(section) {
+  currentMenuSection = section;
+
+  // Обновляем активный таб
+  document.querySelectorAll('.menu-section-tab').forEach(btn => {
+    const isDrink = btn.textContent.trim() === ({ az:'İçkilər', ru:'Напитки', en:'Drinks' }[currentLang]||'İçkilər');
+    btn.classList.toggle('active',
+      (section === 'drink' && isDrink) || (section === 'food' && !isDrink)
+    );
+  });
+
+  renderSection(section);
+
+  // Скролл к верху меню
+  const tabsEl = document.getElementById('menuSectionTabs');
+  if (tabsEl) tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderSection(section) {
+  const nav  = document.getElementById('stickyNav');
+  const body = document.getElementById('menuBody');
+  if (!nav || !body) return;
+
+  const cats = section === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  // Навигация категорий
+  nav.innerHTML = cats.map(c => {
+    const name = getCategoryName(c.category_translations, currentLang) || c.name || '';
+    return `<button class="cat-btn" data-category-id="${c.id}" onclick="scrollToSection('${c.id}',this)">${escapeHtml(name)}</button>`;
   }).join('');
+
+  // Секции блюд
+  let html = '';
+  let catIdx = 0;
+  for (const cat of cats) {
+    catIdx++;
+    const items = allMenuItems.filter(i => i.category_id === cat.id);
+    if (!items.length) continue;
+    const catName = getCategoryName(cat.category_translations, currentLang) || cat.name || '';
+    html += `
+      <div class="menu-section" id="section-${cat.id}">
+        <div class="menu-section-header"><h2 class="section-h2">${escapeHtml(catName)}</h2></div>
+        <div class="menu-grid">
+          ${items.map((item, itemIdx) => {
+            const name = getDishName(item.dish_translations, currentLang) || item.name || '';
+            const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
+            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto:eco,w_400/') : '';
+            const isLCP = (catIdx === 1 && itemIdx === 0);
+            const imgLoad = isLCP ? 'fetchpriority="high" decoding="sync"' : 'loading="lazy" decoding="async"';
+            return `
+              <div class="dish-card${!item.available?' unavailable':''}" onclick="openDishModal({name:'${escapeHtml(name).replace(/'/g,"\\'") }',desc:'${escapeHtml(desc).replace(/'/g,"\\'") }',price:'${item.price}',img:'${item.image_url||''}',emoji:'${item.emoji||'🍽️'}',badge:'${item.badge||''}',catName:'${escapeHtml(catName).replace(/'/g,"\\'") }'})" style="cursor:pointer">
+                <div class="dish-img">
+                  ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" width="400" height="250" ${imgLoad}>` : (item.emoji||'🍽️')}
+                  ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
+                  ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
+                </div>
+                <div class="dish-body">
+                  <h3 class="dish-name">${escapeHtml(name)}</h3>
+                  <p class="dish-desc">${escapeHtml(desc)}</p>
+                  <div class="dish-footer">
+                    <span class="dish-price">${item.price} ₼</span>
+                    <span class="dish-tag">${escapeHtml(catName)}</span>
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }
+
+  if (!html) {
+    const msg = { az: 'Bu bölmədə hələ məhsul yoxdur.', ru: 'В этом разделе пока нет позиций.', en: 'Nothing here yet.' };
+    body.innerHTML = `<div style="text-align:center;padding:4rem;color:var(--text-muted)">${msg[currentLang]||msg.az}</div>`;
+    return;
+  }
+
+  body.innerHTML = html;
+  const firstBtn = nav.querySelector('.cat-btn');
+  if (firstBtn) firstBtn.classList.add('active');
+  setTimeout(() => setupScrollSpy(), 200);
 }
 
-function filterMenu(catId, btn) {
-  currentCategory = catId;
-  document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ========== SCROLL SPY ==========
+let activeObserver = null;
+let isScrollingManually = false;
+let scrollTimeout = null;
+
+function setupScrollSpy() {
+  if (activeObserver) activeObserver.disconnect();
+
+  // Берём только категории текущего раздела
+  const currentCats = currentMenuSection === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  const sections = currentCats
+    .map(c => document.getElementById('section-' + c.id))
+    .filter(el => el !== null);
+
+  if (sections.length === 0) return;
+
+  activeObserver = new IntersectionObserver((entries) => {
+    if (isScrollingManually) return;
+    let bestSection = null;
+    let bestRatio = 0;
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > bestRatio) {
+        bestRatio = entry.intersectionRatio;
+        bestSection = entry.target;
+      }
+    });
+    if (bestSection) {
+      highlightActiveCategory(bestSection.id.replace('section-', ''));
+    }
+  }, { threshold: [0.1, 0.3, 0.5, 0.7], rootMargin: '-80px 0px -100px 0px' });
+
+  sections.forEach(s => activeObserver.observe(s));
+
+  window.removeEventListener('scroll', onScrollSpy);
+  window.addEventListener('scroll', onScrollSpy, { passive: true });
+}
+
+function onScrollSpy() {
+  if (scrollTimeout) clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    if (!isScrollingManually) updateActiveCategoryByScroll();
+  }, 100);
+}
+
+function updateActiveCategoryByScroll() {
+  const currentCats = currentMenuSection === 'drink'
+    ? allCategories.filter(c => c.category_type === 'drink')
+    : allCategories.filter(c => c.category_type !== 'drink');
+
+  const sections = currentCats
+    .map(c => document.getElementById('section-' + c.id))
+    .filter(el => el !== null);
+
+  const scrollPosition = window.scrollY + 160;
+  let currentSection = null;
+  let minDistance = Infinity;
+
+  sections.forEach(section => {
+    const distance = Math.abs(scrollPosition - section.offsetTop);
+    if (distance < minDistance) {
+      minDistance = distance;
+      currentSection = section;
+    }
+  });
+
+  if (currentSection) {
+    highlightActiveCategory(currentSection.id.replace('section-', ''));
+  }
+}
+
+function highlightActiveCategory(categoryId) {
+  const buttons = document.querySelectorAll('.cat-btn');
+  let activeButton = null;
+  
+  buttons.forEach(btn => {
+    if (btn.getAttribute('data-category-id') === categoryId) {
+      activeButton = btn;
+    }
+  });
+  
+  if (activeButton && !activeButton.classList.contains('active')) {
+    buttons.forEach(b => b.classList.remove('active'));
+    activeButton.classList.add('active');
+    
+    const nav = document.querySelector('.menu-sticky-nav');
+    if (nav) {
+      const btnRect = activeButton.getBoundingClientRect();
+      const navRect = nav.getBoundingClientRect();
+      if (btnRect.left < navRect.left || btnRect.right > navRect.right) {
+        activeButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }
+}
+
+function scrollToSection(categoryId, btn) {
+  isScrollingManually = true;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderMenu(catId);
-}
-
-// ========== ФИЛИАЛЫ ==========
-async function loadBranches() {
-  const { data } = await supabaseClient.from('branches').select('*').order('sort_order');
-  const grid = document.getElementById('branchesGrid');
-  if (!grid) return;
-  if (!data?.length) { 
-    const emptyMsg = { az: 'Filiallar tezliklə açılacaq', ru: 'Филиалы скоро откроются', en: 'Branches coming soon' };
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`; 
-    return; 
+  const el = document.getElementById('section-' + categoryId);
+  if (el) {
+    // Учитываем высоту navbar + section tabs + category nav
+    const offset = 170;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
-  
-  // Получаем текст кнопки из settings или i18n
-  const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
-  
-  grid.innerHTML = data.map(b => 
-    `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a></div>`
-  ).join('');
-}
-//<button class="btn-book-branch" onclick="openReservation('${b.name.replace(/'/g, "\\'")}')">${btnText}</button>
-// ========== О НАС ==========
-function loadAboutSection() {
-  const s = siteSettings;
-  const lang = currentLang;
-  
-  // Helper: get language-specific setting or fall back to base key
-  function getSetting(baseKey, fallback) {
-    return s[baseKey + '_' + lang] || s[baseKey] || fallback || '';
-  }
-  
-  const branchesCount = allCategories.length || 0;
-  const aboutText3Raw = getSetting('about_text3', '');
-  const aboutText3 = aboutText3Raw.replace('{branches}', branchesCount);
-  
-  document.getElementById('aboutText1').innerHTML = getSetting('about_text1', '');
-  document.getElementById('aboutText2').innerHTML = getSetting('about_text2', '');
-  document.getElementById('aboutText3').innerHTML = aboutText3;
-  document.getElementById('aboutYear').innerHTML = s.about_year || '2016';
-  
-  const img1 = s.about_img1 || '☕';
-  const img2 = s.about_img2 || '🥐';
-  const imgMain = document.getElementById('aboutImgMain');
-  if(imgMain) { if(img1.startsWith('http')) imgMain.style.backgroundImage = `url('${img1}')`; else imgMain.innerHTML = img1; }
-  const imgSub = document.getElementById('aboutImgSub');
-  if(imgSub) { if(img2.startsWith('http')) imgSub.style.backgroundImage = `url('${img2}')`; else imgSub.innerHTML = img2; }
-  
-  const featContainer = document.getElementById('aboutFeatures');
-  if(featContainer) {
-    const featuresRaw = getSetting('about_features', 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar');
-    const features = featuresRaw.split(',');
-    featContainer.innerHTML = features.map(f => `<div class="about-feat-item">${f.trim()}</div>`).join('');
-  }
-}
-
-// ========== АКЦИИ ==========
-async function loadPromoCards() {
-  const { data } = await supabaseClient.from('promo_cards').select('*').eq('is_active', true);
-  const grid = document.getElementById('promoCardsGrid');
-  if (!grid) return;
-  if (!data?.length) { grid.innerHTML = ''; return; }
-  grid.innerHTML = data.map(p => 
-    `<div class="promo-card-item"><div class="promo-card-img">🎁</div><div class="promo-card-body"><h3>${p.title}</h3><p>${p.description || ''}</p>${p.btn_text && p.btn_url ? `<a href="${p.btn_url}" class="promo-card-btn">${p.btn_text}</a>` : ''}</div></div>`
-  ).join('');
+  setTimeout(() => { isScrollingManually = false; }, 1000);
 }
 
 // ========== ПОПАП ==========
@@ -988,29 +1211,33 @@ async function loadPromoPopup() {
       .eq('is_active', true)
       .order('created_at', { ascending: false });
     
-    if (!data?.length) return;
+    if (!data || data.length === 0) return;
     const popup = data[0];
     document.getElementById('promoTitle').textContent = popup.title || 'Aksiya!';
     document.getElementById('promoDesc').textContent = popup.description || '';
     
-    const icon = document.getElementById('promoIcon');
-    if (icon) {
-      icon.innerHTML = '';
+    const iconContainer = document.getElementById('promoIcon');
+    if (iconContainer) {
+      iconContainer.innerHTML = '';
       if (popup.image_url && popup.image_url.trim() !== '') {
         const img = document.createElement('img');
         img.src = popup.image_url;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
-        icon.appendChild(img);
+        iconContainer.appendChild(img);
       } else {
-        icon.innerHTML = '🎉';
+        iconContainer.innerHTML = '🎉';
+        iconContainer.style.fontSize = '2rem';
+        iconContainer.style.display = 'flex';
+        iconContainer.style.alignItems = 'center';
+        iconContainer.style.justifyContent = 'center';
       }
     }
     
     const btn = document.getElementById('promoBtn');
     if (btn) {
-      if (popup.btn_text && popup.btn_url) {
+      if (popup.btn_text && popup.btn_text.trim() !== '' && popup.btn_url && popup.btn_url.trim() !== '') {
         btn.textContent = popup.btn_text;
         btn.href = popup.btn_url;
         btn.style.display = 'inline-block';
@@ -1019,87 +1246,28 @@ async function loadPromoPopup() {
       }
     }
     
-    const delay = (popup.delay_seconds || 5) * 1000;
+    const delayMs = (popup.delay_seconds || 5) * 1000;
     popupTimeout = setTimeout(() => {
-      popupEl.style.display = 'flex';
-      setTimeout(() => popupEl.classList.add('show'), 50);
-      popupShown = true;
-    }, delay);
-  } catch(e) { console.error(e); }
+      if (!popupShown) {
+        popupEl.style.display = 'flex';
+        setTimeout(() => popupEl.classList.add('show'), 50);
+        popupShown = true;
+      }
+    }, delayMs);
+  } catch(e) {
+    console.error('Ошибка загрузки попапов:', e);
+  }
 }
 
 function closePromo() {
-  const p = document.getElementById('promoPopup');
-  if (p) {
-    p.classList.remove('show');
-    p.style.display = 'none';
+  const popup = document.getElementById('promoPopup');
+  if (popup) {
+    popup.classList.remove('show');
+    popup.style.display = 'none';
     popupShown = false;
     if (popupTimeout) clearTimeout(popupTimeout);
   }
 }
-
-// ========== НАСТРОЙКИ (контакты) ==========
-function loadSettings() {
-  const s = siteSettings;
-  const footerPhone = document.getElementById('footerPhone');
-  if (footerPhone) footerPhone.setAttribute('href', `tel:${s.default_wa_number || '994501234501'}`);
-  const workHours = document.getElementById('workHours');
-  if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
-}
-
-// ========== БРОНИРОВАНИЕ ==========
-let currentBranch = 'Malako — Mərkəz';
-
-function openReservation(b) {
-  currentBranch = b;
-  document.getElementById('modalBranchName').textContent = b;
-  document.getElementById('reservationModal').classList.add('open');
-  document.getElementById('successMsg').classList.remove('show');
-  document.getElementById('reservationForm').style.opacity = '1';
-  document.getElementById('resDate').value = new Date().toISOString().split('T')[0];
-  document.body.style.overflow = 'hidden';
-}
-
-function closeReservation() {
-  document.getElementById('reservationModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function submitReservation() {
-  const n = document.getElementById('resName')?.value.trim() || '';
-  const p = document.getElementById('resPhone')?.value.trim() || '';
-  const d = document.getElementById('resDate')?.value || '';
-  const t = document.getElementById('resTime')?.value || '';
-  const g = document.getElementById('resGuests')?.value || '';
-  const nt = document.getElementById('resNote')?.value.trim() || '';
-  
-  if (!n || !p || !d || !t) {
-    alert(i18next.t('reserve_error_fill_fields') || 'Zəhmət olmasa bütün məcburi sahələri doldurun.');
-    return;
-  }
-  
-  const { error } = await supabaseClient.from('reservations').insert([
-    { name: n, phone: p, branch: currentBranch, date: d, time: t, guests: g, note: nt, status: 'pending' }
-  ]);
-  
-  if (error) {
-    console.error('Ошибка бронирования:', error);
-    alert(i18next.t('reserve_error') || 'Rezervasiya zamanı xəta baş verdi.');
-    return;
-  }
-  
-  const wa = siteSettings.default_wa_number || '994501234501';
-  const msg = encodeURIComponent(
-    `🌿 YENİ REZERVASİYA\n\nFilial: ${currentBranch}\nAd: ${n}\nTelefon: ${p}\nTarix: ${d}\nVaxt: ${t}\nQonaq: ${g}${nt ? '\nArzular: ' + nt : ''}`
-  );
-  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
-  document.getElementById('reservationForm').style.opacity = '0';
-  setTimeout(() => { document.getElementById('successMsg').classList.add('show'); }, 300);
-}
-
-document.getElementById('reservationModal')?.addEventListener('click', e => {
-  if (e.target === document.getElementById('reservationModal')) closeReservation();
-});
 
 // ========== МОБИЛЬНОЕ МЕНЮ ==========
 document.getElementById('burger')?.addEventListener('click', () => {
@@ -1110,27 +1278,22 @@ function closeMobileNav() {
   document.getElementById('mobileNav').classList.remove('open');
 }
 
-// ========== АНИМАЦИИ ==========
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
 // ========== ЗАПУСК ==========
 async function init() {
-  // Инициализируем i18next
   initLangSwitcher();
-  await Promise.all([ initI18n(), loadAllSettings() ]);
-  
-  // После загрузки настроек обновляем UI для текущего языка
+
+  // Переводы и данные грузятся одновременно вместо последовательно
+  await Promise.all([
+    initI18n(),
+    loadAllSettings(),
+  ]);
+
   updateUILanguage();
   
-  // Обновляем все элементы с data-i18n еще раз
+  // Обновляем элементы с data-i18n еще раз после загрузки
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    const translation = i18next.t(key);
+    const translation = i18next.t(key, { lng: currentLang });
     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
       if (el.placeholder !== undefined) el.placeholder = translation;
     } else {
@@ -1144,8 +1307,68 @@ async function init() {
   if (ct) ct.textContent = texts[currentLang];
 }
 
-// Запускаем инициализацию
+// Пересобираем меню при смене языка
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('selected_language', lang);
+  i18next.changeLanguage(lang).then(() => {
+    updateUILanguage();
+    // Пересобираем секции и категории на новом языке
+    if (allCategories.length > 0) buildMenu();
+    const dd = document.getElementById('langDropdown');
+    if (dd) dd.classList.remove('show');
+  });
+}
+
+
+// ===== DISH MODAL =====
+function openDishModal(data) {
+  const overlay = document.getElementById('dishModalOverlay');
+  document.getElementById('dishModalName').textContent = data.name || '';
+  document.getElementById('dishModalDesc').textContent = data.desc || '';
+  document.getElementById('dishModalPrice').textContent = data.price ? data.price + ' ₼' : '';
+  const imgWrap = document.getElementById('dishModalImgWrap');
+  if (data.img) {
+    imgWrap.innerHTML = '<img class="dish-modal-img" src="' + data.img.replace('/upload/', '/upload/f_auto,q_auto,w_900/') + '" alt="' + (data.name||'') + '" loading="lazy">';
+  } else {
+    imgWrap.innerHTML = '<div class="dish-modal-no-img">' + (data.emoji || '🍽️') + '</div>';
+  }
+  const tagEl = document.getElementById('dishModalTag');
+  tagEl.textContent = data.catName || '';
+  const badgeEl = document.getElementById('dishModalBadge');
+  if (data.badge) { badgeEl.textContent = data.badge; badgeEl.style.display = 'inline-block'; }
+  else { badgeEl.style.display = 'none'; }
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDishModal(e) {
+  if (e && e.target !== document.getElementById('dishModalOverlay')) return;
+  document.getElementById('dishModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('dishModalOverlay').classList.remove('open'); document.body.style.overflow = ''; }});
+
 init();
 </script>
+
+<!-- Dish Modal -->
+<div class="dish-modal-overlay" id="dishModalOverlay" onclick="closeDishModal(event)">
+  <div class="dish-modal-box" id="dishModalBox">
+    <button class="dish-modal-close" onclick="closeDishModal()">✕</button>
+    <div id="dishModalImgWrap"></div>
+    <div class="dish-modal-body">
+      <h2 class="dish-modal-name" id="dishModalName"></h2>
+      <p class="dish-modal-desc" id="dishModalDesc"></p>
+      <div class="dish-modal-footer">
+        <span class="dish-modal-price" id="dishModalPrice"></span>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <span class="dish-modal-tag" id="dishModalTag"></span>
+          <span class="dish-modal-badge" id="dishModalBadge" style="display:none"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
