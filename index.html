@@ -59,42 +59,60 @@ body{
   color:var(--dark);
   overflow-x:hidden;
   min-height:100vh;
+  /* Текстура остаётся на body всегда */
   background-color: #F5F0E8;
   background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
   background-repeat: repeat;
   background-attachment: fixed;
 }
+/* Убираем старые классы для фона на body – они больше не нужны */
 body.bg-image-set {
-  background: var(--bg-image) center/cover fixed no-repeat;
+  /* ничего не делаем, фон будет только в hero */
 }
 body.bg-image-set::before {
+  display: none;
+}
+
+/* ===== ФОН ТОЛЬКО В .HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  /* фон по умолчанию – без изображения */
+}
+.hero.hero-bg {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: var(--bg-image, none);
+}
+/* Затемнение поверх фона */
+.hero.hero-bg::before {
   content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: absolute;
+  inset: 0;
   background: rgba(250, 246, 240, 0.55);
-  z-index: -1;
-  pointer-events: none;
+  z-index: 0;
 }
-/* iOS/mobile fix: background-attachment:fixed не работает корректно на мобильных */
+.hero.hero-bg .hero-bg-pattern {
+  z-index: 1;
+}
+.hero.hero-bg .hero-content {
+  position: relative;
+  z-index: 2;
+}
+/* Для мобильных можно переопределить (если нужно) */
 @media (max-width: 768px), (hover: none) {
-  body {
-    background-attachment: scroll;
-  }
-  body.bg-image-set {
-    background-attachment: scroll !important;
-    background-position: center center !important;
-    background-size: 50% 50% !important;
-    background-repeat: no-repeat !important;
-    background-color: #F5F0E8;
-  }
-  body.bg-image-set::before {
-    position: fixed;
-    min-height: 100%;
+  .hero.hero-bg {
+    background-size: cover; /* или 100% 100% – по желанию */
+    background-position: center center;
   }
 }
+/* ===== КОНЕЦ ФОНА В HERO ===== */
+
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;transition:all 0.4s;background:rgba(250,246,240,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:600;color:var(--espresso);text-decoration:none;letter-spacing:0.02em}
 .nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
@@ -120,7 +138,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;a
 .mobile-lang-item{display:flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:50px;cursor:pointer;transition:all 0.3s;font-size:0.85rem;color:var(--mocha);background:var(--milk)}
 .mobile-lang-item.active{background:var(--espresso);color:var(--cream)}
 @media (max-width:768px){.nav-right{gap:0.5rem}.lang-btn{padding:0.55rem 0.8rem}}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .hero-bg-pattern{position:absolute;inset:0;opacity:0.04;background-image:radial-gradient(circle,var(--espresso) 1px,transparent 1px);background-size:40px 40px}
 .hero-content{text-align:center;z-index:2;padding:0 1rem;animation:fadeInUp 1s ease}
 .hero-tagline{font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.5rem;font-weight:500}
@@ -276,7 +293,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 .mobile-nav a{font-family:'Playfair Display',serif;font-size:2rem;color:var(--espresso);text-decoration:none;padding:0.5rem 0;border-bottom:1px solid var(--latte);font-style:italic}
 .mobile-nav .btn-reserve{font-family:'Jost',sans-serif;font-style:normal;font-size:0.9rem;text-align:center;margin-top:1rem;display:block}
 
-/* ——— НОВЫЙ БЛОК ДЛЯ ЛОГОТИПА ——— */
+/* ——— БЛОК ДЛЯ ЛОГОТИПА ——— */
 .hero-logo {
   width: 100%;
   display: flex;
@@ -297,7 +314,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
     height: auto;
   }
 }
-/* ——— КОНЕЦ НОВОГО БЛОКА ——— */
+/* ——— КОНЕЦ БЛОКА ЛОГОТИПА ——— */
 
 @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -425,12 +442,11 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   <div class="hero-content">
     <p class="hero-tagline" id="heroTagline" data-i18n="hero_tagline">Specialty Coffee & Food</p>
     
-    <!-- НОВАЯ СТРУКТУРА ЛОГОТИПА -->
+    <!-- ЛОГОТИП -->
     <div class="hero-logo">
       <img src="https://res.cloudinary.com/dnkapcgvr/image/upload/v1783168645/erasebg-transformed_1_c0fj7a.png" alt="Malako Café">
     </div>
     <h1 class="hero-title" id="heroTitle"><em>Café</em></h1>
-    <!-- КОНЕЦ НОВОЙ СТРУКТУРЫ -->
     
     <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero_subtitle">Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə</p>
     <div class="hero-buttons">
@@ -465,8 +481,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <!-- BRANCHES -->
 <section class="section" id="branches" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="branchesLabel" data-i18n="branches_label">Ünvanlarımız</p><h2 class="section-title fade-up" id="branchesTitle" data-i18n="branches_title">Ən yaxın filialı tapın</h2><div class="branches-grid" id="branchesGrid"></div></section>
  
-<!-- RESERVATION MODAL 
-<div class="modal-overlay" id="reservationModal"><div class="modal"><button class="modal-close" onclick="closeReservation()">×</button><h2 id="reserveTitle" data-i18n="reserve_title">Masa rezervasiyası</h2><p class="modal-branch-name" id="modalBranchName">Malako — Mərkəz</p><div id="reservationForm"><div class="form-group"><label id="reserveNameLabel" data-i18n="reserve_name">Adınız</label><input type="text" id="resName" placeholder="Adınızı daxil edin"></div><div class="form-group"><label id="reservePhoneLabel" data-i18n="reserve_phone">WhatsApp nömrəsi</label><input type="tel" id="resPhone" placeholder="+994 50 000-00-00"></div><div class="form-row"><div class="form-group"><label id="reserveDateLabel" data-i18n="reserve_date">Tarix</label><input type="date" id="resDate"></div><div class="form-group"><label id="reserveTimeLabel" data-i18n="reserve_time">Vaxt</label><input type="time" id="resTime" value="12:00"></div></div><div class="form-group"><label id="reserveGuestsLabel" data-i18n="reserve_guests">Qonaq sayı</label><select id="resGuests"><option value="1">1 qonaq</option><option value="2" selected>2 qonaq</option><option value="3">3 qonaq</option><option value="4">4 qonaq</option><option value="5">5 qonaq</option><option value="6">6 qonaq</option><option value="7+">7+ qonaq</option></select></div><div class="form-group"><label id="reserveNoteLabel" data-i18n="reserve_note">Arzular (istəyə bağlı)</label><textarea id="resNote" placeholder="Xüsusi arzular, allergiyalar, münasibət..."></textarea></div><button class="btn-submit" onclick="submitReservation()" id="reserveSubmitBtn" data-i18n="reserve_submit">Müraciət göndər</button><p class="wa-note" id="reserveNoteWa" data-i18n="reserve_note_wa">📱 Təsdiq menecer tərəfindən WhatsApp-da göndəriləcək</p></div><div class="success-msg" id="successMsg"><h3 id="reserveSuccessTitle" data-i18n="reserve_success_title">Müraciət göndərildi! ✓</h3><p id="reserveSuccessText" data-i18n="reserve_success_text">Menecer bir neçə dəqiqə ərzində rezervasiyanı təsdiqləmək üçün WhatsApp vasitəsilə sizinlə əlaqə saxlayacaq.</p></div></div></div>-->
+<!-- RESERVATION MODAL (закомментирован) -->
  
 <!-- PROMO POPUP -->
 <div class="promo-popup" id="promoPopup" style="display:none"><div class="promo-icon" id="promoIcon"></div><div class="promo-content"><h4 id="promoTitle"></h4><p id="promoDesc"></p><a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a></div><button class="promo-close" onclick="closePromo()">×</button></div>
@@ -698,34 +713,28 @@ function loadLogoSettings() {
   } catch(e) { console.error('Ошибка загрузки логотипа:', e); }
 }
 
-// ========== ФОН ==========
+// ========== ФОН (ТОЛЬКО В .HERO) ==========
 function loadSiteBackground() {
   try {
     const settings = siteSettings;
     const bgType = settings.site_bg_type || 'preset';
-    const presets = {
-      stone:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
-      paper:    { bg: '#F5F0E8', pattern: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" },
-      concrete: { bg: '#E8E4D9', pattern: "url('https://www.transparenttextures.com/patterns/concrete-wall.png')" },
-      map:      { bg: '#EAE5D9', pattern: "url('https://www.transparenttextures.com/patterns/cartographer.png')" }
-    };
-    if (bgType === 'preset') {
-      const preset = settings.site_bg_preset || 'stone';
-      const p = presets[preset] || presets.stone;
-      document.body.style.background = `${p.pattern} ${p.bg}`;
-      document.body.style.backgroundRepeat = 'repeat';
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+
+    // Убираем класс hero-bg в любом случае
+    hero.classList.remove('hero-bg');
+    // Сбрасываем фоновое изображение (но текстура на body остаётся)
+    hero.style.backgroundImage = '';
+
+    if (bgType === 'image' && settings.site_bg_image) {
+      // Добавляем фон только в hero
+      hero.classList.add('hero-bg');
+      hero.style.setProperty('--bg-image', `url('${settings.site_bg_image}')`);
+      // Убираем класс bg-image-set с body (если был)
       document.body.classList.remove('bg-image-set');
-    } else if (bgType === 'image' && settings.site_bg_image) {
-      document.body.classList.add('bg-image-set');
-      document.body.style.setProperty('--bg-image', `url('${settings.site_bg_image}')`);
-      const isMobile = window.matchMedia('(max-width: 768px), (hover: none)').matches;
-      document.body.style.background = `var(--bg-image) center center/cover no-repeat`;
-      document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center center';
-    } else if (bgType === 'color') {
-      document.body.classList.remove('bg-image-set');
-      document.body.style.background = settings.site_bg_color || '#F5F0E8';
+    } else {
+      // Если preset или color, фон не устанавливаем
+      // (текстура на body остаётся)
     }
   } catch(e) { console.error('Ошибка загрузки фона:', e); }
 }
@@ -796,8 +805,6 @@ function initSliderVideos() {
   const videos = document.querySelectorAll('.slide video');
 
   const tryPlay = (video) => {
-    // iOS Safari иногда требует, чтобы muted был установлен именно как JS-свойство,
-    // а не только HTML-атрибут
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -808,20 +815,15 @@ function initSliderVideos() {
   };
 
   videos.forEach(video => {
-    // Запускаем как только видео готово отдавать кадры
     video.addEventListener('loadedmetadata', () => tryPlay(video));
     video.addEventListener('canplay', () => tryPlay(video));
-    // Если видео уже готово (кэш) — пробуем сразу
     if (video.readyState >= 2) tryPlay(video);
   });
 
-  // Несколько повторных попыток в первые секунды (на случай если Safari отложил decode)
   [50, 300, 800, 1500, 3000].forEach(delay => {
     setTimeout(() => videos.forEach(tryPlay), delay);
   });
 
-  // Гарантированный запуск при первом касании/клике пользователя —
-  // на iOS это всегда срабатывает, даже если автозапуск был заблокирован
   const unlockOnInteraction = () => {
     videos.forEach(tryPlay);
     document.removeEventListener('touchstart', unlockOnInteraction);
@@ -830,7 +832,6 @@ function initSliderVideos() {
   document.addEventListener('touchstart', unlockOnInteraction, { once: true, passive: true });
   document.addEventListener('click', unlockOnInteraction, { once: true });
 
-  // Перезапуск при возврате на вкладку (свайп между приложениями на iOS останавливает видео)
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) videos.forEach(tryPlay);
   });
@@ -844,7 +845,7 @@ function slidePrev() { if(sliderSlides.length>1) goToSlide((currentSlide-1+slide
 
 function resetTimer() { clearInterval(sliderTimer); if(sliderSlides.length>1) sliderTimer = setInterval(slideNext, 5000); }
 
-// ========== FEATURES (С ИСПОЛЬЗОВАНИЕМ ПЕРЕВОДОВ ИЗ SETTINGS) ==========
+// ========== FEATURES ==========
 async function loadFeatures() {
   const grid = document.getElementById('featuresGrid');
   if(!grid) return;
@@ -890,13 +891,11 @@ async function loadFeatures() {
 // ========== МЕНЮ ==========
 async function loadCategoriesAndMenu() {
   try {
-    // Загружаем категории с переводами
     const { data: categories } = await supabaseClient
       .from('categories')
       .select('*, category_translations(*)')
       .order('sort_order');
     
-    // Загружаем блюда с переводами
     const { data: menuItems } = await supabaseClient
       .from('menu_items')
       .select('*, dish_translations(*)')
@@ -906,7 +905,6 @@ async function loadCategoriesAndMenu() {
     allCategories = categories || [];
     allMenuItems = menuItems || [];
     
-    // Строим табы для категорий
     const tabs = document.getElementById('menuTabs');
     if (tabs && allCategories.length) {
       tabs.innerHTML = allCategories.map((c, i) => {
@@ -964,20 +962,18 @@ async function loadBranches() {
     return; 
   }
   
-  // Получаем текст кнопки из settings или i18n
   const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
   
   grid.innerHTML = data.map(b => 
     `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a></div>`
   ).join('');
 }
-//<button class="btn-book-branch" onclick="openReservation('${b.name.replace(/'/g, "\\'")}')">${btnText}</button>
+
 // ========== О НАС ==========
 function loadAboutSection() {
   const s = siteSettings;
   const lang = currentLang;
   
-  // Helper: get language-specific setting or fall back to base key
   function getSetting(baseKey, fallback) {
     return s[baseKey + '_' + lang] || s[baseKey] || fallback || '';
   }
@@ -1083,7 +1079,7 @@ function closePromo() {
   }
 }
 
-// ========== НАСТРОЙКИ (контакты) ==========
+// ========== НАСТРОЙКИ ==========
 function loadSettings() {
   const s = siteSettings;
   const footerPhone = document.getElementById('footerPhone');
@@ -1092,59 +1088,7 @@ function loadSettings() {
   if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
 }
 
-// ========== БРОНИРОВАНИЕ ==========
-let currentBranch = 'Malako — Mərkəz';
-
-function openReservation(b) {
-  currentBranch = b;
-  document.getElementById('modalBranchName').textContent = b;
-  document.getElementById('reservationModal').classList.add('open');
-  document.getElementById('successMsg').classList.remove('show');
-  document.getElementById('reservationForm').style.opacity = '1';
-  document.getElementById('resDate').value = new Date().toISOString().split('T')[0];
-  document.body.style.overflow = 'hidden';
-}
-
-function closeReservation() {
-  document.getElementById('reservationModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function submitReservation() {
-  const n = document.getElementById('resName')?.value.trim() || '';
-  const p = document.getElementById('resPhone')?.value.trim() || '';
-  const d = document.getElementById('resDate')?.value || '';
-  const t = document.getElementById('resTime')?.value || '';
-  const g = document.getElementById('resGuests')?.value || '';
-  const nt = document.getElementById('resNote')?.value.trim() || '';
-  
-  if (!n || !p || !d || !t) {
-    alert(i18next.t('reserve_error_fill_fields') || 'Zəhmət olmasa bütün məcburi sahələri doldurun.');
-    return;
-  }
-  
-  const { error } = await supabaseClient.from('reservations').insert([
-    { name: n, phone: p, branch: currentBranch, date: d, time: t, guests: g, note: nt, status: 'pending' }
-  ]);
-  
-  if (error) {
-    console.error('Ошибка бронирования:', error);
-    alert(i18next.t('reserve_error') || 'Rezervasiya zamanı xəta baş verdi.');
-    return;
-  }
-  
-  const wa = siteSettings.default_wa_number || '994501234501';
-  const msg = encodeURIComponent(
-    `🌿 YENİ REZERVASİYA\n\nFilial: ${currentBranch}\nAd: ${n}\nTelefon: ${p}\nTarix: ${d}\nVaxt: ${t}\nQonaq: ${g}${nt ? '\nArzular: ' + nt : ''}`
-  );
-  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
-  document.getElementById('reservationForm').style.opacity = '0';
-  setTimeout(() => { document.getElementById('successMsg').classList.add('show'); }, 300);
-}
-
-document.getElementById('reservationModal')?.addEventListener('click', e => {
-  if (e.target === document.getElementById('reservationModal')) closeReservation();
-});
+// ========== БРОНИРОВАНИЕ (закомментировано) ==========
 
 // ========== МОБИЛЬНОЕ МЕНЮ ==========
 document.getElementById('burger')?.addEventListener('click', () => {
@@ -1165,14 +1109,10 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
 // ========== ЗАПУСК ==========
 async function init() {
-  // Инициализируем i18next
   initLangSwitcher();
   await Promise.all([ initI18n(), loadAllSettings() ]);
-  
-  // После загрузки настроек обновляем UI для текущего языка
   updateUILanguage();
   
-  // Обновляем все элементы с data-i18n еще раз
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key);
@@ -1183,7 +1123,6 @@ async function init() {
     }
   });
   
-  // Устанавливаем флаг и текст для языка
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
