@@ -13,8 +13,7 @@
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.16.8/i18next.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.6.2/i18nextHttpBackend.min.js"></script>
@@ -247,6 +246,15 @@ nav{
   font-style:italic;
   color:var(--caramel)
 }
+.service-charge-note{
+  font-size:0.72rem !important;
+  letter-spacing:0.1em !important;
+  text-transform:uppercase !important;
+  color:var(--text-muted) !important;
+  margin-top:0.6rem !important;
+  margin-bottom:0 !important;
+  opacity:0.65
+}
 
 /* ===== SECTION TABS (İçkilər / Yemәklər) ===== */
 .menu-section-tabs{
@@ -376,8 +384,6 @@ nav{
   transition:all 0.3s;
   display:flex;
   flex-direction:column;
-  content-visibility:auto;
-  contain-intrinsic-size:0 420px;
   cursor:pointer
 }
 .dish-card:hover{
@@ -686,6 +692,7 @@ footer p{
 <div class="menu-hero">
   <p id="menuHeroLabel" data-i18n="menu_page_label">Tam menyu</p>
   <h1><span id="menuHeroPre" data-i18n="menu_page_pre">Bizim</span> <em id="menuHeroEm" data-i18n="menu_page_em">yeməklər</em> <span id="menuHeroPost" data-i18n="menu_page_post">və içkilər</span></h1>
+  <p class="service-charge-note">Service charge included 5%</p>
 </div>
 
 <div class="menu-section-tabs" id="menuSectionTabs"></div>
@@ -873,6 +880,17 @@ function getCategoryName(translations, lang) {
 // ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
   showSkeleton();
+
+  // Проверяем режим экономии данных
+  var dataSaver = false;
+  try {
+    if (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g')) {
+      dataSaver = true;
+      console.warn('Data saver / slow network detected — loading minimal data');
+    }
+  } catch(e) {}
+  window._dataSaver = dataSaver;
+
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
     if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
@@ -941,25 +959,46 @@ function applyMenuTexts() {
 }
 
 // ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
-async function loadMenuData() {
+async function loadMenuData(retryCount) {
+  retryCount = retryCount || 0;
   try {
-    const [catRes, itemRes] = await Promise.all([
-      supabaseClient
-        .from('categories')
-        .select('id,name,emoji,sort_order,category_type,category_translations(id,language,name)')
-        .order('sort_order', { ascending: true }),
-      supabaseClient
-        .from('menu_items')
-        .select('id,name,description,price,image_url,emoji,badge,available,sort_order,category_id,dish_translations(id,language,name,description)')
-        .eq('available', true)
-        .order('sort_order', { ascending: true })
-    ]);
+    // Последовательные запросы вместо параллельных —
+    // Safari на iOS и режим экономии данных иногда обрывают параллельные fetch
+    const catRes = await supabaseClient
+      .from('categories')
+      .select('id,name,emoji,sort_order,category_type,category_translations(id,language,name)')
+      .order('sort_order', { ascending: true });
+
+    if (catRes.error) throw catRes.error;
+
+    const itemRes = await supabaseClient
+      .from('menu_items')
+      .select('id,name,description,price,image_url,emoji,badge,available,sort_order,category_id,dish_translations(id,language,name,description)')
+      .eq('available', true)
+      .order('sort_order', { ascending: true });
+
+    if (itemRes.error) throw itemRes.error;
+
     allCategories = catRes.data || [];
     allMenuItems  = itemRes.data || [];
+
+    if (allCategories.length === 0 && retryCount < 2) {
+      // Пустой ответ — возможно сеть ещё не готова, повторяем через 1.5 сек
+      console.warn('Empty data, retrying... (' + (retryCount + 1) + ')');
+      setTimeout(function() { loadMenuData(retryCount + 1); }, 1500);
+      return;
+    }
+
     buildMenu();
   } catch(e) {
     console.error('Ошибка загрузки меню:', e);
-    showErrorMessage('Menyu yüklənərkən xəta baş verdi');
+    if (retryCount < 2) {
+      // Автоповтор при ошибке сети (Safari/режим экономии)
+      console.warn('Retry ' + (retryCount + 1) + ' after error...');
+      setTimeout(function() { loadMenuData(retryCount + 1); }, 2000);
+    } else {
+      showErrorMessage('Menyu yüklənərkən xəta baş verdi');
+    }
   }
 }
 
@@ -1078,7 +1117,9 @@ function renderSection(section) {
             const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
             const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto:eco,w_400/') : '';
             const isLCP = (catIdx === 1 && itemIdx === 0);
-            const imgLoad = isLCP ? 'fetchpriority="high" decoding="sync"' : 'loading="lazy" decoding="async"';
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const imgLoad = isLCP ? (isIOS ? 'decoding="async"' : 'fetchpriority="high" decoding="sync"') : 'loading="lazy" decoding="async"';
+            const imgSrcFinal = (window._dataSaver && !isLCP) ? '' : imgSrc;
             // Сохраняем данные в реестр — безопасно для любых символов
             const regIdx = window._dishRegistry.length;
             window._dishRegistry.push({
@@ -1367,6 +1408,23 @@ function setLanguage(lang) {
 }
 
 init();
+
+// Safari останавливает fetch когда вкладка уходит в фон
+// При возврате — проверяем и перезагружаем если данные не загрузились
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden && (allCategories.length === 0 || allMenuItems.length === 0)) {
+    console.log('Visibility restored — reloading menu data');
+    loadMenuData(0);
+  }
+});
+
+// Дополнительно: pageshow срабатывает при возврате из кэша Safari (bfcache)
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted && (allCategories.length === 0 || allMenuItems.length === 0)) {
+    console.log('Page restored from bfcache — reloading menu data');
+    loadMenuData(0);
+  }
+});
 
 // ===== DISH MODAL =====
 (function() {
