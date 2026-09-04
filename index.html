@@ -224,11 +224,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;a
 .promo-card-btn{display:inline-block;background:var(--caramel);color:white;padding:0.5rem 1.2rem;border-radius:50px;font-size:0.8rem;text-decoration:none;transition:all 0.3s}
 .promo-card-btn:hover{background:var(--espresso)}
 .branches-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
-.branch-card{background:var(--white);border-radius:20px;padding:2rem;border:1px solid var(--latte);transition:all 0.3s;cursor:pointer;display:block!important;opacity:1!important;visibility:visible!important}
+.branch-card{background:var(--white);border-radius:20px;padding:2rem;border:1px solid var(--latte);transition:all 0.3s;cursor:pointer;display:block!important;opacity:1!important;visibility:visible!important;position:relative}
 .branch-card:hover{border-color:var(--caramel);transform:translateY(-4px);box-shadow:0 12px 35px var(--shadow)}
+.branch-card .click-hint{position:absolute;bottom:0.8rem;right:1rem;font-size:0.7rem;color:var(--text-muted);display:flex;align-items:center;gap:0.3rem;opacity:0.7}
+.branch-card .click-hint .hand{font-size:1.2rem}
 .branch-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--espresso);margin-bottom:0.5rem}
 .branch-addr{font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5}
-.branch-phone{font-size:0.9rem;color:var(--caramel);font-weight:500;text-decoration:none;display:block;margin-bottom:1.2rem}
+.branch-phone{font-size:0.9rem;color:var(--caramel);font-weight:500;text-decoration:none;display:block;margin-bottom:0.8rem}
 .btn-book-branch{width:100%;background:var(--milk);border:1px solid var(--latte);color:var(--espresso);padding:0.65rem;border-radius:12px;font-size:0.83rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.3s;font-weight:500}
 .btn-book-branch:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
 .modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.6);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
@@ -919,7 +921,9 @@ function renderMenu(categoryId) {
     const safeName = (name || '').replace(/'/g, "\'");
     const safeImg = (item.image_url || '').replace(/'/g, "\'");
     const safeBadge = (item.badge || '').replace(/'/g, "\'");
-    return `<div class="menu-card" onclick="openDishModal('${safeName}','${safeDesc}','${item.price}','${safeImg}','${safeBadge}','${item.emoji||'🍽️'}')" style="cursor:pointer"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_400,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+    // Улучшаем качество: увеличиваем ширину до 600, убираем q_auto:eco, добавляем dpr_2
+    const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_2/') : '';
+    return `<div class="menu-card" onclick="openDishModal('${safeName}','${safeDesc}','${item.price}','${safeImg}','${safeBadge}','${item.emoji||'🍽️'}')" style="cursor:pointer"><div class="menu-card-img">${imgSrc ? `<img src="${imgSrc}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
   }).join('');
 }
 
@@ -939,9 +943,25 @@ async function loadBranches() {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`; 
     return; 
   }
-  grid.innerHTML = data.map(b => 
-    `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a></div>`
-  ).join('');
+  // Добавляем иконку руки и подсказку на все языки
+  const hintText = {
+    az: '👆 Xəritəyə bax',
+    ru: '👆 Смотреть на карте',
+    en: '👆 View on map'
+  };
+  const hint = hintText[currentLang] || hintText.az;
+  grid.innerHTML = data.map(b => {
+    const mapUrl = b.map_url || '';
+    const cardContent = `
+      <div class="branch-card fade-up" onclick="${mapUrl ? `window.open('${mapUrl}','_blank')` : 'alert(\'Карта не добавлена\')'}" style="cursor:pointer;">
+        <h3 class="branch-name">${b.name}</h3>
+        <p class="branch-addr">${b.address || ''}</p>
+        <a href="tel:${b.phone}" class="branch-phone" onclick="event.stopPropagation();">${b.phone}</a>
+        <div class="click-hint"><span class="hand">☝️</span> ${hint}</div>
+      </div>
+    `;
+    return cardContent;
+  }).join('');
 }
 
 function loadAboutSection() {
