@@ -663,7 +663,6 @@ footer p{
   <div class="nav-right">
     <div class="lang-switcher">
       <button class="lang-btn" id="langBtn">
-        <!--<span id="currentLangFlag">🇦🇿</span>-->
         <span id="currentLangText">AZ</span>
         <span>▼</span>
       </button>
@@ -679,9 +678,6 @@ footer p{
 
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
-  <!--<a href="index.html#branches" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>
-  <a href="index.html#cashback" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>
-  <a href="index.html#about" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>-->
   <div class="mobile-lang-section">
     <div class="mobile-lang-item active" data-lang="az">AZE</div>
     <div class="mobile-lang-item" data-lang="ru">RU</div>
@@ -712,8 +708,6 @@ footer p{
 
 <footer>
   <a href="index.html" id="footerHomeLink" data-i18n="nav_home">Ana səhifə</a>
-  <!-- <a href="index.html#branches" id="footerReserveLink" data-i18n="nav_reserve">Masa rezerv et</a>
-  <a href="index.html#cashback" id="footerCashbackLink" data-i18n="nav_cashback">Keşbek</a>-->
   <p>© 2024 Malako Café — <span id="footerCity" data-i18n="footer_city">Bakı, Azərbaycan</span></p>
 </footer>
 
@@ -773,10 +767,8 @@ async function initI18n() {
   }
 }
 
-// ========== ОБНОВЛЕНИЕ UI ПО ЯЗЫКУ ==========
 function updateUILanguage() {
   document.documentElement.lang = currentLang === 'az' ? 'az' : (currentLang === 'ru' ? 'ru' : 'en');
-  
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key);
@@ -786,11 +778,9 @@ function updateUILanguage() {
       el.innerHTML = translation;
     }
   });
-  
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
-  
   document.querySelectorAll('.lang-option, .mobile-lang-item').forEach(opt => {
     const lang = opt.getAttribute('data-lang');
     if (lang === currentLang) {
@@ -799,29 +789,24 @@ function updateUILanguage() {
       opt.classList.remove('active');
     }
   });
-  
   localStorage.setItem('selected_language', currentLang);
 }
 
-// ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ==========
 function setLanguage(lang) {
   if (lang === currentLang) return;
   currentLang = lang;
   localStorage.setItem('selected_language', lang);
   i18next.changeLanguage(lang).then(() => {
     updateUILanguage();
-    // Перерисовываем меню с новым языком
     buildMenu();
     const dd = document.getElementById('langDropdown');
     if (dd) dd.classList.remove('show');
   });
 }
 
-// ========== ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ ==========
 function initLangSwitcher() {
   const btn = document.getElementById('langBtn');
   const dd = document.getElementById('langDropdown');
-  
   if (btn && dd) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -829,14 +814,12 @@ function initLangSwitcher() {
     });
     document.addEventListener('click', () => dd.classList.remove('show'));
   }
-  
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', () => {
       const lang = opt.getAttribute('data-lang');
       if (lang) setLanguage(lang);
     });
   });
-  
   document.querySelectorAll('.mobile-lang-item').forEach(opt => {
     opt.addEventListener('click', () => {
       const lang = opt.getAttribute('data-lang');
@@ -846,7 +829,6 @@ function initLangSwitcher() {
   });
 }
 
-// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА БЛЮДА ==========
 function getDishTranslation(translations, lang) {
   if (!translations || translations.length === 0) return null;
   const found = translations.find(t => t.language === lang);
@@ -864,7 +846,6 @@ function getDishDescription(translations, lang) {
   return t ? t.description : null;
 }
 
-// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА КАТЕГОРИИ ==========
 function getCategoryTranslation(translations, lang) {
   if (!translations || translations.length === 0) return null;
   const found = translations.find(t => t.language === lang);
@@ -877,11 +858,9 @@ function getCategoryName(translations, lang) {
   return t ? t.name : null;
 }
 
-// ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
   showSkeleton();
 
-  // Проверяем режим экономии данных
   var dataSaver = false;
   try {
     if (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g')) {
@@ -907,7 +886,6 @@ async function loadAllSettings() {
   try { applyMenuTexts(); } catch(e) {}
 }
 
-// ========== ВНЕШНИЙ ВИД ==========
 function applyAppearanceSettings() {
   const bgType = siteSettings.site_bg_type || 'preset';
   const presets = {
@@ -931,7 +909,6 @@ function applyAppearanceSettings() {
   }
 }
 
-// ========== ЛОГОТИП ==========
 function applyLogoSettings() {
   const logoLink = document.querySelector('.nav-logo');
   if (!logoLink) return;
@@ -946,7 +923,6 @@ function applyLogoSettings() {
   }
 }
 
-// ========== ТЕКСТЫ МЕНЮ ==========
 function applyMenuTexts() {
   const heroLabel = document.getElementById('menuHeroLabel');
   const heroEm = document.getElementById('menuHeroEm');
@@ -958,12 +934,9 @@ function applyMenuTexts() {
   if (heroPost) heroPost.textContent = i18next.t('menu_page_post');
 }
 
-// ========== ЗАГРУЗКА ДАННЫХ МЕНЮ ==========
 async function loadMenuData(retryCount) {
   retryCount = retryCount || 0;
   try {
-    // Последовательные запросы вместо параллельных —
-    // Safari на iOS и режим экономии данных иногда обрывают параллельные fetch
     const catRes = await supabaseClient
       .from('categories')
       .select('id,name,emoji,sort_order,category_type,category_translations(id,language,name)')
@@ -983,7 +956,6 @@ async function loadMenuData(retryCount) {
     allMenuItems  = itemRes.data || [];
 
     if (allCategories.length === 0 && retryCount < 2) {
-      // Пустой ответ — возможно сеть ещё не готова, повторяем через 1.5 сек
       console.warn('Empty data, retrying... (' + (retryCount + 1) + ')');
       setTimeout(function() { loadMenuData(retryCount + 1); }, 1500);
       return;
@@ -993,7 +965,6 @@ async function loadMenuData(retryCount) {
   } catch(e) {
     console.error('Ошибка загрузки меню:', e);
     if (retryCount < 2) {
-      // Автоповтор при ошибке сети (Safari/режим экономии)
       console.warn('Retry ' + (retryCount + 1) + ' after error...');
       setTimeout(function() { loadMenuData(retryCount + 1); }, 2000);
     } else {
@@ -1015,7 +986,7 @@ function showErrorMessage(message) {
   }
 }
 
-let currentMenuSection = 'drink'; // стартуем с İçkilər как на скриншоте
+let currentMenuSection = 'drink';
 
 function showSkeleton() {
   const body = document.getElementById('menuBody');
@@ -1038,7 +1009,6 @@ function buildMenu() {
   const foodCats  = allCategories.filter(c => c.category_type !== 'drink');
   const hasBoth   = drinkCats.length > 0 && foodCats.length > 0;
 
-  // Строим табы секций
   const tabsEl = document.getElementById('menuSectionTabs');
   if (tabsEl) {
     if (hasBoth) {
@@ -1051,12 +1021,10 @@ function buildMenu() {
       tabsEl.style.display = 'flex';
     } else {
       tabsEl.style.display = 'none';
-      // Если только один тип — показываем всё
       currentMenuSection = foodCats.length > 0 ? 'food' : 'drink';
     }
   }
 
-  // Если оба типа отсутствуют — стартуем с первого доступного
   if (!hasBoth) {
     currentMenuSection = drinkCats.length > 0 ? 'drink' : 'food';
   }
@@ -1067,7 +1035,6 @@ function buildMenu() {
 function switchSection(section) {
   currentMenuSection = section;
 
-  // Обновляем активный таб
   document.querySelectorAll('.menu-section-tab').forEach(btn => {
     const isDrink = btn.textContent.trim() === ({ az:'İçkilər', ru:'Напитки', en:'Drinks' }[currentLang]||'İçkilər');
     btn.classList.toggle('active',
@@ -1077,7 +1044,6 @@ function switchSection(section) {
 
   renderSection(section);
 
-  // Скролл к верху меню
   const tabsEl = document.getElementById('menuSectionTabs');
   if (tabsEl) tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1091,16 +1057,13 @@ function renderSection(section) {
     ? allCategories.filter(c => c.category_type === 'drink')
     : allCategories.filter(c => c.category_type !== 'drink');
 
-  // Навигация категорий
   nav.innerHTML = cats.map(c => {
     const name = getCategoryName(c.category_translations, currentLang) || c.name || '';
     return `<button class="cat-btn" data-category-id="${c.id}" onclick="scrollToSection('${c.id}',this)">${escapeHtml(name)}</button>`;
   }).join('');
 
-  // Сбрасываем реестр данных карточек
   window._dishRegistry = [];
 
-  // Секции блюд
   let html = '';
   let catIdx = 0;
   for (const cat of cats) {
@@ -1115,12 +1078,12 @@ function renderSection(section) {
           ${items.map((item, itemIdx) => {
             const name = getDishName(item.dish_translations, currentLang) || item.name || '';
             const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
-            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto:eco,w_400/') : '';
+            // Улучшаем качество: увеличиваем ширину до 600, убираем q_auto:eco, добавляем dpr_2
+            const imgSrc = item.image_url ? item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_600,dpr_2/') : '';
             const isLCP = (catIdx === 1 && itemIdx === 0);
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             const imgLoad = isLCP ? (isIOS ? 'decoding="async"' : 'fetchpriority="high" decoding="sync"') : 'loading="lazy" decoding="async"';
             const imgSrcFinal = (window._dataSaver && !isLCP) ? '' : imgSrc;
-            // Сохраняем данные в реестр — безопасно для любых символов
             const regIdx = window._dishRegistry.length;
             window._dishRegistry.push({
               name: name,
@@ -1135,7 +1098,7 @@ function renderSection(section) {
             return `
               <div class="dish-card${!item.available?' unavailable':''}" data-dish-idx="${regIdx}">
                 <div class="dish-img">
-                  ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" width="400" height="250" ${imgLoad}>` : (item.emoji||'🍽️')}
+                  ${imgSrcFinal ? `<img src="${imgSrcFinal}" alt="${escapeHtml(name)}" width="400" height="250" ${imgLoad}>` : (item.emoji||'🍽️')}
                   ${item.badge ? `<span class="dish-badge">${escapeHtml(item.badge)}</span>` : ''}
                   ${!item.available ? `<span class="dish-unavail-badge">${i18next.t('unavailable')}</span>` : ''}
                 </div>
@@ -1170,7 +1133,6 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-// ========== SCROLL SPY ==========
 let activeObserver = null;
 let isScrollingManually = false;
 let scrollTimeout = null;
@@ -1178,7 +1140,6 @@ let scrollTimeout = null;
 function setupScrollSpy() {
   if (activeObserver) activeObserver.disconnect();
 
-  // Берём только категории текущего раздела
   const currentCats = currentMenuSection === 'drink'
     ? allCategories.filter(c => c.category_type === 'drink')
     : allCategories.filter(c => c.category_type !== 'drink');
@@ -1246,17 +1207,14 @@ function updateActiveCategoryByScroll() {
 function highlightActiveCategory(categoryId) {
   const buttons = document.querySelectorAll('.cat-btn');
   let activeButton = null;
-  
   buttons.forEach(btn => {
     if (btn.getAttribute('data-category-id') === categoryId) {
       activeButton = btn;
     }
   });
-  
   if (activeButton && !activeButton.classList.contains('active')) {
     buttons.forEach(b => b.classList.remove('active'));
     activeButton.classList.add('active');
-    
     const nav = document.querySelector('.menu-sticky-nav');
     if (nav) {
       const btnRect = activeButton.getBoundingClientRect();
@@ -1274,7 +1232,6 @@ function scrollToSection(categoryId, btn) {
   btn.classList.add('active');
   const el = document.getElementById('section-' + categoryId);
   if (el) {
-    // Учитываем высоту navbar + section tabs + category nav
     const offset = 170;
     const top = el.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top, behavior: 'smooth' });
@@ -1282,7 +1239,6 @@ function scrollToSection(categoryId, btn) {
   setTimeout(() => { isScrollingManually = false; }, 1000);
 }
 
-// ========== ПОПАП ==========
 async function loadPromoPopup() {
   try {
     const popupEl = document.getElementById('promoPopup');
@@ -1356,7 +1312,6 @@ function closePromo() {
   }
 }
 
-// ========== МОБИЛЬНОЕ МЕНЮ ==========
 document.getElementById('burger')?.addEventListener('click', () => {
   document.getElementById('mobileNav').classList.toggle('open');
 });
@@ -1365,19 +1320,13 @@ function closeMobileNav() {
   document.getElementById('mobileNav').classList.remove('open');
 }
 
-// ========== ЗАПУСК ==========
 async function init() {
   initLangSwitcher();
-
-  // Переводы и данные грузятся одновременно вместо последовательно
   await Promise.all([
     initI18n(),
     loadAllSettings(),
   ]);
-
   updateUILanguage();
-  
-  // Обновляем элементы с data-i18n еще раз после загрузки
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key, { lng: currentLang });
@@ -1387,20 +1336,16 @@ async function init() {
       el.innerHTML = translation;
     }
   });
-  
-  // Устанавливаем флаг и текст для языка
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
 }
 
-// Пересобираем меню при смене языка
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('selected_language', lang);
   i18next.changeLanguage(lang).then(() => {
     updateUILanguage();
-    // Пересобираем секции и категории на новом языке
     if (allCategories.length > 0) buildMenu();
     const dd = document.getElementById('langDropdown');
     if (dd) dd.classList.remove('show');
@@ -1409,8 +1354,6 @@ function setLanguage(lang) {
 
 init();
 
-// Safari останавливает fetch когда вкладка уходит в фон
-// При возврате — проверяем и перезагружаем если данные не загрузились
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden && (allCategories.length === 0 || allMenuItems.length === 0)) {
     console.log('Visibility restored — reloading menu data');
@@ -1418,7 +1361,6 @@ document.addEventListener('visibilitychange', function() {
   }
 });
 
-// Дополнительно: pageshow срабатывает при возврате из кэша Safari (bfcache)
 window.addEventListener('pageshow', function(e) {
   if (e.persisted && (allCategories.length === 0 || allMenuItems.length === 0)) {
     console.log('Page restored from bfcache — reloading menu data');
@@ -1428,26 +1370,19 @@ window.addEventListener('pageshow', function(e) {
 
 // ===== DISH MODAL =====
 (function() {
-
-  function getOverlay() {
-    return document.getElementById('dmOverlay');
-  }
-
+  function getOverlay() { return document.getElementById('dmOverlay'); }
   function openDM(idx) {
     var d = window._dishRegistry[idx];
     if (!d) return;
     var overlay = getOverlay();
     if (!overlay) return;
-
     document.getElementById('dmName').textContent  = d.name  || '';
     document.getElementById('dmDesc').textContent  = d.desc  || '';
     document.getElementById('dmPrice').textContent = d.price ? d.price + ' ₼' : '';
     document.getElementById('dmTag').textContent   = d.catName || '';
-
     var badge = document.getElementById('dmBadge');
     if (d.badge) { badge.textContent = d.badge; badge.style.display = 'inline-block'; }
     else { badge.style.display = 'none'; }
-
     var imgWrap = document.getElementById('dmImgWrap');
     if (d.img) {
       var src = d.img.replace('/upload/', '/upload/f_auto,q_auto,w_900/');
@@ -1455,18 +1390,15 @@ window.addEventListener('pageshow', function(e) {
     } else {
       imgWrap.innerHTML = '<div class="dm-nimg">' + (d.emoji||'🍽️') + '</div>';
     }
-
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-
   function closeDM() {
     var overlay = getOverlay();
     if (!overlay) return;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
   }
-
   document.addEventListener('click', function(e) {
     var overlay = getOverlay();
     if (e.target === overlay) { closeDM(); return; }
@@ -1477,12 +1409,10 @@ window.addEventListener('pageshow', function(e) {
       openDM(idx);
     }
   });
-
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeDM();
   });
 })();
-
 </script>
 
 <!-- ===== DISH MODAL ===== -->
