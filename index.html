@@ -59,21 +59,11 @@ body{
   color:var(--dark);
   overflow-x:hidden;
   min-height:100vh;
-  /* Текстура остаётся на body всегда */
   background-color: #F5F0E8;
   background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
   background-repeat: repeat;
   background-attachment: fixed;
 }
-/* Убираем старые классы для фона на body – они больше не нужны */
-body.bg-image-set {
-  /* ничего не делаем, фон будет только в hero */
-}
-body.bg-image-set::before {
-  display: none;
-}
-
-/* ===== ФОН ТОЛЬКО В .HERO ===== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -81,7 +71,6 @@ body.bg-image-set::before {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  /* фон по умолчанию – без изображения */
 }
 .hero.hero-bg {
   background-size: cover;
@@ -89,7 +78,6 @@ body.bg-image-set::before {
   background-repeat: no-repeat;
   background-image: var(--bg-image, none);
 }
-/* Затемнение поверх фона */
 .hero.hero-bg::before {
   content: '';
   position: absolute;
@@ -104,15 +92,12 @@ body.bg-image-set::before {
   position: relative;
   z-index: 2;
 }
-/* Для мобильных можно переопределить (если нужно) */
 @media (max-width: 768px), (hover: none) {
   .hero.hero-bg {
-    background-size: cover; /* или 100% 100% – по желанию */
+    background-size: cover;
     background-position: center center;
   }
 }
-/* ===== КОНЕЦ ФОНА В HERO ===== */
-
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;transition:all 0.4s;background:rgba(250,246,240,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:600;color:var(--espresso);text-decoration:none;letter-spacing:0.02em}
 .nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
@@ -174,7 +159,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;a
 .feature-icon{width:56px;height:56px;background:var(--milk);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1.5rem}
 .feature-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--espresso);margin-bottom:0.8rem}
 .feature-card p{font-size:0.9rem;color:var(--mocha);line-height:1.7}
-.menu-preview{}
 .menu-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:3rem}
 .menu-tab{padding:0.6rem 1.4rem;border-radius:50px;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--mocha);transition:all 0.3s;font-family:'Jost',sans-serif;font-weight:400}
 .menu-tab.active,.menu-tab:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
@@ -187,7 +171,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;a
 .menu-card-body{padding:1.3rem}
 .menu-card-body h4{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--espresso);margin-bottom:0.4rem}
 .menu-card-body p{font-size:0.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-/* Dish Modal */
 .dish-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:all 0.3s;backdrop-filter:blur(4px)}
 .dish-modal-overlay.open{opacity:1;visibility:visible}
 .dish-modal-box{background:var(--white);border-radius:24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;transform:scale(0.9) translateY(20px);transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 25px 60px rgba(0,0,0,0.25)}
@@ -276,7 +259,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5%;display:flex;a
 .promo-close:hover{color:var(--espresso)}
 @media (max-width:500px){.promo-popup{flex-direction:column;text-align:center;padding:1rem}.promo-icon{width:100px;height:100px;margin-bottom:0.5rem}}
 footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:3rem;margin-bottom:3rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:3rem;margin-bottom:3rem}
 .footer-brand h3{font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream);margin-bottom:0.8rem}
 .footer-brand p{font-size:0.88rem;color:rgba(232,213,183,0.7);line-height:1.7;max-width:260px}
 .footer-socials{display:flex;gap:0.8rem;margin-top:1.5rem}
@@ -293,7 +276,6 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 .mobile-nav a{font-family:'Playfair Display',serif;font-size:2rem;color:var(--espresso);text-decoration:none;padding:0.5rem 0;border-bottom:1px solid var(--latte);font-style:italic}
 .mobile-nav .btn-reserve{font-family:'Jost',sans-serif;font-style:normal;font-size:0.9rem;text-align:center;margin-top:1rem;display:block}
 
-/* ——— БЛОК ДЛЯ ЛОГОТИПА ——— */
 .hero-logo {
   width: 100%;
   display: flex;
@@ -314,7 +296,6 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
     height: auto;
   }
 }
-/* ——— КОНЕЦ БЛОКА ЛОГОТИПА ——— */
 
 @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -372,7 +353,6 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   .branches-grid{grid-template-columns:1fr}
   .modal{padding:2rem 1.5rem;border-radius:20px}
 }
-/* Слайдер адаптив */
 @media (max-width: 1024px) { .slide { height: 480px; } }
 @media (max-width: 768px) {
   .slider-section { height: auto !important; }
@@ -396,17 +376,15 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
  
 <!-- NAVi -->
 <nav id="navbar">
-  <a href="#" class="nav-logo" id="navLogo"> </a>
+  <a href="#" class="nav-logo" id="navLogo">Malako</a>
   <ul class="nav-links">
     <li><a href="#home" id="navHomeLink" data-i18n="nav_home">Ana səhifə</a></li>
     <li><a href="#menu" id="navMenuLink" data-i18n="nav_menu">Menyu</a></li>
     <li><a href="#about" id="navAboutLink" data-i18n="nav_about">Haqqımızda</a></li>
-    <!-- <li><a href="#cashback" id="navCashbackLink" data-i18n="nav_cashback">Keşbek</a></li> -->
     <li><a href="#branches" id="navBranchesLink" data-i18n="nav_branches">Filiallar</a></li>
   </ul>
   <div class="nav-right">
     <a href="menu.html" class="btn-menu-link" id="navMenuBtn" data-i18n="nav_menu_btn">Menyu</a>
-    <!-- <a href="#branches" class="btn-reserve" id="navReserveBtn" data-i18n="nav_reserve">Rezervasiya</a>-->
     <div class="lang-switcher">
       <button class="lang-btn" id="langBtn"><span id="currentLangText">AZ</span><span>▼</span></button>
       <div class="lang-dropdown" id="langDropdown">
@@ -424,9 +402,7 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
   <a href="#home" onclick="closeMobileNav()" id="mobileNavHome" data-i18n="nav_home">Ana səhifə</a>
   <a href="#menu" onclick="closeMobileNav()" id="mobileNavMenu" data-i18n="nav_menu">Menyu</a>
   <a href="#about" onclick="closeMobileNav()" id="mobileNavAbout" data-i18n="nav_about">Haqqımızda</a>
-  <!-- <a href="#cashback" onclick="closeMobileNav()" id="mobileNavCashback" data-i18n="nav_cashback">Keşbek</a>-->
   <a href="#branches" onclick="closeMobileNav()" id="mobileNavBranches" data-i18n="nav_branches">Filiallar</a>
-  <!-- <a href="#branches" class="btn-reserve" onclick="closeMobileNav()" id="mobileNavReserve" data-i18n="nav_reserve">Rezervasiya</a>-->
   <div class="mobile-lang-section">
     <div class="mobile-lang-item active" data-lang="az">AZE</div>
     <div class="mobile-lang-item" data-lang="ru">RU</div>
@@ -437,21 +413,25 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-bg-pattern"></div>
-  <div class="hero-float-card hero-float-card-1"><div class="float-card-icon">☕</div><div class="float-card-label" id="heroFloatLabel" data-i18n="hero_float1_label">Specialty Coffee</div><div class="float-card-value" id="heroFloatValue" data-i18n="hero_float1_value">Kolumbiya</div></div>
-  <div class="hero-float-card hero-float-card-2"><div class="float-card-icon">🏆</div><div class="float-card-label" id="heroFloatLabel2" data-i18n="hero_float2_label">İşləyirik</div><div class="float-card-value" id="heroFloatValue2" data-i18n="hero_float2_value">2016-cı ildən</div></div>
+  <div class="hero-float-card hero-float-card-1">
+    <div class="float-card-icon">☕</div>
+    <div class="float-card-label" id="heroFloatLabel">Specialty Coffee</div>
+    <div class="float-card-value" id="heroFloatValue">Kolumbiya</div>
+  </div>
+  <div class="hero-float-card hero-float-card-2">
+    <div class="float-card-icon">🏆</div>
+    <div class="float-card-label" id="heroFloatLabel2">İşləyirik</div>
+    <div class="float-card-value" id="heroFloatValue2">2016-cı ildən</div>
+  </div>
   <div class="hero-content">
     <p class="hero-tagline" id="heroTagline" data-i18n="hero_tagline">Specialty Coffee & Food</p>
-    
-    <!-- ЛОГОТИП -->
     <div class="hero-logo">
       <img src="https://res.cloudinary.com/dnkapcgvr/image/upload/v1783168645/erasebg-transformed_1_c0fj7a.png" alt="Malako Café">
     </div>
     <h1 class="hero-title" id="heroTitle"><em>Café</em></h1>
-    
     <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero_subtitle">Sizin sevimli yeriniz — zərif dad, rahat atmosfer və ruhla hazırlanmış qəhvə</p>
     <div class="hero-buttons">
       <a href="menu.html" class="btn-primary" id="heroMenuBtn" data-i18n="hero_btn_menu">Menyuya bax</a>
-      <!--<a href="#branches" class="btn-outline" id="heroReserveBtn" data-i18n="hero_btn_reserve">Masa rezerv et</a> -->
     </div>
   </div>
   <div class="scroll-indicator" id="heroScroll" data-i18n="hero_scroll">Aşağı diyirin</div>
@@ -481,14 +461,44 @@ footer{background:var(--dark);color:var(--latte);padding:4rem 5% 2rem}
 <!-- BRANCHES -->
 <section class="section" id="branches" style="background:rgba(245,237,224,0.85); display: none;"><p class="section-label fade-up" id="branchesLabel" data-i18n="branches_label">Ünvanlarımız</p><h2 class="section-title fade-up" id="branchesTitle" data-i18n="branches_title">Ən yaxın filialı tapın</h2><div class="branches-grid" id="branchesGrid"></div></section>
  
-<!-- RESERVATION MODAL (закомментирован) -->
- 
 <!-- PROMO POPUP -->
 <div class="promo-popup" id="promoPopup" style="display:none"><div class="promo-icon" id="promoIcon"></div><div class="promo-content"><h4 id="promoTitle"></h4><p id="promoDesc"></p><a href="#" id="promoBtn" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:8px; background:var(--caramel); color:white; padding:6px 16px; border-radius:50px; text-decoration:none; font-weight:500; font-size:0.8rem;"></a></div><button class="promo-close" onclick="closePromo()">×</button></div>
  
  
 <!-- FOOTER -->
-<footer><div class="footer-grid"><div class="footer-brand"><h3>Malako</h3><p id="footerBrandText" data-i18n="footer_brand_text">Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer üçün sevimli yeriniz.</p><div class="footer-socials"><a href="#" class="social-link">📷</a><a href="#" class="social-link">📘</a><a href="#" class="social-link">🎵</a></div></div><div class="footer-col"><h4 id="footerNavTitle" data-i18n="footer_nav">Naviqasiya</h4><ul><li><a href="#home" id="footerNavHome" data-i18n="nav_home">Ana səhifə</a></li><li><a href="menu.html" id="footerNavMenu" data-i18n="nav_menu">Menyu</a></li><li><a href="#about" id="footerNavAbout" data-i18n="nav_about">Haqqımızda</a></li><li><a href="#cashback" id="footerNavCashback" data-i18n="nav_cashback">Keşbek</a></li><li><a href="#branches" id="footerNavBranches" data-i18n="nav_branches">Filiallar</a></li></ul></div><div class="footer-col"><h4 id="footerCompanyTitle" data-i18n="footer_company">Şirkət</h4><ul><li><a href="#" id="footerCareer" data-i18n="footer_career">Karyera</a></li><li><a href="#" id="footerFranchise" data-i18n="footer_franchise">Franshiza</a></li><li><a href="#" id="footerCorporate" data-i18n="footer_corporate">Korporativlərə</a></li><li><a href="#" id="footerPrivacy" data-i18n="footer_privacy">Məxfilik siyasəti</a></li></ul></div><div class="footer-col"><h4 id="footerContactsTitle" data-i18n="footer_contacts">Əlaqə</h4><ul><li><a href="tel:+994501234501" id="footerPhone">+994 50 123-45-01</a></li><li><a href="mailto:hello@malako.az" id="footerEmail">hello@malako.az</a></li><li><a href="#" id="footerWhatsApp" data-i18n="footer_whatsapp">WhatsApp</a></li></ul><div style="margin-top:1.5rem;font-size:0.82rem;color:rgba(232,213,183,0.5)" id="workHours">B–B: 08:00–23:00</div></div></div><div class="footer-bottom"><span>© 2024 Malako. <span id="footerRights" data-i18n="footer_rights">Bütün hüquqlar qorunur.</span></span><span data-i18n="footer_city">Bakı, Azərbaycan</span></div></footer>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Malako</h3>
+      <p id="footerBrandText" data-i18n="footer_brand_text">Bakıda specialty qəhvə, dadlı səhər yeməkləri və rahat atmosfer üçün sevimli yeriniz.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-link">📷</a>
+        <a href="#" class="social-link">📘</a>
+        <a href="#" class="social-link">🎵</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 id="footerNavTitle" data-i18n="footer_nav">Naviqasiya</h4>
+      <ul>
+        <li><a href="#home" id="footerNavHome" data-i18n="nav_home">Ana səhifə</a></li>
+        <li><a href="menu.html" id="footerNavMenu" data-i18n="nav_menu">Menyu</a></li>
+        <li><a href="#branches" id="footerNavBranches" data-i18n="nav_branches">Filiallar</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 id="footerContactsTitle" data-i18n="footer_contacts">Əlaqə</h4>
+      <ul>
+        <li><a href="tel:+994501234501" id="footerPhone">+994 50 123-45-01</a></li>
+        <li><a href="#" id="footerWhatsApp" data-i18n="footer_whatsapp">WhatsApp</a></li>
+      </ul>
+      <div style="margin-top:1.5rem;font-size:0.82rem;color:rgba(232,213,183,0.5)" id="workHours">B–B: 08:00–23:00</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Malako. <span id="footerRights" data-i18n="footer_rights">Bütün hüquqlar qorunur.</span></span>
+    <span data-i18n="footer_city">Bakı, Azərbaycan</span>
+  </div>
+</footer>
  
 <script>
 // ========== SUPABASE КОНФИГУРАЦИЯ ==========
@@ -527,7 +537,6 @@ async function initI18n() {
         }
       });
     
-    // Загружаем язык из localStorage
     const savedLang = localStorage.getItem('selected_language');
     if (savedLang && ['az', 'ru', 'en'].includes(savedLang)) {
       currentLang = savedLang;
@@ -546,11 +555,8 @@ async function initI18n() {
   }
 }
 
-// ========== ОБНОВЛЕНИЕ UI ПО ЯЗЫКУ ==========
 function updateUILanguage() {
   document.documentElement.lang = currentLang === 'az' ? 'az' : (currentLang === 'ru' ? 'ru' : 'en');
-  
-  // Обновляем все элементы с data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key);
@@ -560,13 +566,9 @@ function updateUILanguage() {
       el.innerHTML = translation;
     }
   });
-  
-  // Обновляем флаг и текст кнопки языка
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
-  
-  // Обновляем активный класс для опций языка
   document.querySelectorAll('.lang-option, .mobile-lang-item').forEach(opt => {
     const lang = opt.getAttribute('data-lang');
     if (lang === currentLang) {
@@ -575,32 +577,28 @@ function updateUILanguage() {
       opt.classList.remove('active');
     }
   });
-  
   localStorage.setItem('selected_language', currentLang);
 }
 
-// ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ==========
 function setLanguage(lang) {
   if (lang === currentLang) return;
   currentLang = lang;
   localStorage.setItem('selected_language', lang);
   i18next.changeLanguage(lang).then(() => {
     updateUILanguage();
-    // Перерисовываем контент, зависящий от языка
     loadCategoriesAndMenu();
     loadFeatures();
     loadBranches();
     loadAboutSection();
+    loadFloatingTexts(); // обновить тексты в карточках
     const dd = document.getElementById('langDropdown');
     if (dd) dd.classList.remove('show');
   });
 }
 
-// ========== ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ ==========
 function initLangSwitcher() {
   const btn = document.getElementById('langBtn');
   const dd = document.getElementById('langDropdown');
-  
   if (btn && dd) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -608,14 +606,12 @@ function initLangSwitcher() {
     });
     document.addEventListener('click', () => dd.classList.remove('show'));
   }
-  
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', () => {
       const lang = opt.getAttribute('data-lang');
       if (lang) setLanguage(lang);
     });
   });
-  
   document.querySelectorAll('.mobile-lang-item').forEach(opt => {
     opt.addEventListener('click', () => {
       const lang = opt.getAttribute('data-lang');
@@ -625,12 +621,10 @@ function initLangSwitcher() {
   });
 }
 
-// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА БЛЮДА ==========
 function getDishTranslation(translations, lang) {
   if (!translations || translations.length === 0) return null;
   const found = translations.find(t => t.language === lang);
   if (found) return found;
-  // Fallback на AZ
   return translations.find(t => t.language === 'az') || translations[0] || null;
 }
 
@@ -644,7 +638,6 @@ function getDishDescription(translations, lang) {
   return t ? t.description : null;
 }
 
-// ========== ПОЛУЧЕНИЕ ПЕРЕВОДА КАТЕГОРИИ ==========
 function getCategoryTranslation(translations, lang) {
   if (!translations || translations.length === 0) return null;
   const found = translations.find(t => t.language === lang);
@@ -657,19 +650,18 @@ function getCategoryName(translations, lang) {
   return t ? t.name : null;
 }
 
-// ========== ЗАГРУЗКА НАСТРОЕК ==========
 async function loadAllSettings() {
   try {
     const { data, error } = await supabaseClient.from('settings').select('*');
     if (!error) (data || []).forEach(s => siteSettings[s.key] = s.value);
   } catch(e) { console.warn('settings не загружены:', e); }
 
-  // Применяем настройки — секции показываются даже если settings пустой
   try { loadLogoSettings(); } catch(e) {}
   try { loadSiteBackground(); } catch(e) {}
   loadSectionsVisibility();
+  loadFloatingTexts();
+  loadContactSettings();
 
-  // Загружаем данные параллельно
   await Promise.allSettled([
     loadSlides(),
     loadCategoriesAndMenu(),
@@ -681,10 +673,8 @@ async function loadAllSettings() {
   ]);
 
   try { loadSettings(); } catch(e) {}
-  try { loadContactSettings(); } catch(e) {}
 }
 
-// ========== ЛОГОТИП ==========
 function loadLogoSettings() {
   try {
     const settings = siteSettings;
@@ -713,33 +703,22 @@ function loadLogoSettings() {
   } catch(e) { console.error('Ошибка загрузки логотипа:', e); }
 }
 
-// ========== ФОН (ТОЛЬКО В .HERO) ==========
 function loadSiteBackground() {
   try {
     const settings = siteSettings;
     const bgType = settings.site_bg_type || 'preset';
     const hero = document.querySelector('.hero');
     if (!hero) return;
-
-    // Убираем класс hero-bg в любом случае
     hero.classList.remove('hero-bg');
-    // Сбрасываем фоновое изображение (но текстура на body остаётся)
     hero.style.backgroundImage = '';
-
     if (bgType === 'image' && settings.site_bg_image) {
-      // Добавляем фон только в hero
       hero.classList.add('hero-bg');
       hero.style.setProperty('--bg-image', `url('${settings.site_bg_image}')`);
-      // Убираем класс bg-image-set с body (если был)
       document.body.classList.remove('bg-image-set');
-    } else {
-      // Если preset или color, фон не устанавливаем
-      // (текстура на body остаётся)
     }
   } catch(e) { console.error('Ошибка загрузки фона:', e); }
 }
 
-// ========== ВИДИМОСТЬ СЕКЦИЙ ==========
 function loadSectionsVisibility() {
   const s = siteSettings;
   const map = {
@@ -757,16 +736,34 @@ function loadSectionsVisibility() {
   });
 }
 
-// ========== КОНТАКТЫ ==========
 function loadContactSettings() {
   const s = siteSettings;
-  const footerPhone = document.getElementById('footerPhone');
-  if (footerPhone) footerPhone.setAttribute('href', `tel:${s.default_wa_number || '994501234501'}`);
+  const phoneLink = document.getElementById('footerPhone');
+  if (phoneLink) {
+    const number = s.default_wa_number || '994501234501';
+    phoneLink.setAttribute('href', 'tel:' + number);
+    const display = s.footer_phone_display || '+994 50 123-45-01';
+    phoneLink.textContent = display;
+  }
   const workHours = document.getElementById('workHours');
   if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
 }
 
-// ========== СЛАЙДЕР ==========
+function loadFloatingTexts() {
+  const lang = currentLang;
+  const s = siteSettings;
+  const get = (key) => s[key + '_' + lang] || s[key] || '';
+  
+  const label1 = document.getElementById('heroFloatLabel');
+  if (label1) label1.textContent = get('hero_float1_label') || 'Specialty Coffee';
+  const value1 = document.getElementById('heroFloatValue');
+  if (value1) value1.textContent = get('hero_float1_value') || 'Kolumbiya';
+  const label2 = document.getElementById('heroFloatLabel2');
+  if (label2) label2.textContent = get('hero_float2_label') || 'İşləyirik';
+  const value2 = document.getElementById('heroFloatValue2');
+  if (value2) value2.textContent = get('hero_float2_value') || '2016-cı ildən';
+}
+
 async function loadSlides() {
   const { data } = await supabaseClient.from('slides').select('*').order('sort_order');
   sliderSlides = (data || []).filter(s => s.is_active !== false);
@@ -800,30 +797,25 @@ function buildSlider() {
   initSliderVideos();
 }
 
-// ========== НАДЁЖНЫЙ ЗАПУСК ВИДЕО В СЛАЙДЕРЕ (для iOS Safari) ==========
 function initSliderVideos() {
   const videos = document.querySelectorAll('.slide video');
-
   const tryPlay = (video) => {
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
     const playPromise = video.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => { /* будет повторная попытка ниже */ });
+      playPromise.catch(() => {});
     }
   };
-
   videos.forEach(video => {
     video.addEventListener('loadedmetadata', () => tryPlay(video));
     video.addEventListener('canplay', () => tryPlay(video));
     if (video.readyState >= 2) tryPlay(video);
   });
-
   [50, 300, 800, 1500, 3000].forEach(delay => {
     setTimeout(() => videos.forEach(tryPlay), delay);
   });
-
   const unlockOnInteraction = () => {
     videos.forEach(tryPlay);
     document.removeEventListener('touchstart', unlockOnInteraction);
@@ -831,7 +823,6 @@ function initSliderVideos() {
   };
   document.addEventListener('touchstart', unlockOnInteraction, { once: true, passive: true });
   document.addEventListener('click', unlockOnInteraction, { once: true });
-
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) videos.forEach(tryPlay);
   });
@@ -845,21 +836,17 @@ function slidePrev() { if(sliderSlides.length>1) goToSlide((currentSlide-1+slide
 
 function resetTimer() { clearInterval(sliderTimer); if(sliderSlides.length>1) sliderTimer = setInterval(slideNext, 5000); }
 
-// ========== FEATURES ==========
 async function loadFeatures() {
   const grid = document.getElementById('featuresGrid');
   if(!grid) return;
-  
   const s = siteSettings;
   const lang = currentLang;
-  
   function getFeatureText(baseKey, fallbacks) {
     const key = baseKey + '_' + lang;
     if (s[key]) return s[key];
     if (s[baseKey]) return s[baseKey];
     return fallbacks[lang] || fallbacks.az || '';
   }
-  
   const features = [
     { 
       icon: '☕', 
@@ -882,29 +869,24 @@ async function loadFeatures() {
       desc: getFeatureText('feature4_desc', { az: 'Xidmətin keyfiyyəti bizim fəlsəfəmizin əsasını təşkil edir. Hər rəy təhlil edilir və səviyyəmizi yaxşılaşdırır.', ru: 'Качество сервиса — основа нашей философии. Каждый отзыв анализируется и помогает нам расти.', en: 'Service quality is the core of our philosophy. Every review is analysed and helps us improve.' }) 
     }
   ];
-  
   grid.innerHTML = features.map(f => 
     `<div class="feature-card fade-up"><div class="feature-icon">${f.icon}</div><h3>${f.title}</h3><p>${f.desc}</p></div>`
   ).join('');
 }
 
-// ========== МЕНЮ ==========
 async function loadCategoriesAndMenu() {
   try {
     const { data: categories } = await supabaseClient
       .from('categories')
       .select('*, category_translations(*)')
       .order('sort_order');
-    
     const { data: menuItems } = await supabaseClient
       .from('menu_items')
       .select('*, dish_translations(*)')
       .eq('available', true)
       .order('sort_order');
-    
     allCategories = categories || [];
     allMenuItems = menuItems || [];
-    
     const tabs = document.getElementById('menuTabs');
     if (tabs && allCategories.length) {
       tabs.innerHTML = allCategories.map((c, i) => {
@@ -922,25 +904,22 @@ async function loadCategoriesAndMenu() {
 function renderMenu(categoryId) {
   const g = document.getElementById('menuGrid');
   if (!g) return;
-  
   const items = allMenuItems.filter(i => i.category_id === categoryId);
   const cat = allCategories.find(c => c.id === categoryId);
   const catName = cat ? getCategoryName(cat.category_translations, currentLang) || cat.name || '' : '';
-  
   if (!items.length) {
     const emptyMsg = { az: 'Bu kateqoriyada hələ heç bir yemək yoxdur', ru: 'В этой категории пока нет блюд', en: 'No items in this category yet' };
     g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`;
     return;
   }
-  
   g.innerHTML = items.slice(0,6).map(item => {
     const name = getDishName(item.dish_translations, currentLang) || item.name || '';
     const desc = getDishDescription(item.dish_translations, currentLang) || item.description || '';
     const safeDesc = (desc || '').replace(/'/g, "\'");
-      const safeName = (name || '').replace(/'/g, "\'");
-      const safeImg = (item.image_url || '').replace(/'/g, "\'");
-      const safeBadge = (item.badge || '').replace(/'/g, "\'");
-      return `<div class="menu-card" onclick="openDishModal('${safeName}','${safeDesc}','${item.price}','${safeImg}','${safeBadge}','${item.emoji||'🍽️'}')" style="cursor:pointer"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_400,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
+    const safeName = (name || '').replace(/'/g, "\'");
+    const safeImg = (item.image_url || '').replace(/'/g, "\'");
+    const safeBadge = (item.badge || '').replace(/'/g, "\'");
+    return `<div class="menu-card" onclick="openDishModal('${safeName}','${safeDesc}','${item.price}','${safeImg}','${safeBadge}','${item.emoji||'🍽️'}')" style="cursor:pointer"><div class="menu-card-img">${item.image_url ? `<img src="${item.image_url.replace('/upload/', '/upload/f_auto,q_auto,w_400,dpr_auto/')}" alt="${name}" loading="lazy" decoding="async">` : (item.emoji || '🍽️')}${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}</div><div class="menu-card-body"><h4>${name}</h4><p>${desc}</p><div class="menu-card-footer"><span class="menu-price">${item.price} AZN</span><span class="menu-tag">${catName}</span></div></div></div>`;
   }).join('');
 }
 
@@ -951,9 +930,8 @@ function filterMenu(catId, btn) {
   renderMenu(catId);
 }
 
-// ========== ФИЛИАЛЫ ==========
 async function loadBranches() {
-  const { data } = await supabaseClient.from('branches').select('*').order('sort_order');
+  const { data } = await supabaseClient.from('branches').select('*').eq('is_active', true).order('sort_order');
   const grid = document.getElementById('branchesGrid');
   if (!grid) return;
   if (!data?.length) { 
@@ -961,39 +939,30 @@ async function loadBranches() {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">${emptyMsg[currentLang] || emptyMsg.az}</div>`; 
     return; 
   }
-  
-  const btnText = siteSettings['btn_book_branch_' + currentLang] || siteSettings.btn_book_branch || i18next.t('nav_reserve') || 'Masa rezerv et';
-  
   grid.innerHTML = data.map(b => 
     `<div class="branch-card fade-up"><h3 class="branch-name">${b.name}</h3><p class="branch-addr">${b.address || ''}</p><a href="tel:${b.phone}" class="branch-phone">${b.phone}</a></div>`
   ).join('');
 }
 
-// ========== О НАС ==========
 function loadAboutSection() {
   const s = siteSettings;
   const lang = currentLang;
-  
   function getSetting(baseKey, fallback) {
     return s[baseKey + '_' + lang] || s[baseKey] || fallback || '';
   }
-  
   const branchesCount = allCategories.length || 0;
   const aboutText3Raw = getSetting('about_text3', '');
   const aboutText3 = aboutText3Raw.replace('{branches}', branchesCount);
-  
   document.getElementById('aboutText1').innerHTML = getSetting('about_text1', '');
   document.getElementById('aboutText2').innerHTML = getSetting('about_text2', '');
   document.getElementById('aboutText3').innerHTML = aboutText3;
   document.getElementById('aboutYear').innerHTML = s.about_year || '2016';
-  
   const img1 = s.about_img1 || '☕';
   const img2 = s.about_img2 || '🥐';
   const imgMain = document.getElementById('aboutImgMain');
   if(imgMain) { if(img1.startsWith('http')) imgMain.style.backgroundImage = `url('${img1}')`; else imgMain.innerHTML = img1; }
   const imgSub = document.getElementById('aboutImgSub');
   if(imgSub) { if(img2.startsWith('http')) imgSub.style.backgroundImage = `url('${img2}')`; else imgSub.innerHTML = img2; }
-  
   const featContainer = document.getElementById('aboutFeatures');
   if(featContainer) {
     const featuresRaw = getSetting('about_features', 'Öz qovurma, Təzə inqrediyentlər, Peşəkar komanda, Yüksək standartlar');
@@ -1002,7 +971,6 @@ function loadAboutSection() {
   }
 }
 
-// ========== АКЦИИ ==========
 async function loadPromoCards() {
   const { data } = await supabaseClient.from('promo_cards').select('*').eq('is_active', true);
   const grid = document.getElementById('promoCardsGrid');
@@ -1013,7 +981,6 @@ async function loadPromoCards() {
   ).join('');
 }
 
-// ========== ПОПАП ==========
 async function loadPromoPopup() {
   try {
     const popupEl = document.getElementById('promoPopup');
@@ -1022,18 +989,15 @@ async function loadPromoPopup() {
     popupEl.style.display = 'none';
     popupShown = false;
     if (popupTimeout) clearTimeout(popupTimeout);
-    
     const { data } = await supabaseClient
       .from('promo_popups')
       .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: false });
-    
     if (!data?.length) return;
     const popup = data[0];
     document.getElementById('promoTitle').textContent = popup.title || 'Aksiya!';
     document.getElementById('promoDesc').textContent = popup.description || '';
-    
     const icon = document.getElementById('promoIcon');
     if (icon) {
       icon.innerHTML = '';
@@ -1048,7 +1012,6 @@ async function loadPromoPopup() {
         icon.innerHTML = '🎉';
       }
     }
-    
     const btn = document.getElementById('promoBtn');
     if (btn) {
       if (popup.btn_text && popup.btn_url) {
@@ -1059,7 +1022,6 @@ async function loadPromoPopup() {
         btn.style.display = 'none';
       }
     }
-    
     const delay = (popup.delay_seconds || 5) * 1000;
     popupTimeout = setTimeout(() => {
       popupEl.style.display = 'flex';
@@ -1079,7 +1041,6 @@ function closePromo() {
   }
 }
 
-// ========== НАСТРОЙКИ ==========
 function loadSettings() {
   const s = siteSettings;
   const footerPhone = document.getElementById('footerPhone');
@@ -1088,9 +1049,6 @@ function loadSettings() {
   if (workHours) workHours.textContent = s.work_hours || 'B–B: 08:00–23:00';
 }
 
-// ========== БРОНИРОВАНИЕ (закомментировано) ==========
-
-// ========== МОБИЛЬНОЕ МЕНЮ ==========
 document.getElementById('burger')?.addEventListener('click', () => {
   document.getElementById('mobileNav').classList.toggle('open');
 });
@@ -1099,7 +1057,6 @@ function closeMobileNav() {
   document.getElementById('mobileNav').classList.remove('open');
 }
 
-// ========== АНИМАЦИИ ==========
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -1107,12 +1064,10 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-// ========== ЗАПУСК ==========
 async function init() {
   initLangSwitcher();
   await Promise.all([ initI18n(), loadAllSettings() ]);
   updateUILanguage();
-  
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = i18next.t(key);
@@ -1122,14 +1077,11 @@ async function init() {
       el.innerHTML = translation;
     }
   });
-  
   const texts = { az: 'AZE', ru: 'RU', en: 'ENG' };
   const ct = document.getElementById('currentLangText');
   if (ct) ct.textContent = texts[currentLang];
 }
 
-
-// ===== DISH MODAL =====
 function openDishModal(name, desc, price, imgUrl, badge, emoji) {
   document.getElementById('dishModalName').textContent = name || '';
   document.getElementById('dishModalDesc').textContent = desc || '';
@@ -1161,7 +1113,6 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeDishModal();
 });
 
-// Запускаем инициализацию
 init();
 </script>
 
